@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurent_app/config/config.dart';
 import 'package:scrollable_list_tabview/model/scrollable_list_tab.dart';
 import 'package:scrollable_list_tabview/scrollable_list_tabview.dart';
 
@@ -8,6 +9,7 @@ class CategoryDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(child: Scaffold(
+      backgroundColor: AppConfig.secmainColor,
       body: Column(
         children: [
           Container(height: 100.0,),

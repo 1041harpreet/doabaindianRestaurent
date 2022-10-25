@@ -35,7 +35,7 @@ class _NavBarState extends ConsumerState<NavBar> {
           BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined), label: "Home",tooltip: "Home Page"),
           BottomNavigationBarItem(
-            icon: Icon(Icons.history, ), label: "Orders",),
+            icon: Icon(Icons.history, size: 35.0,), label: "Orders",),
           BottomNavigationBarItem(
               icon:
               Icon(Icons.shopping_cart,size: 35.0,),
