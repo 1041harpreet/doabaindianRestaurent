@@ -4,19 +4,9 @@ class AppConfig {
   static Color primaryColor = const Color(0xffe5623e);
   static Color greyColor = const Color(0xfffafafa);
   static Color lightYellow = const Color(0xffFFFCBF);
-  static Color secmainColor = const Color(0xffF5F5F5);
+  static Color secmainColor = const Color(0xfff3f3f3);
   static Color blackColor = const Color(0xff606060);
 
-  static ButtonStyle flatButtonStyle = ButtonStyle(
-    elevation: MaterialStateProperty.all(0),
-    padding: MaterialStateProperty.all(
-        const EdgeInsets.symmetric(vertical: 16, horizontal: 16)),
-    shape: MaterialStateProperty.all(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-    ),
-  );
 
   //typography
   static TextStyle textH1 = const TextStyle(
@@ -27,4 +17,5 @@ class AppConfig {
   TextStyle greySmallText = TextStyle(fontSize: 15, color: AppConfig.greyColor);
   static TextStyle blackTitle = const TextStyle(color: Colors.black);
   static var t26 = const TextStyle(color: Colors.black, fontSize: 26);
+  static var catItem = const TextStyle(color: Colors.black54, fontSize: 18,fontWeight: FontWeight.bold);
 }
