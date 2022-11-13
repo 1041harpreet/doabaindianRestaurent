@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurent_app/screens/navBar/category_page.dart';
+import 'package:restaurent_app/screens/navBar/order_screen/order_page.dart';
 
-import '../screens/navBar/add_to_cart.dart';
-import '../screens/navBar/home_page.dart';
+import '../screens/navBar/cart_Page/add_to_cart.dart';
+import '../screens/navBar/home_page/home_page.dart';
 import '../screens/navBar/profile_page.dart';
 
 
@@ -11,7 +11,7 @@ class NavServices extends ChangeNotifier{
 
   List screens = [
     HomePage(),
-    CategoryPage(),
+    OrderPage(),
     AddToCart(),
     ProfileScreen(),
   ];

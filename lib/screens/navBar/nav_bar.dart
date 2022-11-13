@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ant_design.dart';
+import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent_app/config/config.dart';
 
 import '../../provider/nav_bar_provider.dart';
@@ -31,16 +34,16 @@ class _NavBarState extends ConsumerState<NavBar> {
         onTap: (value) {
           navbarprovider.changeindex(value);
         },
-        items:const [
+        items: [
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined,size: 30.0), label: "Home",tooltip: "Home Page"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined), label: "Home",tooltip: "Home Page"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history, size: 35.0,), label: "Orders",),
-          BottomNavigationBarItem(
+            icon: Iconify(Carbon.order_details,color:navbarprovider.selectedindex==1 ? AppConfig.primaryColor :Colors.grey,size: 30.0),label: "Order"),
+          const BottomNavigationBarItem(
               icon:
-              Icon(Icons.shopping_cart,size: 35.0,),
+              Icon(Icons.shopping_cart,size: 30.0),
               label: "Cart"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "My Profile",)
+          const BottomNavigationBarItem(icon: Icon(Icons.person,size: 30.0), label: "My Profile",)
         ],
       ),
     );
