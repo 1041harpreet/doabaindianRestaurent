@@ -4,7 +4,7 @@ import 'package:restaurent_app/screens/navBar/order_screen/order_page.dart';
 
 import '../screens/navBar/cart_Page/add_to_cart.dart';
 import '../screens/navBar/home_page/home_page.dart';
-import '../screens/navBar/profile_page.dart';
+import '../screens/navBar/profille_page/profile_page.dart';
 
 
 class NavServices extends ChangeNotifier{
