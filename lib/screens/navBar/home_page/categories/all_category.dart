@@ -9,8 +9,7 @@ import 'package:restaurent_app/screens/navBar/home_page/categories/stream_builde
 
 import '../../../../provider/category_provider.dart';
 import 'category_items.dart';
-import '../item.dart';
-import 'cat_item.dart';
+import '../../../../widgets/category_item.dart';
 
 class MoreCategory extends ConsumerStatefulWidget {
   int index;
