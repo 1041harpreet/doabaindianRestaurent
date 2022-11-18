@@ -54,6 +54,7 @@ dependencies:
   maps_launcher:
   url_launcher:
   reactive_forms:
+  device_preview:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons:

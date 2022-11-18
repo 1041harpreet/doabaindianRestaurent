@@ -48,14 +48,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent_app/screens/auth/sign_up_screen.dart';
-import 'package:restaurent_app/screens/navBar/nav_bar.dart';
+import 'package:restaurent_app/screens/auth/login_screen.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
 
-class LoginScreen extends ConsumerWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends ConsumerWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
@@ -95,7 +94,7 @@ class LoginScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: ReactiveForm(
-          formGroup:authprovider.loginForm ,
+          formGroup:authprovider.SignUpForm ,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -104,7 +103,7 @@ class LoginScreen extends ConsumerWidget {
               ),
               //header text
               Text(
-                'Login Account',
+                'Sign Up Account',
                 style: GoogleFonts.inter(
                   fontSize: 24.0,
                   color: const Color(0xFF15224F),
@@ -115,7 +114,7 @@ class LoginScreen extends ConsumerWidget {
                 height: size.height * 0.01,
               ),
               Text(
-                'Discover your food & Try to Login',
+                'register yourself to  Discover your food ',
                 style: GoogleFonts.inter(
                   fontSize: 14.0,
                   color: const Color(0xFF969AA8),
@@ -130,37 +129,24 @@ class LoginScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.05,
               ),
-
               //email & password section
+              textfieldbtn(size, 'Full name', 'name'),
+              SizedBox(
+                height: size.height * 0.02,
+              ),
               textfieldbtn(size, 'Phone number', 'phone'),
+
               SizedBox(
                 height: size.height * 0.02,
               ),
               textfieldbtn(size, 'Password', 'password'),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'Forget Password?',
-                    style: GoogleFonts.inter(
-                      fontSize: 14.0,
-                      color: const Color(0xFF969AA8),
-                    ),
-                    textAlign: TextAlign.end,
-                  ),
-                ],
-              ),
 
               SizedBox(
-                height: size.height * 0.03,
+                height: size.height * 0.02,
               ),
               //sign in button
-              Button(size,"Sign in",Colors.white,AppConfig.primaryColor,(){
+              Button(size,"Sign up",Colors.white,AppConfig.primaryColor,(){
                 print('sign in');
-                Navigator.push(context, MaterialPageRoute(builder: (context) => NavBar(),));
               }),
               SizedBox(
                 height: size.height * 0.02,
@@ -185,7 +171,7 @@ class LoginScreen extends ConsumerWidget {
               //footer section. sign up text here
               GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(),));
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => LoginScreen(),));
                   },
                   child: footerText()),
             ],
@@ -294,7 +280,7 @@ class LoginScreen extends ConsumerWidget {
         ),
         children: const [
           TextSpan(
-            text: 'Don’t have an account ?',
+            text: 'Already have an account?',
           ),
           TextSpan(
             text: ' ',
@@ -303,7 +289,7 @@ class LoginScreen extends ConsumerWidget {
             ),
           ),
           TextSpan(
-            text: 'Sign up',
+            text: 'Sign in',
             style: TextStyle(
               color: Color(0xFFFF5844),
               fontWeight: FontWeight.w700,

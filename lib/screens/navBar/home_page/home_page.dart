@@ -19,6 +19,7 @@ import '../../../widgets/shimmer.dart';
 import 'categories/category_items.dart';
 import 'categories/all_category.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+
 class HomePage extends ConsumerWidget {
   HomePage({Key? key}) : super(key: key);
 
@@ -46,7 +47,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartprovider=ref.watch(cartProvider);
+    final cartprovider = ref.watch(cartProvider);
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     List carsoullist = ["assets/images/image.png"];
@@ -60,24 +61,34 @@ class HomePage extends ConsumerWidget {
           children: [
             header(wsize, hsize),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3.0,horizontal: 16.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(color: AppConfig.secmainColor),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 3.0, horizontal: 16.0),
+              child: Container(
+                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                height: 50.0,
+                child: TextFormField(
+
+                  decoration: InputDecoration(
+                    hintText: "Search any food",
+
+                    hintStyle: TextStyle(color: AppConfig.primaryColor),
+                    prefixIcon: Icon(Icons.search,color: AppConfig.primaryColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      borderSide: BorderSide(color: AppConfig.primaryColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      borderSide: BorderSide(color: AppConfig.primaryColor),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      borderSide: BorderSide(color: AppConfig.primaryColor),
+                    ),
+                    // prefixIcon:
                   ),
-                  focusedBorder:  OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(color: AppConfig.primaryColor),
-                  ),
-                  enabledBorder:  OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(color: AppConfig.blackColor),
-                  ),
-                  // prefixIcon:
                 ),
-              ),
+              )
             ),
             CarouselSlider(
                 options: CarouselOptions(
@@ -380,8 +391,8 @@ Widget buildImage(hsize, wsize, img) {
 
 Widget header(wsize, hsize) {
   return Padding(
-    padding: EdgeInsets.only(top:wsize * 0.03,right: wsize * 0.03,left: wsize * 0.03
-    ),
+    padding: EdgeInsets.only(
+        top: wsize * 0.03, right: wsize * 0.03, left: wsize * 0.03),
     child: SizedBox(
       height: hsize * .1,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -394,7 +405,7 @@ Widget header(wsize, hsize) {
                 Text.rich(
                   TextSpan(
                     style: GoogleFonts.inter(
-                      fontSize: wsize*0.045,
+                      fontSize: wsize * 0.045,
                       color: const Color(0xFF21899C),
                       letterSpacing: 2.000000061035156,
                     ),
@@ -415,9 +426,11 @@ Widget header(wsize, hsize) {
                     ],
                   ),
                 ),
+                const SizedBox(
+                  height: 5.0,
+                ),
                 Row(
                   children: [
-                    SizedBox(height: 5.0,),
                     Icon(
                       Icons.location_on,
                       color: Colors.grey,
@@ -426,19 +439,25 @@ Widget header(wsize, hsize) {
                     SizedBox(
                       width: wsize * .4,
                       child: GestureDetector(
-                        onTap: ()async {
-
-                            const query = '40.15902603552938, -83.08269070574414';
-                            final uri = Uri(scheme: 'geo', host: '0,0', queryParameters: {'q': query});
-                          try{
-                            if(await canLaunchUrl(uri)){
-                            await launchUrl(uri);
-                          }else{
+                        onTap: () async {
+                          const query = '40.15902603552938, -83.08269070574414';
+                          var latitude='40.15902603552938';
+                          var longitude='-83.08269070574414';
+                          final uri = Uri(
+                              scheme: 'geo',
+                              host: '0,0',
+                              queryParameters: {'q': query});
+                          String googleUrl =
+                              'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude';
+                          try {
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            } else {
                               print('cant launch');
-                            }}
-                              catch(e){
+                            }
+                          } catch (e) {
                             print(e.toString());
-                              }
+                          }
                         },
                         child: AutoSizeText(
                           "230 W Olentangy St, Powell, OH 43065, USA",
@@ -466,7 +485,6 @@ Widget header(wsize, hsize) {
               borderRadius: BorderRadius.circular(8.0),
               child: GestureDetector(
                 onTap: () async {
-
                   // print(re);
                 },
                 child: Icon(

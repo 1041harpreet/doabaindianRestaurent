@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/screens/navBar/cart_Page/add_to_cart.dart';
+import 'package:restaurent_app/screens/navBar/cart_Page/cart_page.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
