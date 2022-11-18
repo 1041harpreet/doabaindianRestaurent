@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent_app/screens/auth/login_screen.dart';
 import 'package:restaurent_app/screens/auth/splash_screen.dart';
 
 
@@ -57,13 +60,20 @@ void main() async {
     // NotificationService().showNotification(mess['title'], mess['bill']);
   });
   runApp(
-    ProviderScope(
-      child: MaterialApp(
-          color: AppConfig.primaryColor,
-          theme: ThemeData.dark(),
-          debugShowCheckedModeBanner: false,
-          home: MyApp()),
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) =>  ProviderScope(
+        child: MaterialApp(
+            useInheritedMediaQuery: true,
+            locale: DevicePreview.locale(context),
+            builder: DevicePreview.appBuilder,
+            color: AppConfig.primaryColor,
+            theme: ThemeData.dark(),
+            debugShowCheckedModeBanner: false,
+            home: MyApp()),
+      ), // Wrap your app
     ),
+
   );
 }
 
@@ -106,14 +116,14 @@ class _MyAppState extends State<MyApp> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Allow Notifications'),
-            content: Text('Our app would like to send you notifications'),
+            title: const Text('Allow Notifications'),
+            content: const Text('Our app would like to send you notifications'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(
+                child: const Text(
                   'Don\'t Allow',
                   style: TextStyle(
                     color: Colors.grey,
@@ -125,7 +135,7 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () => AwesomeNotifications()
                       .requestPermissionToSendNotifications()
                       .then((_) => Navigator.pop(context)),
-                  child: Text(
+                  child: const Text(
                     'Allow',
                     style: TextStyle(
                       color: Colors.teal,
@@ -151,7 +161,7 @@ class _MyAppState extends State<MyApp> {
 
   }
 
-  late StreamSubscription subscription;
+  // late StreamSubscription subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
 
@@ -171,7 +181,7 @@ class _MyAppState extends State<MyApp> {
 
     // AwesomeNotifications().actionSink.close();
     // AwesomeNotifications().createdSink.close();
-    subscription.cancel();
+    // subscription.cancel();
     super.dispose();
   }
 
@@ -184,10 +194,13 @@ class _MyAppState extends State<MyApp> {
       statusBarBrightness: Brightness.dark,
     ));
     return MaterialApp(
-      title: "GO Crazy",
+      title: "DOABA INDIAN RESTAURANT",
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: const LoginScreen(),
     );
   }
 }

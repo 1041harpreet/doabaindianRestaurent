@@ -49,6 +49,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent_app/screens/auth/sign_up_screen.dart';
+import 'package:restaurent_app/screens/navBar/nav_bar.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
@@ -159,6 +160,7 @@ class LoginScreen extends ConsumerWidget {
               //sign in button
               Button(size,"Sign in",Colors.white,AppConfig.primaryColor,(){
                 print('sign in');
+                Navigator.push(context, MaterialPageRoute(builder: (context) => NavBar(),));
               }),
               SizedBox(
                 height: size.height * 0.02,
