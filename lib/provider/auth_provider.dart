@@ -4,13 +4,11 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 class AuthService extends ChangeNotifier{
   FormGroup loginForm=FormGroup({
-    "phone": FormControl(
+    "email": FormControl(
       // value: '1234567890',
         validators: [
           Validators.required,
-          Validators.number,
-          Validators.minLength(10),
-          Validators.maxLength(10)
+         Validators.email
         ]),
     'password': FormControl(
       // value: '123456',
@@ -19,13 +17,11 @@ class AuthService extends ChangeNotifier{
         ]),
   });
   FormGroup SignUpForm=FormGroup({
-    "phone": FormControl(
+    "email": FormControl(
       // value: '1234567890',
         validators: [
           Validators.required,
-          Validators.number,
-          Validators.minLength(10),
-          Validators.maxLength(10)
+         Validators.email
         ]),
     "name": FormControl(
       // value: '1234567890',
@@ -38,6 +34,7 @@ class AuthService extends ChangeNotifier{
           Validators.required,
         ]),
   });
+
 }
 final authProvider=ChangeNotifierProvider((ref) {
   var state=AuthService();
