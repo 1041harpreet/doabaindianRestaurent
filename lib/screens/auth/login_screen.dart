@@ -50,6 +50,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent_app/screens/auth/sign_up_screen.dart';
 import 'package:restaurent_app/screens/navBar/nav_bar.dart';
+import 'package:restaurent_app/services/toast_service.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
@@ -132,11 +133,17 @@ class LoginScreen extends ConsumerWidget {
               ),
 
               //email & password section
-              textfieldbtn(size, 'Phone number', 'phone'),
+              textfieldbtn(size, 'Email', 'email',{
+                ValidationMessage.required: (error) => "The email must not be empty",
+                ValidationMessage.email: (error) => 'Please enter a valid email',
+
+              }),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              textfieldbtn(size, 'Password', 'password'),
+              textfieldbtn(size, 'Password', 'password',{
+                ValidationMessage.required: (error) => "The password must not be empty",
+              }),
               SizedBox(
                 height: size.height * 0.01,
               ),
@@ -159,7 +166,15 @@ class LoginScreen extends ConsumerWidget {
               ),
               //sign in button
               Button(size,"Sign in",Colors.white,AppConfig.primaryColor,(){
+                if( authprovider.loginForm.valid){
                 print('sign in');
+                showSuccessToast(message: 'login successfull',context: context);
+                }
+                else{
+                  print('invalid');
+                  authprovider.loginForm.markAllAsTouched();
+                  showErrorToast(message: 'fill the detail first',context: context);
+                }
                 Navigator.push(context, MaterialPageRoute(builder: (context) => NavBar(),));
               }),
               SizedBox(
@@ -176,16 +191,16 @@ class LoginScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Button(size,"Google",Colors.black,Colors.white,(){
+              Button(size,"sign up with Google",Colors.black,Colors.white,(){
                 print('sign in with google');
               }),
               SizedBox(
-                height: size.height * 0.04,
+                height: size.height * 0.02,
               ),
               //footer section. sign up text here
               GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen(),));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpScreen(),));
                   },
                   child: footerText()),
             ],
@@ -222,7 +237,7 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget textfieldbtn(Size size, lable, controlname) {
+  Widget textfieldbtn(Size size, lable, controlname,validation) {
     return Container(
       alignment: Alignment.center,
       height: size.height * 0.07,
@@ -240,6 +255,7 @@ class LoginScreen extends ConsumerWidget {
           fontSize: 16.0,
           color: const Color(0xFF15224F),
         ),
+          validationMessages: validation,
         maxLines: 1,
         cursorColor: const Color(0xFF15224F),
         decoration: InputDecoration(

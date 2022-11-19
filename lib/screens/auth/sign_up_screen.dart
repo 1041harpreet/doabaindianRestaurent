@@ -52,6 +52,7 @@ import 'package:restaurent_app/screens/auth/login_screen.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
+import '../../services/toast_service.dart';
 
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -130,16 +131,25 @@ class SignUpScreen extends ConsumerWidget {
                 height: size.height * 0.05,
               ),
               //email & password section
-              textfieldbtn(size, 'Full name', 'name'),
+              textfieldbtn(size, 'Full name', 'name',{
+                ValidationMessage.required: (error) => "The name must not be empty",
+              }),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              textfieldbtn(size, 'Phone number', 'phone'),
+              textfieldbtn(size, 'Email', 'email',{
+                ValidationMessage.required: (error) => "The email must not be empty",
+                ValidationMessage.email: (error) => 'Please enter a valid email',
+
+              }),
 
               SizedBox(
                 height: size.height * 0.02,
               ),
-              textfieldbtn(size, 'Password', 'password'),
+              textfieldbtn(size, 'Password', 'password',{
+                ValidationMessage.required: (error) => "The password must not be empty",
+
+              }),
 
               SizedBox(
                 height: size.height * 0.02,
@@ -147,6 +157,15 @@ class SignUpScreen extends ConsumerWidget {
               //sign in button
               Button(size,"Sign up",Colors.white,AppConfig.primaryColor,(){
                 print('sign in');
+                if( authprovider.SignUpForm.valid){
+                  print('sign in');
+                  showSuccessToast(message: 'register successfull',context: context);
+                }
+                else{
+                  print('invalid');
+                  authprovider.SignUpForm.markAllAsTouched();
+                  showErrorToast(message: 'fill the detail first',context: context);
+                }
               }),
               SizedBox(
                 height: size.height * 0.02,
@@ -162,11 +181,11 @@ class SignUpScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Button(size,"Google",Colors.black,Colors.white,(){
+              Button(size,"Sign in with Google",Colors.black,Colors.white,(){
                 print('sign in with google');
               }),
               SizedBox(
-                height: size.height * 0.04,
+                height: size.height * 0.02,
               ),
               //footer section. sign up text here
               GestureDetector(
@@ -208,7 +227,7 @@ class SignUpScreen extends ConsumerWidget {
     );
   }
 
-  Widget textfieldbtn(Size size, lable, controlname) {
+  Widget textfieldbtn(Size size, lable, controlname,validation) {
     return Container(
       alignment: Alignment.center,
       height: size.height * 0.07,
@@ -226,6 +245,7 @@ class SignUpScreen extends ConsumerWidget {
           fontSize: 16.0,
           color: const Color(0xFF15224F),
         ),
+        validationMessages: validation,
         maxLines: 1,
         cursorColor: const Color(0xFF15224F),
         decoration: InputDecoration(
