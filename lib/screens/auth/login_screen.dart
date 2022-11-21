@@ -108,7 +108,9 @@ class LoginScreen extends ConsumerWidget {
                   GestureDetector(
                     onTap: () {
                       print('click');
-                      authprovider.forgetPassword();
+                      authprovider.resetPassword('1041harpreet@gmail.com');
+                      // authprovider.updateEmail('1044harpreet@gmail.com');
+
                     },
                     child: Text(
                       'Forget Password?',

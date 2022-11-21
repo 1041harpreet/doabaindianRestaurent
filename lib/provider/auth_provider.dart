@@ -12,11 +12,12 @@ class AuthService extends ChangeNotifier {
   bool signupload = false;
   bool signinload = false;
 
-  signinloading( value) {
+  signinloading(value) {
     signinload = value;
     notifyListeners();
   }
-  signuploading( value) {
+
+  signuploading(value) {
     signupload = value;
     notifyListeners();
   }
@@ -52,15 +53,14 @@ class AuthService extends ChangeNotifier {
   get user => _auth.currentUser;
 
   //SIGN UP METHOD
-  Future signUp(email, password, context) async {
-    signuploading( true);
+  Future signUp(email, password, context,username) async {
+    signuploading(true);
     try {
       await _auth
           .createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          )
-          .then((value) {});
+        email: email,
+        password: password,
+      );
       showSuccessToast(message: 'register successfully', context: context);
 
       return null;
@@ -80,14 +80,14 @@ class AuthService extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
     } finally {
-      signuploading( false);
+      signuploading(false);
       notifyListeners();
     }
   }
 
   //SIGN IN METHOD
   Future signIn(email, password, context) async {
-    signinloading( true);
+    signinloading(true);
     try {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
@@ -123,7 +123,7 @@ class AuthService extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
     } finally {
-      signinloading( false);
+      signinloading(false);
       notifyListeners();
     }
   }
@@ -141,13 +141,12 @@ class AuthService extends ChangeNotifier {
   }
 
   //CHANGE password
-  void changePassword(
-      String currentPassword, String newPassword, context) async {
+  void changePassword(String currentPassword, String newPassword, context)
+  async {
     print('pressed');
     final user = FirebaseAuth.instance.currentUser;
-    if(user==null){
-
-    }else{
+    if (user == null) {
+    } else {
       final cred = EmailAuthProvider.credential(
           email: '1041harpreet@gmail.com', password: currentPassword);
       print(cred);
@@ -159,7 +158,6 @@ class AuthService extends ChangeNotifier {
               context: context, message: "Password update successfully");
           //Success, do something
         }).catchError((error) {
-
           showErrorToast(message: "something went wrong", context: context);
           //Error, show something
         });
@@ -168,11 +166,33 @@ class AuthService extends ChangeNotifier {
         showErrorToast(message: "something went wrong", context: context);
       });
     }
+  }
+
+   resetPassword(  email) async {
+    try{
+      await _auth
+          .sendPasswordResetEmail(email: email).then((value) {
+            print('done');
+      });
+    }catch(e){
+      print(e.toString());
+    }
+  }
+  forgetPassword() {
+    print('forget password click');
 
   }
-}
-forgetPassword(){
-  print('forget password');
+  updateEmail(newemail){
+    try {
+      _auth.currentUser!.updateEmail(newemail).then((value) {
+        print('success');
+      });
+    }catch(e){
+      print(e.toString());
+    }
+  }
+  googleSignIn(){
+  }
 }
 
 final authProvider = ChangeNotifierProvider((ref) {
