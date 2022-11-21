@@ -45,7 +45,9 @@ Widget optionListView(authprovider,context) {
       primary: false,
       children: [
         _listItem(
-            onClick: () {},
+            onClick: () {
+              authprovider.updateEmail('1044harpreet@gmail.com');
+            },
             text: 'Your Orders',
             icon: const Icon(Icons.ballot_outlined),
             showArrow: true),

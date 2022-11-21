@@ -156,7 +156,7 @@ class SignUpScreen extends ConsumerWidget {
               Button(size,"Sign up",Colors.white,AppConfig.primaryColor,()async{
                 print('sign up start');
                 if( authprovider.SignUpForm.valid){
-                 await authprovider.signUp( authprovider.SignUpForm.control('email').value,authprovider.SignUpForm.control('password').value,context);
+                 await authprovider.signUp( authprovider.SignUpForm.control('email').value,authprovider.SignUpForm.control('password').value,context,authprovider.SignUpForm.control('name').value);
                   print('sign up end');
                 }
                 else{
