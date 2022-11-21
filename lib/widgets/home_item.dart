@@ -7,6 +7,7 @@ import '../screens/navBar/home_page/home_page.dart';
 
 Widget homeItem(wsize,hsize,item){
 return Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
   children: [
     Container(
         margin:  EdgeInsets.all(wsize*0.02),
@@ -25,36 +26,22 @@ return Column(
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(12)),
           child:CachedNetworkImage(
-            imageUrl: item['img'],
+            imageUrl: item.img,
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 Center(child: CircularProgressIndicator(value: downloadProgress.progress)),
             errorWidget: (context, url, error) => const Icon(Icons.error,color: Colors.black),
           ),
         )
     ),
-    // Container(
-    //   margin:  EdgeInsets.all(wsize*0.02),
-    //   width: wsize/ 2.5,
-    //   height: hsize / 5,
-    //   decoration: BoxDecoration(
-    //       borderRadius: BorderRadius.circular(20),
-    //
-    //      ),
-    //   child:ClipRRect(
-    //     borderRadius: const BorderRadius.all(Radius.circular(12)),
-    //     child:CachedNetworkImage(
-    //             imageUrl: item['img'],
-    //             progressIndicatorBuilder: (context, url, downloadProgress) =>
-    //                 Center(child: CircularProgressIndicator(value: downloadProgress.progress)),
-    //             errorWidget: (context, url, error) => const Icon(Icons.error,color: Colors.black),
-    //           ),
-    //   )
-    // ),
-    SizedBox(
-      width: wsize / 3,
-      child: Text(
-        item['title'],
-        style:const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+
+    Padding(
+      padding:  EdgeInsets.only(left:wsize*0.02 ),
+      child: SizedBox(
+        width: wsize / 3,
+        child: Text(
+          item.title,
+          style:const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+        ),
       ),
     )
   ],

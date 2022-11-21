@@ -29,6 +29,8 @@
 
 // ignore_for_file: prefer_const_constructors
 
+import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,7 +39,9 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
-import 'package:restaurent_app/services/toast_service.dart';
+import 'package:restaurent_app/provider/nav_bar_provider.dart';
+import 'package:restaurent_app/screens/navBar/nav_bar.dart';
+import 'package:restaurent_app/widgets/toast_service.dart';
 
 import '../../../config/config.dart';
 import '../../../provider/category_provider.dart';
@@ -75,7 +79,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
   Widget build(BuildContext context) {
     final provider = ref.watch(categoryProvider);
     final cartprovider = ref.watch(cartProvider);
-
+    final navprovider = ref.watch(NavBarProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppConfig.secmainColor,
@@ -96,48 +100,60 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
         // ),
         body: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10.0)),
+                          width: 40.0,
+                          height: 40.0,
+                          child: const Icon(
+                            Icons.arrow_back_ios_new_outlined,
+                            color: Colors.grey,
+                          )),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 15.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        navprovider.changeindex(2);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => NavBar()),
+                        );
+                      },
+                      child: Container(
                         decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10.0)),
                         width: 40.0,
                         height: 40.0,
-                        child: const Icon(
-                          Icons.arrow_back_ios_new_outlined,
-                          color: Colors.grey,
-                        )),
+                        child: Badge(
+                          badgeContent:
+                              Text(cartprovider.badgevalue.toString()),
+                          child: const Icon(
+                            Icons.shopping_cart,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      // Navigator.pop(context);
-                    },
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10.0)),
-                        width: 40.0,
-                        height: 40.0,
-                        child: const Icon(
-                          Icons.shopping_cart,
-                          color: Colors.grey,
-                        )),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -150,9 +166,20 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.35,
                 child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
-                    child:
-                        Image.network(widget.item['img'], fit: BoxFit.cover)),
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.item['img'],
+                    fit: BoxFit.cover,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress,
+                                color: AppConfig.primaryColor),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error, color: Colors.black),
+                  ),
+                ),
+                // Image.network(, fit: BoxFit.cover)),
               ),
             ),
             Expanded(
@@ -185,7 +212,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                               Text(
                                 widget.item['title'],
                                 style: GoogleFonts.poppins(
-                                  fontSize:15.0 ,
+                                  fontSize: 15.0,
                                   color: Colors.black87,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -391,7 +418,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                     : InkWell(
                         onTap: () {
                           print('cart clicked');
-                          cartprovider.addToCart(widget.item, provider.quantity, widget.catname,context);
+                          cartprovider.addToCart(widget.item, provider.quantity,
+                              widget.catname, context);
                           print('cart done');
                         },
                         child: cartprovider.cartloading == true

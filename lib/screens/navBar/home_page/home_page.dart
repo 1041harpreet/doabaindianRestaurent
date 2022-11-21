@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/config/const.dart';
+import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
 import 'package:restaurent_app/widgets/home_item.dart';
 import 'package:restaurent_app/screens/navBar/order_screen/order_page.dart';
@@ -15,14 +16,22 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../provider/category_provider.dart';
+import '../../../provider/home_provider.dart';
+import '../../../services/notification_service/notification.dart';
 import '../../../widgets/shimmer.dart';
 import 'categories/category_items.dart';
 import 'categories/all_category.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
-class HomePage extends ConsumerWidget {
-  HomePage({Key? key}) : super(key: key);
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
+  @override
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  @override
   var d;
   TextEditingController searchController = TextEditingController();
   final options = const LiveOptions(
@@ -45,9 +54,21 @@ class HomePage extends ConsumerWidget {
     reAnimateOnVisibility: false,
   );
 
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.watch(categoryProvider).getCategory();
+    });
+    super.initState();
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final categoryprovider = ref.watch(categoryProvider);
     final cartprovider = ref.watch(cartProvider);
+    final authprovider = ref.watch(authProvider);
+
+    final homeprovider = ref.watch(homeProvider);
+
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     List carsoullist = ["assets/images/image.png"];
@@ -59,37 +80,38 @@ class HomePage extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            header(wsize, hsize),
+            header(wsize, hsize, homeprovider, categoryprovider, authprovider,
+                context),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 3.0, horizontal: 16.0),
-              child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                height: 50.0,
-                child: TextFormField(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 3.0, horizontal: 16.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  height: 50.0,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Search any food",
 
-                  decoration: InputDecoration(
-                    hintText: "Search any food",
-
-                    hintStyle: TextStyle(color: AppConfig.primaryColor),
-                    prefixIcon: Icon(Icons.search,color: AppConfig.primaryColor),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: AppConfig.primaryColor),
+                      hintStyle: TextStyle(color: AppConfig.primaryColor),
+                      prefixIcon:
+                          Icon(Icons.search, color: AppConfig.primaryColor),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(color: AppConfig.primaryColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(color: AppConfig.primaryColor),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(color: AppConfig.primaryColor),
+                      ),
+                      // prefixIcon:
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: AppConfig.primaryColor),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: AppConfig.primaryColor),
-                    ),
-                    // prefixIcon:
                   ),
-                ),
-              )
-            ),
+                )),
             CarouselSlider(
                 options: CarouselOptions(
                   height: hsize * 0.25,
@@ -161,83 +183,130 @@ class HomePage extends ConsumerWidget {
             Padding(
               padding: EdgeInsets.all(wsize * .03),
               child: SizedBox(
-                height: hsize * .3,
-                width: MediaQuery.of(context).size.width * 1,
-                child: StreamBuilder<dynamic>(
-                    stream: FirebaseFirestore.instance
-                        .collection('category')
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (!snapshot.hasData) {
-                        return ListView.builder(
+                  height: hsize * .3,
+                  width: MediaQuery.of(context).size.width * 1,
+                  child: categoryprovider.loading
+                      ? ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: 8,
                           itemBuilder: (context, index) {
                             return homePageShimmer(context, wsize, hsize);
                           },
-                        );
-                        // return Center(
-                        //   child: Column(
-                        //     mainAxisSize: MainAxisSize.min,
-                        //     children: [
-                        //       SizedBox(
-                        //           width: 24,
-                        //           height: 24,
-                        //           child: CircularProgressIndicator(
-                        //             strokeWidth: 2,
-                        //             color: AppConfig.primaryColor,
-                        //           )),
-                        //       const SizedBox(height: 16),
-                        //       Text("Loading...",
-                        //           style:
-                        //               TextStyle(color: AppConfig.primaryColor)),
-                        //     ],
-                        //   ),
-                        // );
-                      }
-                      if (snapshot.hasError) {
-                        return Text(
-                          'error',
-                          style: AppConfig.blackTitle,
-                        );
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: LiveList.options(
-                            options: options,
-                            itemCount: snapshot.data.docs.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index, animation) {
-                              DocumentSnapshot item = snapshot.data.docs[index];
-                              print(item);
-                              return FadeTransition(
-                                opacity: Tween<double>(
-                                  begin: 0,
-                                  end: 1,
-                                ).animate(animation),
-                                // And slide transition
-                                child: SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(0, -0.1),
-                                      end: Offset.zero,
-                                    ).animate(animation),
-                                    // Paste you Widget
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CategoryItems(
-                                                        name: item['title'])));
-                                      },
-                                      child: homeItem(wsize, hsize, item),
-                                    )),
-                              );
-                            }),
-                      );
-                    }),
-              ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: LiveList.options(
+                              options: options,
+                              itemCount: categoryprovider.category.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index, animation) {
+                                // DocumentSnapshot item = snapshot.data.docs[index];
+                                // print(item);
+                                return FadeTransition(
+                                  opacity: Tween<double>(
+                                    begin: 0,
+                                    end: 1,
+                                  ).animate(animation),
+                                  // And slide transition
+                                  child: SlideTransition(
+                                      position: Tween<Offset>(
+                                        begin: const Offset(0, -0.1),
+                                        end: Offset.zero,
+                                      ).animate(animation),
+                                      // Paste you Widget
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CategoryItems(
+                                                          name: categoryprovider
+                                                              .category[index]
+                                                              .title)));
+                                        },
+                                        child: homeItem(wsize, hsize,
+                                            categoryprovider.category[index]),
+                                      )),
+                                );
+                              }),
+                        )
+
+                  // StreamBuilder<dynamic>(
+                  //           stream: FirebaseFirestore.instance
+                  //               .collection('category')
+                  //               .snapshots(),
+                  //           builder: (context, AsyncSnapshot snapshot) {
+                  //             if (!snapshot.hasData) {
+                  //               return ListView.builder(
+                  //                 scrollDirection: Axis.horizontal,
+                  //                 itemCount: 8,
+                  //                 itemBuilder: (context, index) {
+                  //                   return homePageShimmer(context, wsize, hsize);
+                  //                 },
+                  //               );
+                  //               // return Center(
+                  //               //   child: Column(
+                  //               //     mainAxisSize: MainAxisSize.min,
+                  //               //     children: [
+                  //               //       SizedBox(
+                  //               //           width: 24,
+                  //               //           height: 24,
+                  //               //           child: CircularProgressIndicator(
+                  //               //             strokeWidth: 2,
+                  //               //             color: AppConfig.primaryColor,
+                  //               //           )),
+                  //               //       const SizedBox(height: 16),
+                  //               //       Text("Loading...",
+                  //               //           style:
+                  //               //               TextStyle(color: AppConfig.primaryColor)),
+                  //               //     ],
+                  //               //   ),
+                  //               // );
+                  //             }
+                  //             if (snapshot.hasError) {
+                  //               return Text(
+                  //                 'error',
+                  //                 style: AppConfig.blackTitle,
+                  //               );
+                  //             }
+                  //             return Padding(
+                  //               padding: const EdgeInsets.only(top: 5.0),
+                  //               child: LiveList.options(
+                  //                   options: options,
+                  //                   itemCount: snapshot.data.docs.length,
+                  //                   scrollDirection: Axis.horizontal,
+                  //                   itemBuilder: (context, index, animation) {
+                  //                     DocumentSnapshot item = snapshot.data.docs[index];
+                  //                     print(item);
+                  //                     return FadeTransition(
+                  //                       opacity: Tween<double>(
+                  //                         begin: 0,
+                  //                         end: 1,
+                  //                       ).animate(animation),
+                  //                       // And slide transition
+                  //                       child: SlideTransition(
+                  //                           position: Tween<Offset>(
+                  //                             begin: const Offset(0, -0.1),
+                  //                             end: Offset.zero,
+                  //                           ).animate(animation),
+                  //                           // Paste you Widget
+                  //                           child: GestureDetector(
+                  //                             onTap: () {
+                  //                               Navigator.push(
+                  //                                   context,
+                  //                                   MaterialPageRoute(
+                  //                                       builder: (context) =>
+                  //                                           CategoryItems(
+                  //                                               name: item['title'])));
+                  //                             },
+                  //                             child: homeItem(wsize, hsize, item),
+                  //                           )),
+                  //                     );
+                  //                   }),
+                  //             );
+                  //           }),
+                  ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,7 +322,8 @@ class HomePage extends ConsumerWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    // cartprovider.Total();
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -262,7 +332,6 @@ class HomePage extends ConsumerWidget {
                           ),
                         ));
                     print('pressed more');
-                    // print(Const();
                   },
                   child: Padding(
                     padding:
@@ -276,76 +345,130 @@ class HomePage extends ConsumerWidget {
             Padding(
               padding: EdgeInsets.all(wsize * .03),
               child: SizedBox(
-                height: hsize * .3,
-                width: MediaQuery.of(context).size.width * 1,
-                child: StreamBuilder<dynamic>(
-                    stream: FirebaseFirestore.instance
-                        .collection('category')
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: AppConfig.primaryColor,
-                                  )),
-                              const SizedBox(height: 16),
-                              Text("Loading...",
-                                  style:
-                                      TextStyle(color: AppConfig.primaryColor)),
-                            ],
-                          ),
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return Text(
-                          'error',
-                          style: AppConfig.blackTitle,
-                        );
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: LiveList.options(
-                            options: options,
-                            itemCount: snapshot.data.docs.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index, animation) {
-                              DocumentSnapshot item = snapshot.data.docs[index];
-                              print(item);
-                              return FadeTransition(
-                                opacity: Tween<double>(
-                                  begin: 0,
-                                  end: 1,
-                                ).animate(animation),
-                                // And slide transition
-                                child: SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(0, -0.1),
-                                      end: Offset.zero,
-                                    ).animate(animation),
-                                    // Paste you Widget
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CategoryItems(
-                                                        name: item['title'])));
-                                      },
-                                      child: homeItem(wsize, hsize, item),
-                                    )),
-                              );
-                            }),
-                      );
-                    }),
-              ),
+                  height: hsize * .3,
+                  width: MediaQuery.of(context).size.width * 1,
+                  child: categoryprovider.loading
+                      ? ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 8,
+                          itemBuilder: (context, index) {
+                            return homePageShimmer(context, wsize, hsize);
+                          },
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: LiveList.options(
+                              options: options,
+                              itemCount: categoryprovider.category.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index, animation) {
+                                // DocumentSnapshot item = snapshot.data.docs[index];
+                                // print(item);
+                                return FadeTransition(
+                                  opacity: Tween<double>(
+                                    begin: 0,
+                                    end: 1,
+                                  ).animate(animation),
+                                  // And slide transition
+                                  child: SlideTransition(
+                                      position: Tween<Offset>(
+                                        begin: const Offset(0, -0.1),
+                                        end: Offset.zero,
+                                      ).animate(animation),
+                                      // Paste you Widget
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CategoryItems(
+                                                          name: categoryprovider
+                                                              .category[index]
+                                                              .title)));
+                                        },
+                                        child: homeItem(wsize, hsize,
+                                            categoryprovider.category[index]),
+                                      )),
+                                );
+                              }),
+                        )
+
+                  // StreamBuilder<dynamic>(
+                  //           stream: FirebaseFirestore.instance
+                  //               .collection('category')
+                  //               .snapshots(),
+                  //           builder: (context, AsyncSnapshot snapshot) {
+                  //             if (!snapshot.hasData) {
+                  //               return ListView.builder(
+                  //                 scrollDirection: Axis.horizontal,
+                  //                 itemCount: 8,
+                  //                 itemBuilder: (context, index) {
+                  //                   return homePageShimmer(context, wsize, hsize);
+                  //                 },
+                  //               );
+                  //               // return Center(
+                  //               //   child: Column(
+                  //               //     mainAxisSize: MainAxisSize.min,
+                  //               //     children: [
+                  //               //       SizedBox(
+                  //               //           width: 24,
+                  //               //           height: 24,
+                  //               //           child: CircularProgressIndicator(
+                  //               //             strokeWidth: 2,
+                  //               //             color: AppConfig.primaryColor,
+                  //               //           )),
+                  //               //       const SizedBox(height: 16),
+                  //               //       Text("Loading...",
+                  //               //           style:
+                  //               //               TextStyle(color: AppConfig.primaryColor)),
+                  //               //     ],
+                  //               //   ),
+                  //               // );
+                  //             }
+                  //             if (snapshot.hasError) {
+                  //               return Text(
+                  //                 'error',
+                  //                 style: AppConfig.blackTitle,
+                  //               );
+                  //             }
+                  //             return Padding(
+                  //               padding: const EdgeInsets.only(top: 5.0),
+                  //               child: LiveList.options(
+                  //                   options: options,
+                  //                   itemCount: snapshot.data.docs.length,
+                  //                   scrollDirection: Axis.horizontal,
+                  //                   itemBuilder: (context, index, animation) {
+                  //                     DocumentSnapshot item = snapshot.data.docs[index];
+                  //                     print(item);
+                  //                     return FadeTransition(
+                  //                       opacity: Tween<double>(
+                  //                         begin: 0,
+                  //                         end: 1,
+                  //                       ).animate(animation),
+                  //                       // And slide transition
+                  //                       child: SlideTransition(
+                  //                           position: Tween<Offset>(
+                  //                             begin: const Offset(0, -0.1),
+                  //                             end: Offset.zero,
+                  //                           ).animate(animation),
+                  //                           // Paste you Widget
+                  //                           child: GestureDetector(
+                  //                             onTap: () {
+                  //                               Navigator.push(
+                  //                                   context,
+                  //                                   MaterialPageRoute(
+                  //                                       builder: (context) =>
+                  //                                           CategoryItems(
+                  //                                               name: item['title'])));
+                  //                             },
+                  //                             child: homeItem(wsize, hsize, item),
+                  //                           )),
+                  //                     );
+                  //                   }),
+                  //             );
+                  //           }),
+                  ),
             ),
             const Center(
                 child: Text(
@@ -389,7 +512,8 @@ Widget buildImage(hsize, wsize, img) {
       ));
 }
 
-Widget header(wsize, hsize) {
+Widget header(
+    wsize, hsize, homeprovider, categoryprovider, authprovider, context) {
   return Padding(
     padding: EdgeInsets.only(
         top: wsize * 0.03, right: wsize * 0.03, left: wsize * 0.03),
@@ -440,24 +564,7 @@ Widget header(wsize, hsize) {
                       width: wsize * .4,
                       child: GestureDetector(
                         onTap: () async {
-                          const query = '40.15902603552938, -83.08269070574414';
-                          var latitude='40.15902603552938';
-                          var longitude='-83.08269070574414';
-                          final uri = Uri(
-                              scheme: 'geo',
-                              host: '0,0',
-                              queryParameters: {'q': query});
-                          String googleUrl =
-                              'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude';
-                          try {
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            } else {
-                              print('cant launch');
-                            }
-                          } catch (e) {
-                            print(e.toString());
-                          }
+                          homeprovider.openMap();
                         },
                         child: AutoSizeText(
                           "230 W Olentangy St, Powell, OH 43065, USA",
@@ -485,7 +592,10 @@ Widget header(wsize, hsize) {
               borderRadius: BorderRadius.circular(8.0),
               child: GestureDetector(
                 onTap: () async {
-                  // print(re);
+                  NotificationController.createNewNotification(context);
+                  // await authprovider.changePassword(
+                  //     '1234567', '12345678', context);
+
                 },
                 child: Icon(
                   Icons.notifications_rounded,
