@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'loader_screen.dart';
 
@@ -15,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-        Duration(seconds: 1),
+        Duration(milliseconds: 250),
             () => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -25,9 +26,36 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SvgPicture.asset('assets/images/bm_logo.svg'),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(child:richText(context) ),
     );
   }
 }
+Widget richText( context) {
+  return Text.rich(
+    TextSpan(
+      style: GoogleFonts.inter(
+        fontSize: MediaQuery.of(context).size.width*0.05,
+        color: const Color(0xFF21899C),
+        letterSpacing: 2.000000061035156,
+      ),
+      children: const [
+        TextSpan(
+          text: 'DOABA INDIAN ',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        TextSpan(
+          text: 'RESTAURENT',
+          style: TextStyle(
+            color: Color(0xFFFE9879),
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+

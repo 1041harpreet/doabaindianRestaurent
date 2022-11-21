@@ -52,7 +52,7 @@ import 'package:restaurent_app/screens/auth/login_screen.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
-import '../../services/toast_service.dart';
+import '../../widgets/toast_service.dart';
 
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -67,6 +67,7 @@ class SignUpScreen extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
+
             //to give space from top
             const Expanded(
               flex: 1,
@@ -140,26 +141,23 @@ class SignUpScreen extends ConsumerWidget {
               textfieldbtn(size, 'Email', 'email',{
                 ValidationMessage.required: (error) => "The email must not be empty",
                 ValidationMessage.email: (error) => 'Please enter a valid email',
-
               }),
-
               SizedBox(
                 height: size.height * 0.02,
               ),
               textfieldbtn(size, 'Password', 'password',{
                 ValidationMessage.required: (error) => "The password must not be empty",
-
               }),
-
               SizedBox(
                 height: size.height * 0.02,
               ),
               //sign in button
-              Button(size,"Sign up",Colors.white,AppConfig.primaryColor,(){
-                print('sign in');
+              authprovider.signupload==true ? loadingButton(size):
+              Button(size,"Sign up",Colors.white,AppConfig.primaryColor,()async{
+                print('sign up start');
                 if( authprovider.SignUpForm.valid){
-                  print('sign in');
-                  showSuccessToast(message: 'register successfull',context: context);
+                 await authprovider.signUp( authprovider.SignUpForm.control('email').value,authprovider.SignUpForm.control('password').value,context);
+                  print('sign up end');
                 }
                 else{
                   print('invalid');
@@ -319,4 +317,22 @@ class SignUpScreen extends ConsumerWidget {
       ),
     );
   }
+}
+Widget loadingButton(Size size) {
+  return Container(
+      alignment: Alignment.center,
+      height: size.height * 0.06,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: AppConfig.primaryColor,
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF4C2E84).withOpacity(0.2),
+            offset: const Offset(0, 15.0),
+            blurRadius: 60.0,
+          ),
+        ],
+      ),
+      child: const Center(child: CircularProgressIndicator(color:Colors.white,))
+  );
 }
