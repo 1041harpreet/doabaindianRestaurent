@@ -8,7 +8,9 @@ import 'package:iconify_flutter/icons/ant_design.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
+import 'package:restaurent_app/screens/navBar/cart_Page/checkout_page.dart';
 import '../../../provider/nav_bar_provider.dart';
 import '../../../widgets/cart_item.dart';
 import '../../../widgets/category_item.dart';
@@ -35,6 +37,8 @@ class _AddToCartState extends ConsumerState<AddToCart> {
   @override
   Widget build(BuildContext context) {
     final cartprovider = ref.watch(cartProvider);
+
+    final authprovider = ref.watch(authProvider);
     final navprovider = ref.watch(NavBarProvider);
 
     print(cartprovider.subtotal.toString());
@@ -80,8 +84,8 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                   StreamBuilder<dynamic>(
                     stream: FirebaseFirestore.instance
                         .collection('cart')
-                        .doc('6283578905')
-                        .collection('6283578905')
+                        .doc(cartprovider.email)
+                        .collection(cartprovider.email)
                         .snapshots(),
                     builder: (context, AsyncSnapshot snapshot) {
                       // cartprovider.changeBadge(snapshot.data.docs.length);
@@ -112,14 +116,9 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                         );
                       }
                       if (snapshot.data.docs.length == 0) {
-                        // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                        //   cartprovider.changeBadge(0);
-                        // });
                         return noItemWidget();
                       }
-                      // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                      //   cartprovider.changeBadge(snapshot.data.docs.length);
-                      // });
+
                       return ListView.builder(
                         itemCount: snapshot.data.docs.length,
                         itemBuilder: (context, index) {
@@ -221,7 +220,13 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                                                 AppConfig.primaryColor),
                                         onPressed: () async {
                                           print('checkout');
-                                          cartprovider.checkout();
+
+                                          cartprovider.checkoutForm.control('fullname').patchValue(authprovider.username);
+                                          cartprovider.checkoutForm.control('phone').patchValue( authprovider.phone);
+                                          cartprovider.checkoutForm.control('email').patchValue(authprovider.user.email);
+
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutPage(),));
+
                                         },
                                         child: const Text("Checkout")),
                                   ),

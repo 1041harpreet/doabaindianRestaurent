@@ -15,10 +15,12 @@ class LoaderScreen extends ConsumerWidget {
   @override
   Scaffold build(BuildContext context, WidgetRef ref) {
     final authprovider = ref.watch(authProvider);
-    final cartprovider = ref.watch(cartProvider);
+    // final cartprovider = ref.watch(cartProvider);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      print('working');
       if(authprovider.user !=null){
+        authprovider.getUserInfo();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => const NavBar(),
@@ -31,36 +33,6 @@ class LoaderScreen extends ConsumerWidget {
             ),
                 (route) => false);
       }
-      // if (provider.loaded) {
-      //   if (provider.token != null) {
-      //     print('logged in');
-      //     if (init == false) {
-      //       init = true;
-      //       await screenServiceProvider.getUserInfo();
-      //       print(screenServiceProvider.userData[0].category);
-      //       if (screenServiceProvider.userData[0].category == "Student" ) {
-      //         Navigator.of(context).pushAndRemoveUntil(
-      //             MaterialPageRoute(
-      //               builder: (context) => const NavBar(),
-      //             ),
-      //                 (route) => false);
-      //       } else {
-      //         Navigator.of(context).pushAndRemoveUntil(
-      //             MaterialPageRoute(
-      //               builder: (context) => NavBar(),
-      //             ),
-      //                 (route) => false);
-      //       }
-      //     }
-      //   } else {
-      //     print('login screen');
-      //     Navigator.of(context).pushAndRemoveUntil(
-      //         MaterialPageRoute(
-      //           builder: (context) => LoginScreen(),
-      //         ),
-      //             (route) => false);
-      //   }
-      // }
     });
 
     return Scaffold(

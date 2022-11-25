@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent_app/screens/auth/forget_password.dart';
 import 'package:restaurent_app/screens/auth/sign_up_screen.dart';
 import 'package:restaurent_app/screens/navBar/nav_bar.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
@@ -108,7 +109,8 @@ class LoginScreen extends ConsumerWidget {
                   GestureDetector(
                     onTap: () {
                       print('click');
-                      authprovider.resetPassword('1041harpreet@gmail.com');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPasswordScreen(),));
+                      // authprovider.resetPassword('1041harpreet@gmail.com');
                       // authprovider.updateEmail('1044harpreet@gmail.com');
 
                     },
@@ -132,6 +134,7 @@ class LoginScreen extends ConsumerWidget {
               Button(size,"Sign in",Colors.white,AppConfig.primaryColor,(){
                 if( authprovider.loginForm.valid){
                   authprovider.signIn(authprovider.loginForm.control('email').value,authprovider.loginForm.control('password').value,context);
+                  authprovider.getUserInfo();
                 print('sign in');
                 }
                 else{

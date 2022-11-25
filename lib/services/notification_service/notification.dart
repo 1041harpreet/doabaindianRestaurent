@@ -144,6 +144,8 @@ class NotificationController extends ChangeNotifier {
   NotificationController._internal();
 
   factory NotificationController() {
+    print('gettingbcounter');
+    print(AwesomeNotifications().getGlobalBadgeCounter());
     return _instance;
   }
 
@@ -151,8 +153,6 @@ class NotificationController extends ChangeNotifier {
   String _firebaseToken = '';
   String get firebaseToken => _firebaseToken;
 
-  String _nativeToken = '';
-  String get nativeToken => _nativeToken;
 
   ReceivedAction? initialAction;
 
@@ -209,9 +209,7 @@ class NotificationController extends ChangeNotifier {
   //   REMOTE NOTIFICATION EVENTS
   /// Use this method to detect when a new fcm token is received
   static Future<void> myFcmTokenHandle(String token) async {
-
     debugPrint('Firebase Token:"$token"');
-
     _instance._firebaseToken = token;
     _instance.notifyListeners();
   }
@@ -298,7 +296,7 @@ class NotificationController extends ChangeNotifier {
             notificationLayout: NotificationLayout.BigPicture,
             payload: {'notificationId': '1234567890'}),
         actionButtons: [
-          NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
+          NotificationActionButton(key: 'REDIRECT', label: 'Redirect',),
           NotificationActionButton(
               key: 'REPLY',
               label: 'Reply Message',
@@ -324,6 +322,7 @@ class NotificationController extends ChangeNotifier {
       print('fcm available');
       try {
         return await AwesomeNotificationsFcm().requestFirebaseAppToken();
+
       } catch (exception) {
         debugPrint('$exception');
       }
