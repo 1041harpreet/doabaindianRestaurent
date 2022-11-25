@@ -270,7 +270,7 @@ class CartService extends ChangeNotifier {
     }
   }
 
-  sendMail() async {
+  userMail(email,user) async {
     print('sending');
     String username = '1041harpreet@gmail.com';
     String password = 'ualpmmclbwwazchx';
@@ -280,17 +280,19 @@ class CartService extends ChangeNotifier {
     //     username: username, password: password, port: 587);
     final message = Message()
       ..from = Address(username)
-      ..recipients.add('12001033harpreeta2@gmail.com')
-      // ..ccRecipients.addAll(['1041harpreet@gmail.com'])
+      ..recipients.add(email)
+      // ..ccRecipients.addAll([email])
       // ..bccRecipients.add(const Address('bccAddress@example.com'))
-      ..subject = 'order placed'
+      ..subject = 'Order placed $user'
       ..text = 'This is the plain text.\nThis is line 2 of the text part.'
-      ..html = "<h1>harpreet</h1>\n<p>Hey! Here's some HTML content</p>";
+      ..html = "<h1>$user</h1>\n"
+          "<p>Your order payment of ${total.toStringAsFixed(2)} is successfully done</p>\n"
+         ;
     try {
       final sendReport = await send(message, smtpServer);
       print('Message sent: $sendReport');
     } on MailerException catch (e) {
-      print('Message not sent.' + e.message);
+      print('Message not sent.${e.message}');
       for (var p in e.problems) {
         print('Problem: ${p.code}: ${p.msg}');
       }
