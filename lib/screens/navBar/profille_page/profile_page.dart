@@ -7,37 +7,37 @@ import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/screens/navBar/cart_Page/cart_page.dart';
 
 import '../../../provider/nav_bar_provider.dart';
+import 'my_profile.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
-    final authprovider=ref.watch(authProvider);
-    final navprovider=ref.watch(NavBarProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authprovider = ref.watch(authProvider);
+    final navprovider = ref.watch(NavBarProvider);
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     return SafeArea(
         child: WillPopScope(
-          onWillPop: () async {
-            navprovider.changeindex(0);
-            return false;
-          },
-          child: Scaffold(
-      backgroundColor: AppConfig.secmainColor,
-      body: SingleChildScrollView(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start, children: [
+      onWillPop: () async {
+        navprovider.changeindex(0);
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: AppConfig.secmainColor,
+        body: SingleChildScrollView(
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             SizedBox(height: hsize * 0.15, child: orderHeader(wsize, hsize)),
-            optionListView(authprovider,context)
+            optionListView(authprovider, context)
           ]),
+        ),
       ),
-    ),
-        ));
+    ));
   }
 }
 
-Widget optionListView(authprovider,context) {
+Widget optionListView(authprovider, context) {
   return Container(
     child: ListView(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
@@ -46,9 +46,18 @@ Widget optionListView(authprovider,context) {
       children: [
         _listItem(
             onClick: () {
-              authprovider.updateEmail('1044harpreet@gmail.com');
+              authprovider.updateProfile.patchValue({
+                "username": authprovider.username,
+                "email": authprovider.user.email,
+                "phone": authprovider.phone,
+              });
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyProfile(),
+                  ));
             },
-            text: 'Your Orders',
+            text: 'My Profile',
             icon: const Icon(Icons.ballot_outlined),
             showArrow: true),
         _separator(),
@@ -78,7 +87,7 @@ Widget optionListView(authprovider,context) {
         _separator(),
         _listItem(text: 'Rate App', icon: const Icon(Icons.star_border)),
         _separator(),
-        logoutbutton(  authprovider,context),
+        logoutbutton(authprovider, context),
         // _listItem(
         //     onClick: () async {
         //       // Navigator.pushAndRemoveUntil(
@@ -118,26 +127,25 @@ Widget _listItem({icon, text, onClick, showArrow = true}) {
             size: 15.0,
           )
         : const SizedBox(),
-    onTap: onClick ?? () {
-    },
+    onTap: onClick ?? () {},
   );
 }
-Widget logoutbutton( authprovider,context) {
+
+Widget logoutbutton(authprovider, context) {
   return ListTile(
-    leading:const Icon(Icons.logout),
+    leading: const Icon(Icons.logout),
     iconColor: AppConfig.blackColor,
     title: Text(
       'LogOut',
       style: AppConfig.blackTitle,
     ),
-    trailing:
-        Icon(
+    trailing: Icon(
       Icons.arrow_forward_ios,
       color: AppConfig.blackColor,
       size: 15.0,
     ),
-    onTap: ()async {
-     logoutdialogBox(context, authprovider);
+    onTap: () async {
+      logoutdialogBox(context, authprovider);
     },
   );
 }
@@ -149,16 +157,15 @@ Widget orderHeader(wsize, hsize) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-         Text(
+        Text(
           "Doaba Indian Restaurant",
-          style: TextStyle(fontSize: hsize*0.035, color: Colors.black),
+          style: TextStyle(fontSize: hsize * 0.035, color: Colors.black),
         ),
         SizedBox(
           height: hsize * 0.01,
         ),
-
         Padding(
-          padding:  EdgeInsets.symmetric(horizontal: wsize*0.04),
+          padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
           child: Row(
             children: [
               const Icon(
@@ -173,7 +180,7 @@ Widget orderHeader(wsize, hsize) {
           ),
         ),
         Padding(
-          padding:  EdgeInsets.symmetric(horizontal: wsize*0.04),
+          padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
           child: Row(
             children: [
               const Icon(
@@ -191,8 +198,9 @@ Widget orderHeader(wsize, hsize) {
     ),
   );
 }
-logoutdialogBox(context,authprovider){
-  return   showDialog(
+
+logoutdialogBox(context, authprovider) {
+  return showDialog(
     context: context,
     builder: (context) => Theme(
       data: ThemeData(backgroundColor: Colors.white),

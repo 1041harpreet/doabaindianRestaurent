@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,13 +7,46 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent_app/model/order_item_model.dart';
+import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // import 'package:mailer/mailer.dart';
 // import 'package:mailer/smtp_server.dart';
 class CartService extends ChangeNotifier {
+  String email;
+  CartService(this.email);
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FormGroup checkoutForm = FormGroup({
+    "fullname": FormControl(
+        validators: [Validators.required]),
+    'address': FormControl(
+        validators: [
+          Validators.required,
+        ]),
+    'company': FormControl(),
+    'additional': FormControl(),
+    'email': FormControl(
+        validators: [
+          Validators.required,
+          Validators.email
+        ]),
+    'phone': FormControl<int>(
+        validators: [
+          Validators.required,
+        ]),
+    'town': FormControl(),
+    'state': FormControl(
+        validators: [
+        ]),
+    'zipcode': FormControl(
+        validators: [
+          Validators.required,
+        ]),
+  });
 
   //set total ,subtotal, status initial
   //set loading in cart screen
@@ -35,8 +69,8 @@ class CartService extends ChangeNotifier {
   getBadge() async {
     await _firestore
         .collection('cart')
-        .doc('6283578905')
-        .collection('6283578905')
+        .doc(email)
+        .collection(email)
         .get()
         .then((value) {
       print('value is');
@@ -73,8 +107,8 @@ class CartService extends ChangeNotifier {
         await getcountValue(item);
         await _firestore
             .collection('cart')
-            .doc('6283578905')
-            .collection('6283578905')
+            .doc(email)
+            .collection(email)
             .doc(item['title'])
             .update({
           'total': itemTotal + item['price'] * count,
@@ -86,8 +120,8 @@ class CartService extends ChangeNotifier {
         print('item total is $total');
         await _firestore
             .collection('cart')
-            .doc('6283578905')
-            .collection('6283578905')
+            .doc(email)
+            .collection(email)
             .doc(item['title'])
             .set({
           "count": count,
@@ -117,8 +151,8 @@ class CartService extends ChangeNotifier {
   checkFromCart(item) async {
     await _firestore
         .collection('cart')
-        .doc('6283578905')
-        .collection('6283578905')
+        .doc(email)
+        .collection(email)
         .doc(item['title'])
         .get()
         .then((value) async {
@@ -136,8 +170,8 @@ class CartService extends ChangeNotifier {
   getcountValue(item) async {
     await _firestore
         .collection('cart')
-        .doc('6283578905')
-        .collection('6283578905')
+        .doc(email)
+        .collection(email)
         .doc(item['title'])
         .get()
         .then((value) {
@@ -156,8 +190,8 @@ class CartService extends ChangeNotifier {
       await removeToTotal(item, item['count']);
       await _firestore
           .collection('cart')
-          .doc('6283578905')
-          .collection('6283578905')
+          .doc(email)
+          .collection(email)
           .doc(item['title'])
           .delete();
       showSuccessToast(message: "item removed from cart", context: context);
@@ -184,7 +218,7 @@ class CartService extends ChangeNotifier {
     subtotal = subtotal + itemtotal;
     await _firestore
         .collection('cart')
-        .doc('6283578905')
+        .doc(email)
         .update({"subtotal": subtotal, 'total': subtotal + tax});
     await getTotal();
     notifyListeners();
@@ -201,7 +235,7 @@ class CartService extends ChangeNotifier {
       print('before subtotal$subtotal');
       await _firestore
           .collection('cart')
-          .doc('6283578905')
+          .doc(email)
           .update({"subtotal": subtotal, 'total': subtotal + tax});
       await getTotal();
       notifyListeners();
@@ -211,18 +245,27 @@ class CartService extends ChangeNotifier {
   }
 
   //get total bill :
+
   getTotal() async {
     try {
-      await _firestore.collection('cart').doc('6283578905').get().then((value) {
-        var x = value.get('subtotal');
-        subtotal = x.toDouble();
-        var y = value.get('total');
-        total = y.toDouble();
-        notifyListeners();
+      await _firestore.collection('cart').doc(email).get().then((value) {
+        if(value.exists==true){
+          var x = value.get('subtotal');
+          subtotal = x.toDouble();
+          var y = value.get('total');
+          total = y.toDouble();
+          notifyListeners();
+        }else{
+          subtotal=0.0;
+          total=0.0;
+          notifyListeners();
+        }
+
       });
       print('subtotal is $subtotal');
       notifyListeners();
     } catch (e) {
+      print('get total error');
       print(e.toString());
     }
   }
@@ -255,12 +298,32 @@ class CartService extends ChangeNotifier {
   }
 
   checkout() async {
-    sendMail();
+    // sendMail();
+  }
+  List orderItem=[];
+  getorderItem() async {
+    changeloading(true);
+    try{
+      var ref = await _firestore.collection('cart').doc(email).collection(email).get();
+      orderItem=ref.docs.map((e) => OrderItem.fromJson(e.data())).toList();
+      notifyListeners();
+    }
+    catch(e){
+      print(e.toString());
+    }finally{
+      changeloading(false);
+      notifyListeners();
+    }
   }
 }
 
 final cartProvider = ChangeNotifierProvider((ref) {
-  var state = CartService();
+  final authprovider=ref.watch(authProvider);
+  var state = CartService(authprovider.user.email);
+  print(authprovider.user.email);
+  print(authprovider.phone);
+
+
   state.getBadge();
   return state;
 });

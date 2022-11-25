@@ -48,7 +48,7 @@ Widget richText( context) {
           ),
         ),
         TextSpan(
-          text: 'RESTAURENT',
+          text: 'RESTAURANT',
           style: TextStyle(
             color: Color(0xFFFE9879),
             fontWeight: FontWeight.w800,

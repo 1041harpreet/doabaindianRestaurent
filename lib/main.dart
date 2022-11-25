@@ -10,27 +10,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/home_provider.dart';
+import 'package:restaurent_app/screens/auth/loader_screen.dart';
 import 'package:restaurent_app/screens/auth/login_screen.dart';
 import 'package:restaurent_app/screens/auth/splash_screen.dart';
 import 'package:restaurent_app/services/connection_service.dart';
 import 'package:restaurent_app/services/notification_service/notification.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await NotificationController.initializeLocalNotifications(debug: true);
-  // await NotificationController.initializeRemoteNotifications(debug: true);
   await NotificationController.getInitialNotificationAction();
   // NotificationService().init();
   // NotificationService().gettoken();
   runApp(
      ProviderScope(
-        child: MaterialApp(
-            color: AppConfig.primaryColor,
-            theme: ThemeData.dark(),
-            debugShowCheckedModeBanner: false,
-            home: MyApp()),
-
+        child: MyApp(),
     ),
 
   );
@@ -44,8 +40,6 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  // FirebaseMessaging messaging = FirebaseMessaging.instance;
-
   bool hasInterNetConnection = false;
 
   @override
@@ -65,6 +59,7 @@ class _MyAppState extends ConsumerState<MyApp> {
        }
      },);
     });
+
    // NotificationService().request(context);
     super.initState();
   }
@@ -82,11 +77,9 @@ class _MyAppState extends ConsumerState<MyApp> {
       statusBarColor: Colors.black,
       statusBarBrightness: Brightness.dark,
     ));
-    return MaterialApp(
+    return
+      MaterialApp(
       title: "DOABA INDIAN RESTAURANT",
-      useInheritedMediaQuery: true,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home:  SplashScreen(),
