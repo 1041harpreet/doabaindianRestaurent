@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Const {
+  var key="AAAAD0_2908:APA91bGdGFnWuTIGHdukayVhDlcnmAASN2terfMf0SGaT-cmCEPqyWPqPdx2GnWqSDQgaLpduEAgRdZL-s1W8LA9CGXti-CIuF4bizvNwiwEoqGymG3WJVb6a_rjcvyYnONhnIsiVEBv";
   size(context) {
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;

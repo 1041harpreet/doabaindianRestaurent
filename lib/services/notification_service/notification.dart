@@ -129,35 +129,33 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent_app/config/const.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
 
 import '../../main.dart';
 
 class NotificationController extends ChangeNotifier {
-  //   SINGLETON PATTERN
-
 
   static final NotificationController _instance =
   NotificationController._internal();
-
   factory NotificationController() {
-    print('gettingbcounter');
+    print('notification working');
     print(AwesomeNotifications().getGlobalBadgeCounter());
     return _instance;
   }
 
   NotificationController._internal();
-  String _firebaseToken = '';
+  final String _firebaseToken = '';
   String get firebaseToken => _firebaseToken;
 
 
   ReceivedAction? initialAction;
 
   //  INITIALIZATION METHODS
-
   static Future<void> initializeLocalNotifications(
       {required bool debug}) async {
     await AwesomeNotifications().initialize(
@@ -206,13 +204,7 @@ class NotificationController extends ChangeNotifier {
     //     arguments: receivedAction);
   }
 
-  //   REMOTE NOTIFICATION EVENTS
-  /// Use this method to detect when a new fcm token is received
-  static Future<void> myFcmTokenHandle(String token) async {
-    debugPrint('Firebase Token:"$token"');
-    _instance._firebaseToken = token;
-    _instance.notifyListeners();
-  }
+
   //    REQUEST NOTIFICATION PERMISSIONS
   static Future<bool> displayNotificationRationale(context) async {
     bool userAuthorized = false;
@@ -225,21 +217,11 @@ class NotificationController extends ChangeNotifier {
                 style: Theme.of(context).textTheme.titleLarge),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Image.asset(
-                        'assets/animated-bell.gif',
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                    'Allow Awesome Notifications to send you beautiful notifications!'),
+              children: const [
+
+                SizedBox(height: 20),
+                Text(
+                    'Allow Doaba Indian Restaurant to send you notifications!'),
               ],
             ),
             actions: [
@@ -275,53 +257,21 @@ class NotificationController extends ChangeNotifier {
 
   // LOCAL NOTIFICATION CREATION METHODS
 
-  static Future<void> createNewNotification(context) async {
-    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
-
-    if (!isAllowed) {
-      isAllowed = await displayNotificationRationale(context);
-    }
-
-    if (!isAllowed) return;
-
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 1, // -1 is replaced by a random number
-            channelKey: 'doaba channel',
-            title: 'Huston! The eagle has landed!',
-            body:
-            "A small step for a man, but a giant leap to Flutter's community!",
-            bigPicture: 'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
-            largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
-            notificationLayout: NotificationLayout.BigPicture,
-            payload: {'notificationId': '1234567890'}),
-        actionButtons: [
-          NotificationActionButton(key: 'REDIRECT', label: 'Redirect',),
-          NotificationActionButton(
-              key: 'REPLY',
-              label: 'Reply Message',
-              requireInputText: true,
-              actionType: ActionType.SilentAction
-          ),
-          NotificationActionButton(
-              key: 'DISMISS',
-              label: 'Dismiss',
-              actionType: ActionType.DismissAction,
-              isDangerousOption: true)
-        ]);
-  }
 
   static Future<void> resetBadge() async {
     await AwesomeNotifications().resetGlobalBadge();
   }
 
   //  REMOTE TOKEN REQUESTS
-
-  static Future<String> requestFirebaseToken() async {
+  String token='';
+   Future<String> requestFirebaseToken() async {
     if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
       print('fcm available');
       try {
-        return await AwesomeNotificationsFcm().requestFirebaseAppToken();
+        await AwesomeNotificationsFcm().subscribeToTopic('all');
+        token=await AwesomeNotificationsFcm().requestFirebaseAppToken();
+        print('token is '+token);
+        return token;
 
       } catch (exception) {
         debugPrint('$exception');
@@ -331,4 +281,71 @@ class NotificationController extends ChangeNotifier {
     }
     return '';
   }
+  var postUrl = "https://fcm.googleapis.com/fcm/send";
+  Future<void> createNewNotification(title,body,String token) async {
+
+
+    final data ={
+      "to" : token,
+      "mutable_content": true,
+      "priority": "high",
+      "notification": {
+        "badge": 50,
+        "title": title,
+        "body": body
+      },
+      "data" : {
+        "content": {
+          "id": uniqueId(),
+          "badge": 50,
+          "channelKey": "doaba channel",
+          "displayOnForeground": true,
+          "notificationLayout": "BigPicture",
+          "largeIcon": "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
+          "bigPicture": "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
+          "showWhen": true,
+          "autoDismissible": true,
+          "privacy": "Private",
+          "payload": {
+            "secret": "Awesome Notifications Rocks!"
+          }
+        },
+        "actionButtons": [
+          {
+            "key": "DISMISS",
+            "label": "Dismiss",
+            "actionType": "DismissAction",
+            "isDangerousOption": true,
+            "autoDismissible": true
+          }
+        ]
+      }
+    };
+
+    final headers = {
+      'content-type': 'application/json',
+      'Authorization': 'key=${Const().key}'
+    };
+
+    BaseOptions options = BaseOptions(
+      connectTimeout: 10000,
+      receiveTimeout: 5000,
+      headers: headers,
+    );
+
+    try {
+      final response = await Dio(options).post(postUrl, data: data);
+      print(response.data);
+      if (response.statusCode == 200) {
+      } else {
+        print('notification sending failed');
+      }
+    } catch (e) {
+      print('exception $e');
+    }
+  }
+
+}
+int uniqueId() {
+  return DateTime.now().millisecondsSinceEpoch.remainder(100000);
 }

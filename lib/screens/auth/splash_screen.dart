@@ -5,22 +5,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'loader_screen.dart';
-
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(
-        Duration(milliseconds: 250),
+     Timer(
+      const Duration(milliseconds: 250),
             () => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => LoaderScreen(),
+              builder: (context) => const LoaderScreen(),
             )));
   }
 

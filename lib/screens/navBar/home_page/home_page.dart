@@ -1,7 +1,9 @@
 import 'package:auto_animated/auto_animated.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,8 +12,8 @@ import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/config/const.dart';
 import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
+import 'package:restaurent_app/screens/navBar/home_page/notification/main_notiification_page.dart';
 import 'package:restaurent_app/widgets/home_item.dart';
-import 'package:restaurent_app/screens/navBar/order_screen/order_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,6 +21,7 @@ import '../../../provider/category_provider.dart';
 import '../../../provider/home_provider.dart';
 import '../../../services/notification_service/notification.dart';
 import '../../../widgets/shimmer.dart';
+import 'carsoul_full_screen.dart';
 import 'categories/category_items.dart';
 import 'categories/all_category.dart';
 import 'package:maps_launcher/maps_launcher.dart';
@@ -37,17 +40,13 @@ class _HomePageState extends ConsumerState<HomePage> {
   final options = const LiveOptions(
     // Start animation after (default zero)
     delay: Duration(seconds: 0),
-
     // Show each item through (default 250)
-    showItemInterval: Duration(milliseconds: 30),
-
+    showItemInterval: Duration(milliseconds: 5),
     // Animation duration (default 250)
-    showItemDuration: Duration(microseconds: 30),
-
+    showItemDuration: Duration(microseconds: 5),
     // Animations starts at 0.05 visible
     // item fraction in sight (default 0.025)
-    visibleFraction: 0.01,
-
+    visibleFraction: 0.001,
     // Repeat the animation of the appearance
     // when scrolling in the opposite direction (default false)
     // To get the effect as in a showcase for ListView, set true
@@ -57,6 +56,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.watch(categoryProvider).getCategory();
+      ref.watch(categoryProvider).getcarsoulItem();
+
     });
     super.initState();
   }
@@ -66,9 +67,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final categoryprovider = ref.watch(categoryProvider);
     final cartprovider = ref.watch(cartProvider);
     final authprovider = ref.watch(authProvider);
-
     final homeprovider = ref.watch(homeProvider);
-
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     List carsoullist = ["assets/images/image.png"];
@@ -82,36 +81,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           children: [
             header(wsize, hsize, homeprovider, categoryprovider, authprovider,
                 context),
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 3.0, horizontal: 16.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                  height: 50.0,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      hintText: "Search any food",
-
-                      hintStyle: TextStyle(color: AppConfig.primaryColor),
-                      prefixIcon:
-                          Icon(Icons.search, color: AppConfig.primaryColor),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: AppConfig.primaryColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: AppConfig.primaryColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: AppConfig.primaryColor),
-                      ),
-                      // prefixIcon:
-                    ),
-                  ),
-                )),
+            categoryprovider.carload ? carsoulShimmer(context, wsize):
             CarouselSlider(
                 options: CarouselOptions(
                   height: hsize * 0.25,
@@ -127,30 +97,31 @@ class _HomePageState extends ConsumerState<HomePage> {
                   scrollDirection: Axis.horizontal,
                   enlargeStrategy: CenterPageEnlargeStrategy.height,
                 ),
-                items: carsoullist.map((e) {
-                  return Builder(
-                    builder: (context) {
-                      return Container(
+                items: <Widget>[
+                  for (var i = 0; i < categoryprovider.carsoulList.length; i++)
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CarsoulFullScreen(url: categoryprovider.carsoulList[i].img),));
+                      },
+                      child: Container(
                         height: 200.0,
+                        margin: const EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.circular(10.0),
                           image: DecorationImage(
-                            image: AssetImage(e),
-                            fit: BoxFit.fill,
+                            image:
+                            NetworkImage(categoryprovider.carsoulList[i].img),
+                            fit: BoxFit.fitHeight,
                           ),
+                          borderRadius: BorderRadius.circular(32.0),
                         ),
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.all(10.0),
-                      );
-                    },
-                  );
-                }).toList()),
+                      ),
+                    ),
+                ],),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: wsize * .05),
+                  padding: EdgeInsets.only(top: 10.0,left: wsize * .05),
                   child: Text(
                     "Categories",
                     style: TextStyle(
@@ -161,7 +132,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
                 InkWell(
                   onTap: () async {
-                    // cartprovider.Total();
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -215,15 +185,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                                       ).animate(animation),
                                       // Paste you Widget
                                       child: GestureDetector(
-                                        onTap: () {
+                                        onTap: () async{
                                           Navigator.push(
                                               context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CategoryItems(
-                                                          name: categoryprovider
-                                                              .category[index]
-                                                              .title)));
+                                              CupertinoPageRoute(builder: (context) =>  CategoryItems(
+                                              name: categoryprovider
+                                                  .category[index]
+                                                  .title,
+                                                index: index,)));
+                                              // MaterialPageRoute(
+                                              //     builder: (context) =>
+                                              //        ));
                                         },
                                         child: homeItem(wsize, hsize,
                                             categoryprovider.category[index]),
@@ -231,81 +203,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 );
                               }),
                         )
-
-                  // StreamBuilder<dynamic>(
-                  //           stream: FirebaseFirestore.instance
-                  //               .collection('category')
-                  //               .snapshots(),
-                  //           builder: (context, AsyncSnapshot snapshot) {
-                  //             if (!snapshot.hasData) {
-                  //               return ListView.builder(
-                  //                 scrollDirection: Axis.horizontal,
-                  //                 itemCount: 8,
-                  //                 itemBuilder: (context, index) {
-                  //                   return homePageShimmer(context, wsize, hsize);
-                  //                 },
-                  //               );
-                  //               // return Center(
-                  //               //   child: Column(
-                  //               //     mainAxisSize: MainAxisSize.min,
-                  //               //     children: [
-                  //               //       SizedBox(
-                  //               //           width: 24,
-                  //               //           height: 24,
-                  //               //           child: CircularProgressIndicator(
-                  //               //             strokeWidth: 2,
-                  //               //             color: AppConfig.primaryColor,
-                  //               //           )),
-                  //               //       const SizedBox(height: 16),
-                  //               //       Text("Loading...",
-                  //               //           style:
-                  //               //               TextStyle(color: AppConfig.primaryColor)),
-                  //               //     ],
-                  //               //   ),
-                  //               // );
-                  //             }
-                  //             if (snapshot.hasError) {
-                  //               return Text(
-                  //                 'error',
-                  //                 style: AppConfig.blackTitle,
-                  //               );
-                  //             }
-                  //             return Padding(
-                  //               padding: const EdgeInsets.only(top: 5.0),
-                  //               child: LiveList.options(
-                  //                   options: options,
-                  //                   itemCount: snapshot.data.docs.length,
-                  //                   scrollDirection: Axis.horizontal,
-                  //                   itemBuilder: (context, index, animation) {
-                  //                     DocumentSnapshot item = snapshot.data.docs[index];
-                  //                     print(item);
-                  //                     return FadeTransition(
-                  //                       opacity: Tween<double>(
-                  //                         begin: 0,
-                  //                         end: 1,
-                  //                       ).animate(animation),
-                  //                       // And slide transition
-                  //                       child: SlideTransition(
-                  //                           position: Tween<Offset>(
-                  //                             begin: const Offset(0, -0.1),
-                  //                             end: Offset.zero,
-                  //                           ).animate(animation),
-                  //                           // Paste you Widget
-                  //                           child: GestureDetector(
-                  //                             onTap: () {
-                  //                               Navigator.push(
-                  //                                   context,
-                  //                                   MaterialPageRoute(
-                  //                                       builder: (context) =>
-                  //                                           CategoryItems(
-                  //                                               name: item['title'])));
-                  //                             },
-                  //                             child: homeItem(wsize, hsize, item),
-                  //                           )),
-                  //                     );
-                  //                   }),
-                  //             );
-                  //           }),
                   ),
             ),
             Row(
@@ -314,7 +211,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 Padding(
                   padding: EdgeInsets.only(left: wsize * .05),
                   child: Text(
-                    "Best For U",
+                    "Made for You",
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: wsize * .05,
@@ -385,7 +282,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                                       CategoryItems(
                                                           name: categoryprovider
                                                               .category[index]
-                                                              .title)));
+                                                              .title,index: index,)));
                                         },
                                         child: homeItem(wsize, hsize,
                                             categoryprovider.category[index]),
@@ -394,80 +291,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                               }),
                         )
 
-                  // StreamBuilder<dynamic>(
-                  //           stream: FirebaseFirestore.instance
-                  //               .collection('category')
-                  //               .snapshots(),
-                  //           builder: (context, AsyncSnapshot snapshot) {
-                  //             if (!snapshot.hasData) {
-                  //               return ListView.builder(
-                  //                 scrollDirection: Axis.horizontal,
-                  //                 itemCount: 8,
-                  //                 itemBuilder: (context, index) {
-                  //                   return homePageShimmer(context, wsize, hsize);
-                  //                 },
-                  //               );
-                  //               // return Center(
-                  //               //   child: Column(
-                  //               //     mainAxisSize: MainAxisSize.min,
-                  //               //     children: [
-                  //               //       SizedBox(
-                  //               //           width: 24,
-                  //               //           height: 24,
-                  //               //           child: CircularProgressIndicator(
-                  //               //             strokeWidth: 2,
-                  //               //             color: AppConfig.primaryColor,
-                  //               //           )),
-                  //               //       const SizedBox(height: 16),
-                  //               //       Text("Loading...",
-                  //               //           style:
-                  //               //               TextStyle(color: AppConfig.primaryColor)),
-                  //               //     ],
-                  //               //   ),
-                  //               // );
-                  //             }
-                  //             if (snapshot.hasError) {
-                  //               return Text(
-                  //                 'error',
-                  //                 style: AppConfig.blackTitle,
-                  //               );
-                  //             }
-                  //             return Padding(
-                  //               padding: const EdgeInsets.only(top: 5.0),
-                  //               child: LiveList.options(
-                  //                   options: options,
-                  //                   itemCount: snapshot.data.docs.length,
-                  //                   scrollDirection: Axis.horizontal,
-                  //                   itemBuilder: (context, index, animation) {
-                  //                     DocumentSnapshot item = snapshot.data.docs[index];
-                  //                     print(item);
-                  //                     return FadeTransition(
-                  //                       opacity: Tween<double>(
-                  //                         begin: 0,
-                  //                         end: 1,
-                  //                       ).animate(animation),
-                  //                       // And slide transition
-                  //                       child: SlideTransition(
-                  //                           position: Tween<Offset>(
-                  //                             begin: const Offset(0, -0.1),
-                  //                             end: Offset.zero,
-                  //                           ).animate(animation),
-                  //                           // Paste you Widget
-                  //                           child: GestureDetector(
-                  //                             onTap: () {
-                  //                               Navigator.push(
-                  //                                   context,
-                  //                                   MaterialPageRoute(
-                  //                                       builder: (context) =>
-                  //                                           CategoryItems(
-                  //                                               name: item['title'])));
-                  //                             },
-                  //                             child: homeItem(wsize, hsize, item),
-                  //                           )),
-                  //                     );
-                  //                   }),
-                  //             );
-                  //           }),
                   ),
             ),
             const Center(
@@ -489,28 +312,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 }
 
-Widget buildImage(hsize, wsize, img) {
-  return Container(
-      // height: hsize * .,
-      // width: wsize * .3,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(wsize * 0.025),
-        boxShadow: [
-          BoxShadow(
-              offset: const Offset(2.0, 2.0),
-              color: Colors.black26,
-              blurRadius: wsize * .025)
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-        child: Image.network(
-          img,
-          fit: BoxFit.cover,
-        ),
-      ));
-}
+
+
 
 Widget header(
     wsize, hsize, homeprovider, categoryprovider, authprovider, context) {
@@ -592,13 +395,19 @@ Widget header(
               borderRadius: BorderRadius.circular(8.0),
               child: GestureDetector(
                 onTap: () async {
-                  NotificationController.createNewNotification(context);
-                  // await authprovider.changePassword(
-                  //     '1234567', '12345678', context);
+                  // categoryprovider.getAllFeedPosts();
+                  Navigator.push(context, PageRouteBuilder(
+                    pageBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation) {
+                      return const NotificationPage();
+                    },
+                  ),
+                  );
 
                 },
                 child: Icon(
-                  Icons.notifications_rounded,
+                  Icons.notifications_on_sharp,
                   color: AppConfig.primaryColor,
                   size: wsize * 0.09,
                 ),
@@ -608,3 +417,4 @@ Widget header(
     ),
   );
 }
+

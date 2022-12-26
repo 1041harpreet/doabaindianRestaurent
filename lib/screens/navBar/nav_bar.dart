@@ -42,7 +42,7 @@ class _NavBarState extends ConsumerState<NavBar> {
           const BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined,size: 30.0), label: "Home",tooltip: "Home Page"),
           BottomNavigationBarItem(
-            icon: Iconify(Carbon.order_details,color:navbarprovider.selectedindex==1 ? AppConfig.primaryColor :Colors.grey,size: 30.0),label: "Order"),
+            icon: Iconify(Carbon.favorite,color:navbarprovider.selectedindex==1 ? AppConfig.primaryColor :Colors.grey,size: 30.0),label: "Favourite"),
            BottomNavigationBarItem(
               icon:Badge(
                   badgeContent: Text(cartprovider.badgevalue.toString()),

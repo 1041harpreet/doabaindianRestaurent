@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/home_provider.dart';
 import 'package:restaurent_app/screens/auth/loader_screen.dart';
@@ -16,14 +15,14 @@ import 'package:restaurent_app/screens/auth/splash_screen.dart';
 import 'package:restaurent_app/services/connection_service.dart';
 import 'package:restaurent_app/services/notification_service/notification.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
+
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await NotificationController.initializeLocalNotifications(debug: true);
   await NotificationController.getInitialNotificationAction();
-  // NotificationService().init();
-  // NotificationService().gettoken();
+
   runApp(
      ProviderScope(
         child: MyApp(),
@@ -31,7 +30,7 @@ void main() async {
 
   );
 }
-
+final navigatorKey = GlobalKey<NavigatorState>();
 class MyApp extends ConsumerStatefulWidget {
   MyApp({Key? key}) : super(key: key);
 
@@ -40,34 +39,27 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  bool hasInterNetConnection = false;
+  // bool hasInterNetConnection = false;
 
   @override
   initState() {
       NotificationController.startListeningNotificationEvents();
-      NotificationController.requestFirebaseToken();
-    print("connection check");
+      print("connection checking");
     //Create instance
-    ConnectionUtil connectionStatus = ConnectionUtil.getInstance();
-    //Initialize
-    connectionStatus.initialize();
-    //Listen for connection change
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp)async {
-     connectionStatus.connectionChange.listen(ref.watch(homeProvider).connectionChanged).onDone(() {
-       if(ref.watch(homeProvider).hasInterNetConnection==false){
-         showErrorToast(message: "no internet connection",context: context);
-       }
-     },);
-    });
+    // ConnectionUtil connectionStatus = ConnectionUtil.getInstance();
+    // //Initialize
+    // connectionStatus.initialize();
+    // //Listen for connection change
+
 
    // NotificationService().request(context);
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
 
   @override
@@ -78,11 +70,11 @@ class _MyAppState extends ConsumerState<MyApp> {
       statusBarBrightness: Brightness.dark,
     ));
     return
-      MaterialApp(
+      GetMaterialApp(
       title: "DOABA INDIAN RESTAURANT",
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home:  SplashScreen(),
+      home:  const SplashScreen(),
     );
   }
 }

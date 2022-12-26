@@ -15,8 +15,8 @@ class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
-    final authprovider=ref.watch(authProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authprovider = ref.watch(authProvider);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -33,7 +33,7 @@ class LoginScreen extends ConsumerWidget {
             //page content here
             Expanded(
               flex: 9,
-              child: buildCard(size,authprovider,context),
+              child: buildCard(size, authprovider, context),
             ),
           ],
         ),
@@ -41,7 +41,7 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildCard(Size size,authprovider,context) {
+  Widget buildCard(Size size, authprovider, context) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -52,7 +52,7 @@ class LoginScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: ReactiveForm(
-          formGroup:authprovider.loginForm ,
+          formGroup: authprovider.loginForm,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -89,16 +89,18 @@ class LoginScreen extends ConsumerWidget {
               ),
 
               //email & password section
-              textfieldbtn(size, 'Email', 'email',{
-                ValidationMessage.required: (error) => "The email must not be empty",
-                ValidationMessage.email: (error) => 'Please enter a valid email',
-
+              textfieldbtn(size, 'Email', 'email', {
+                ValidationMessage.required: (error) =>
+                    "The email must not be empty",
+                ValidationMessage.email: (error) =>
+                    'Please enter a valid email',
               }),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              textfieldbtn(size, 'Password', 'password',{
-                ValidationMessage.required: (error) => "The password must not be empty",
+              textfieldbtn(size, 'Password', 'password', {
+                ValidationMessage.required: (error) =>
+                    "The password must not be empty",
               }),
               SizedBox(
                 height: size.height * 0.01,
@@ -109,10 +111,13 @@ class LoginScreen extends ConsumerWidget {
                   GestureDetector(
                     onTap: () {
                       print('click');
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPasswordScreen(),));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgetPasswordScreen(),
+                          ));
                       // authprovider.resetPassword('1041harpreet@gmail.com');
                       // authprovider.updateEmail('1044harpreet@gmail.com');
-
                     },
                     child: Text(
                       'Forget Password?',
@@ -130,20 +135,26 @@ class LoginScreen extends ConsumerWidget {
                 height: size.height * 0.03,
               ),
               //sign in button
-              authprovider.signinload==true ? loadingButton(size):
-              Button(size,"Sign in",Colors.white,AppConfig.primaryColor,(){
-                if( authprovider.loginForm.valid){
-                  authprovider.signIn(authprovider.loginForm.control('email').value,authprovider.loginForm.control('password').value,context);
-                  authprovider.getUserInfo();
-                print('sign in');
-                }
-                else{
-                  print('invalid');
-                  authprovider.loginForm.markAllAsTouched();
-                  showErrorToast(message: 'fill the detail first',context: context);
-                }
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => NavBar(),));
-              }),
+              authprovider.signinload == true
+                  ? loadingButton(size)
+                  : Button(
+                      size, "Sign in", Colors.white, AppConfig.primaryColor,
+                      () async {
+                      if (authprovider.loginForm.valid) {
+                        await authprovider.signIn(
+                            authprovider.loginForm.control('email').value,
+                            authprovider.loginForm.control('password').value,
+                            context);
+                        // authprovider.getUserInfo();
+                        print('sign in');
+                      } else {
+                        print('invalid');
+                        authprovider.loginForm.markAllAsTouched();
+                        showErrorToast(
+                            message: 'fill the detail first', context: context);
+                      }
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => NavBar(),));
+                    }),
               SizedBox(
                 height: size.height * 0.02,
               ),
@@ -158,7 +169,8 @@ class LoginScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Button(size,"sign up with Google",Colors.black,Colors.white,(){
+              Button(size, "sign up with Google", Colors.black, Colors.white,
+                  () {
                 print('sign in with google');
               }),
               SizedBox(
@@ -167,7 +179,11 @@ class LoginScreen extends ConsumerWidget {
               //footer section. sign up text here
               GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpScreen(),));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpScreen(),
+                        ));
                   },
                   child: footerText()),
             ],
@@ -177,7 +193,9 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget richText(double fontSize,) {
+  Widget richText(
+    double fontSize,
+  ) {
     return Text.rich(
       TextSpan(
         style: GoogleFonts.inter(
@@ -204,7 +222,7 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget textfieldbtn(Size size, lable, controlname,validation) {
+  Widget textfieldbtn(Size size, lable, controlname, validation) {
     return Container(
       alignment: Alignment.center,
       height: size.height * 0.07,
@@ -222,7 +240,7 @@ class LoginScreen extends ConsumerWidget {
           fontSize: 16.0,
           color: const Color(0xFF15224F),
         ),
-          validationMessages: validation,
+        validationMessages: validation,
         maxLines: 1,
         cursorColor: const Color(0xFF15224F),
         decoration: InputDecoration(
@@ -238,24 +256,26 @@ class LoginScreen extends ConsumerWidget {
 
   Widget loadingButton(Size size) {
     return Container(
-      alignment: Alignment.center,
-      height: size.height * 0.06,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: AppConfig.primaryColor,
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF4C2E84).withOpacity(0.2),
-            offset: const Offset(0, 15.0),
-            blurRadius: 60.0,
-          ),
-        ],
-      ),
-      child: const Center(child: CircularProgressIndicator(color:Colors.white,))
-    );
+        alignment: Alignment.center,
+        height: size.height * 0.06,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: AppConfig.primaryColor,
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF4C2E84).withOpacity(0.2),
+              offset: const Offset(0, 15.0),
+              blurRadius: 60.0,
+            ),
+          ],
+        ),
+        child: const Center(
+            child: CircularProgressIndicator(
+          color: Colors.white,
+        )));
   }
 
-  Widget Button(Size size,title,titlecolor,buttoncolor,ontap) {
+  Widget Button(Size size, title, titlecolor, buttoncolor, ontap) {
     return GestureDetector(
       onTap: ontap,
       child: Container(

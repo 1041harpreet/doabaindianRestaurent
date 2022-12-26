@@ -42,6 +42,7 @@ class HomeService extends ChangeNotifier {
     }
     notifyListeners();
   }
+
 }
 
 final homeProvider = ChangeNotifierProvider((ref) {
