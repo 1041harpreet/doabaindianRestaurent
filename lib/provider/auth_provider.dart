@@ -1,3 +1,4 @@
+import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +8,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
 import 'package:restaurent_app/screens/auth/login_screen.dart';
 import 'package:restaurent_app/screens/navBar/nav_bar.dart';
+import 'package:restaurent_app/services/notification_service/notification.dart';
 
+import '../admin/admin_home_page.dart';
 import '../widgets/toast_service.dart';
 
 class AuthService extends ChangeNotifier {
@@ -34,7 +37,7 @@ class AuthService extends ChangeNotifier {
     "email": FormControl(
         // value: '1234567890',
         validators: [Validators.required, Validators.email]),
-    'phone': FormControl<int>(
+    'phone': FormControl(
         // value: '123456',
         validators: [
           Validators.required,
@@ -46,8 +49,7 @@ class AuthService extends ChangeNotifier {
         ]),
   });
   FormGroup resetPasswordForm = FormGroup({
-    "email": FormControl(
-        validators: [Validators.required, Validators.email]),
+    "email": FormControl(validators: [Validators.required, Validators.email]),
   });
   FormGroup loginForm = FormGroup({
     "email": FormControl(
@@ -76,6 +78,16 @@ class AuthService extends ChangeNotifier {
 
   get user => _auth.currentUser;
 
+  storeToken(email) async {
+    var token = await NotificationController().requestFirebaseToken();
+    print(token);
+    await FirebaseFirestore.instance
+        .collection('token')
+        .doc(email)
+        .set({"token": token});
+    notifyListeners();
+  }
+
   //SIGN UP METHOD
   Future signUp(email, password, context, username, phone) async {
     signuploading(true);
@@ -86,12 +98,22 @@ class AuthService extends ChangeNotifier {
         password: password,
       )
           .then((value) async {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => NavBar(),
-            ),
-                (route) => false);
+        if (role == 'admin') {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const AdminHomePage(),
+              ),
+              (route) => false);
+        } else {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const NavBar(),
+              ),
+              (route) => false);
+        }
+
         await adduser(email, username, phone);
+        await getUserInfo();
         await setInitialTotal(email);
         notifyListeners();
       });
@@ -124,10 +146,8 @@ class AuthService extends ChangeNotifier {
   }
 
   adduser(email, username, phone) async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(email)
-        .set({"email": email, "username": username, "phone": phone});
+    await FirebaseFirestore.instance.collection('users').doc(email).set(
+        {"email": email, "username": username, "phone": phone, 'role': "user"});
     notifyListeners();
   }
 
@@ -137,12 +157,22 @@ class AuthService extends ChangeNotifier {
     try {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => NavBar(),
-            ),
-            (route) => false);
+          .then((value) async {
+        await getUserInfo();
+        if (role == 'admin') {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const AdminHomePage(),
+              ),
+              (route) => false);
+        } else {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const NavBar(),
+              ),
+              (route) => false);
+        }
+
         showSuccessToast(message: 'login successfully', context: context);
         notifyListeners();
       });
@@ -182,9 +212,10 @@ class AuthService extends ChangeNotifier {
     await _auth.signOut();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => LoginScreen(),
+          builder: (context) => const LoginScreen(),
         ),
         (route) => false);
+    await AwesomeNotificationsFcm().unsubscribeToTopic('all');
     showSuccessToast(message: 'Logout successfully', context: context);
     print('signout');
   }
@@ -216,16 +247,16 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  resetPassword(email,context) async {
+  resetPassword(email, context) async {
     try {
       await _auth.sendPasswordResetEmail(email: email).then((value) {
-        showSuccessToast(message: "link sent successfully",context: context);
+        showSuccessToast(message: "link sent successfully", context: context);
         print('done');
       });
     } catch (e) {
       print(e.toString());
-      showErrorToast(message: "link sent failed,check your email",context: context);
-
+      showErrorToast(
+          message: "link sent failed,check your email", context: context);
     }
   }
 
@@ -254,21 +285,35 @@ class AuthService extends ChangeNotifier {
       print(e.toString());
     }
   }
+
   var phone;
-  String username='';
-  getUserInfo()async{
-    print('getting user info');
-    await FirebaseFirestore.instance.collection('users').doc(_auth.currentUser?.email).get().then((value) {
-      phone=value.get('phone');
-      username=value.get('username');
-      print(phone);
-      print(username);
-    });
+  String username = '';
+  String role = 'user';
+
+  getUserInfo() async {
+    try {
+      print('getting user info');
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser?.email)
+          .get()
+          .then((value) async {
+        phone = value.get('phone');
+        username = value.get('username');
+        role = value.get('role');
+        await storeToken(_auth.currentUser?.email);
+        print('my role is $role');
+        print(phone);
+        print(username);
+      });
+    } catch (e) {
+      print("error $e");
+    }
   }
 }
 
 final authProvider = ChangeNotifierProvider((ref) {
   var state = AuthService();
-  print(state.user);
+  print("user is ${state.user}");
   return state;
 });

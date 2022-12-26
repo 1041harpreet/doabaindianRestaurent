@@ -1,9 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ant_design.dart';
+import 'package:iconify_flutter/icons/bx.dart';
+import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/screens/navBar/home_page/home_page.dart';
 
 import 'category_item.dart';
+
+// import 'category_item.dart';
 
 Widget CartItem(wsize, hsize, context, item,cartprovider) {
   return Padding(
@@ -54,8 +60,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                       padding: EdgeInsets.only(left: wsize * 0.04),
                       child: item['category'].toString().length > 30
                           ? AutoSizeText(
-                          item['category'].toString().substring(0, 30) +
-                              '...',
+                          '${item['category'].toString().substring(0, 30)}...',
                           maxLines: 1,
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
@@ -128,7 +133,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                                 onTap: () async{
                                   await cartprovider.removeFromCart(item, context);
                                 },
-                                child: Icon(Icons.delete,color: AppConfig.primaryColor,)),
+                                child: Iconify(AntDesign.delete,color: AppConfig.primaryColor,)),
                           )
                         ],
                       ),

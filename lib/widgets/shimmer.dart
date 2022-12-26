@@ -140,3 +140,7 @@ Widget checkoutshimmer(context,wsize)
   );
 }
 
+Widget carsoulShimmer(context,wsize)
+{
+  return MyShimmerEffectUI.rectangular(height: 200, width:wsize*0.9, circular: 10.0);
+}

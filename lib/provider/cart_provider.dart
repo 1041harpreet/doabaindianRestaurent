@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,33 +19,6 @@ class CartService extends ChangeNotifier {
   CartService(this.email);
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  FormGroup checkoutForm = FormGroup({
-    "fullname": FormControl(
-        validators: [Validators.required]),
-    'address': FormControl(
-        validators: [
-          Validators.required,
-        ]),
-    'company': FormControl(),
-    'additional': FormControl(),
-    'email': FormControl(
-        validators: [
-          Validators.required,
-          Validators.email
-        ]),
-    'phone': FormControl<int>(
-        validators: [
-          Validators.required,
-        ]),
-    'town': FormControl(),
-    'state': FormControl(
-        validators: [
-        ]),
-    'zipcode': FormControl(
-        validators: [
-          Validators.required,
-        ]),
-  });
 
   //set total ,subtotal, status initial
   //set loading in cart screen
@@ -64,7 +36,7 @@ class CartService extends ChangeNotifier {
     notifyListeners();
   }
 
-  int badgevalue = 2;
+  int badgevalue = 0;
 
   getBadge() async {
     await _firestore
@@ -109,25 +81,25 @@ class CartService extends ChangeNotifier {
             .collection('cart')
             .doc(email)
             .collection(email)
-            .doc(item['title'])
+            .doc(item.title)
             .update({
-          'total': itemTotal + item['price'] * count,
+          'total': itemTotal + item.price * count,
           "count": count + availableCount,
         });
         print('update done');
       } else {
-        var total = count * item['price'];
+        var total = count * item.price;
         print('item total is $total');
         await _firestore
             .collection('cart')
             .doc(email)
             .collection(email)
-            .doc(item['title'])
+            .doc(item.title)
             .set({
           "count": count,
-          "img": item['img'],
-          "price": item['price'],
-          "title": item['title'],
+          "img": item.img,
+          "price": item.price,
+          "title": item.title,
           "category": category,
           "total": total
         });
@@ -153,7 +125,7 @@ class CartService extends ChangeNotifier {
         .collection('cart')
         .doc(email)
         .collection(email)
-        .doc(item['title'])
+        .doc(item.title)
         .get()
         .then((value) async {
       print("value exist " + value.exists.toString());
@@ -172,7 +144,7 @@ class CartService extends ChangeNotifier {
         .collection('cart')
         .doc(email)
         .collection(email)
-        .doc(item['title'])
+        .doc(item.title)
         .get()
         .then((value) {
       print("count value in firebase is ${value.get('count')}");
@@ -214,7 +186,7 @@ class CartService extends ChangeNotifier {
 
   // add bill to total
   addToTotal(item, count) async {
-    var itemtotal = item['price'] * count;
+    var itemtotal = item.price * count;
     subtotal = subtotal + itemtotal;
     await _firestore
         .collection('cart')
@@ -270,34 +242,7 @@ class CartService extends ChangeNotifier {
     }
   }
 
-  userMail(email,user) async {
-    print('sending');
-    String username = '1041harpreet@gmail.com';
-    String password = 'ualpmmclbwwazchx';
-    String domainSmtp = 'mail.domain.com'; //also use for gmail smtp
-    final smtpServer = gmail(username, password);
-    // final smtpSer = SmtpServer(domainSmtp,
-    //     username: username, password: password, port: 587);
-    final message = Message()
-      ..from = Address(username)
-      ..recipients.add(email)
-      // ..ccRecipients.addAll([email])
-      // ..bccRecipients.add(const Address('bccAddress@example.com'))
-      ..subject = 'Order placed $user'
-      ..text = 'This is the plain text.\nThis is line 2 of the text part.'
-      ..html = "<h1>$user</h1>\n"
-          "<p>Your order payment of ${total.toStringAsFixed(2)} is successfully done</p>\n"
-         ;
-    try {
-      final sendReport = await send(message, smtpServer);
-      print('Message sent: $sendReport');
-    } on MailerException catch (e) {
-      print('Message not sent.${e.message}');
-      for (var p in e.problems) {
-        print('Problem: ${p.code}: ${p.msg}');
-      }
-    }
-  }
+
 
   checkout() async {
     // sendMail();

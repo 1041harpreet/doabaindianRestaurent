@@ -1,19 +1,36 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/category_provider.dart';
 
+import '../../../../widgets/category_item.dart';
+import '../../../../widgets/shimmer.dart';
+import '../product_details_view.dart';
 import 'stream_builder_widget.dart';
-
-class CategoryItems extends ConsumerWidget {
+class CategoryItems extends ConsumerStatefulWidget {
   String name;
-
-  CategoryItems({Key? key, required this.name}) : super(key: key);
+  int index;
+   CategoryItems({Key? key,required this.name,required this.index}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CategoryItems> createState() => _CategoryItemsState();
+}
+
+class _CategoryItemsState extends ConsumerState<CategoryItems> {
+
+
+@override
+  void initState() {
+  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    ref.watch(categoryProvider).getsubcategory(widget.name);
+  });
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
     final cprovider = ref.watch(categoryProvider);
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
@@ -45,7 +62,7 @@ class CategoryItems extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  name,
+                  widget.name,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: wsize * 0.05,
@@ -56,41 +73,37 @@ class CategoryItems extends ConsumerWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top: 4.0),
+              padding: const EdgeInsets.only(top: 8.0),
               child: Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 5.0, // soften the shadow
-                      spreadRadius: -1.0, //extend the shadow
-                      offset: Offset(
-                        -2.0, // Move to right 10  horizontally
-                        2.0, // Move to bottom 5 Vertically
-                      ),
-                    )
-                  ],
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25.0),
-                    topRight: Radius.circular(25.0),
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 5.0, // soften the shadow
+                        spreadRadius: -1.0, //extend the shadow
+                        offset: Offset(
+                          -2.0, // Move to right 10  horizontally
+                          2.0, // Move to bottom 5 Vertically
+                        ),
+                      )
+                    ],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25.0),
+                      topRight: Radius.circular(25.0),
+                    ),
                   ),
-                ),
-                child: streamBuilder(
-                    FirebaseFirestore.instance
-                        .collection('category')
-                        .doc(name)
-                        .collection(name)
-                        .snapshots(),
-                    wsize,
-                    hsize,
-                    cprovider,name),
-              ),
+                  child:
+                    listBuilder(
+
+                        wsize,
+                        hsize,
+                        cprovider,widget.name,context),
+                  ),
             ),
           ),
-
         ]),
       ),
     );

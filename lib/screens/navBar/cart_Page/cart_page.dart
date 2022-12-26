@@ -11,7 +11,9 @@ import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
 import 'package:restaurent_app/screens/navBar/cart_Page/checkout_page.dart';
+import '../../../provider/check_out_provider.dart';
 import '../../../provider/nav_bar_provider.dart';
+import '../../../services/notification_service/notification.dart';
 import '../../../widgets/cart_item.dart';
 import '../../../widgets/category_item.dart';
 import '../../../widgets/shimmer.dart';
@@ -37,10 +39,9 @@ class _AddToCartState extends ConsumerState<AddToCart> {
   @override
   Widget build(BuildContext context) {
     final cartprovider = ref.watch(cartProvider);
-
     final authprovider = ref.watch(authProvider);
     final navprovider = ref.watch(NavBarProvider);
-
+    final checkoutprovider = ref.watch(checkOutProvider);
     print(cartprovider.subtotal.toString());
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
@@ -88,7 +89,6 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                         .collection(cartprovider.email)
                         .snapshots(),
                     builder: (context, AsyncSnapshot snapshot) {
-                      // cartprovider.changeBadge(snapshot.data.docs.length);
                       if (!snapshot.hasData) {
                         return Center(
                           child: Column(
@@ -119,123 +119,122 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                         return noItemWidget();
                       }
 
-                      return ListView.builder(
-                        itemCount: snapshot.data.docs.length,
-                        itemBuilder: (context, index) {
-                          DocumentSnapshot item = snapshot.data.docs[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                top: 4.0, left: 8.0, right: 8.0),
-                            child: CartItem(
-                                wsize, hsize, context, item, cartprovider),
-                          );
-                        },
-                      );
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: ListView.builder(
+                            itemCount: snapshot.data.docs.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot item = snapshot.data.docs[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 4.0, left: 8.0, right: 8.0),
+                                child: CartItem(
+                                    wsize, hsize, context, item, cartprovider),
+                              );
+                            },
+                          )),
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.white70,
+                            ),
+                            width: wsize,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(7.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Subtotal",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: hsize * 0.02,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                          "\$${cartprovider.subtotal.toStringAsFixed(2)}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black)),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(7.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Tax",
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: hsize * 0.02,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                          "\$${cartprovider.tax.toStringAsFixed(2)}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black)),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(7.0),
+                                      child: Text("Total : ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: AppConfig.primaryColor,
+                                              fontSize: 18.0)),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Text(
+                                          "\$${cartprovider.total.toStringAsFixed(2)}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
+                                              fontSize: 16.0)),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                AppConfig.primaryColor),
+                                            onPressed: () async {
+                                              print('checkout');
+
+                                              checkoutprovider.checkoutForm.control('fullname').patchValue(authprovider.username);
+                                              checkoutprovider.checkoutForm.control('phone').patchValue( authprovider.phone.toString());
+                                              checkoutprovider.checkoutForm.control('email').patchValue(authprovider.user.email);
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutPage(),));
+
+                                            },
+                                            child: const Text("Checkout")),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        ],);
+
                     },
                   ),
                 ),
               ),
             ),
-            cartprovider.checkoutloading
-                ? Center(
-                    child: CircularProgressIndicator(
-                        color: AppConfig.primaryColor, strokeWidth: 2.0),
-                  )
-                : cartprovider.subtotal == 0.0
-                    ? Container()
-                    : Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white70,
-                        ),
-                        width: wsize,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Subtotal",
-                                    style: TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: hsize * 0.02,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                      "\$${cartprovider.subtotal.toStringAsFixed(2)}",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black)),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "taxs",
-                                    style: TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: hsize * 0.02,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text("\$${cartprovider.tax}",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black)),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Text("Total : ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: AppConfig.primaryColor,
-                                          fontSize: 18.0)),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Text(
-                                      "\$${cartprovider.total.toStringAsFixed(2)}",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black,
-                                          fontSize: 16.0)),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                AppConfig.primaryColor),
-                                        onPressed: () async {
-                                          print('checkout');
 
-                                          cartprovider.checkoutForm.control('fullname').patchValue(authprovider.username);
-                                          cartprovider.checkoutForm.control('phone').patchValue( authprovider.phone);
-                                          cartprovider.checkoutForm.control('email').patchValue(authprovider.user.email);
-
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutPage(),));
-
-                                        },
-                                        child: const Text("Checkout")),
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      )
           ]),
         ),
       ),
