@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bx.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/auth_provider.dart';
-import 'package:restaurent_app/screens/navBar/cart_Page/cart_page.dart';
+import 'package:restaurentapp/config/config.dart';
+import 'package:restaurentapp/provider/auth_provider.dart';
+import 'package:restaurentapp/screens/navBar/cart_Page/cart_page.dart';
 
 import '../../../provider/nav_bar_provider.dart';
+import 'aboutus_page.dart';
 import 'my_profile.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -28,7 +29,7 @@ class ProfileScreen extends ConsumerWidget {
         backgroundColor: AppConfig.secmainColor,
         body: SingleChildScrollView(
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            SizedBox(height: hsize * 0.15, child: orderHeader(wsize, hsize)),
+            orderHeader(wsize, hsize),
             optionListView(authprovider, context)
           ]),
         ),
@@ -46,6 +47,7 @@ Widget optionListView(authprovider, context) {
       children: [
         _listItem(
             onClick: () {
+              print(authprovider.phone);
               authprovider.updateProfile.patchValue({
                 "username": authprovider.username,
                 "email": authprovider.user.email,
@@ -54,7 +56,7 @@ Widget optionListView(authprovider, context) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyProfile(),
+                    builder: (context) => const MyProfile(),
                   ));
             },
             text: 'My Profile',
@@ -62,8 +64,10 @@ Widget optionListView(authprovider, context) {
             showArrow: true),
         _separator(),
         _listItem(
-            onClick: () {},
-            text: "Contact Us",
+            onClick: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AboutUsPage(),));
+            },
+            text: "About Us",
             icon: const Icon(
               Icons.contact_page_outlined,
               color: Colors.black,
@@ -88,17 +92,6 @@ Widget optionListView(authprovider, context) {
         _listItem(text: 'Rate App', icon: const Icon(Icons.star_border)),
         _separator(),
         logoutbutton(authprovider, context),
-        // _listItem(
-        //     onClick: () async {
-        //       // Navigator.pushAndRemoveUntil(
-        //       //     context,
-        //       //     MaterialPageRoute(
-        //       //         builder: (BuildContext context) =>
-        //       //         new PhoneNumberScreen()),
-        //       //         (Route<dynamic> route) => false);
-        //     },
-        //     text: 'Logout',
-        //     icon: const Icon(Icons.logout)),
         _separator(),
       ],
     ),
@@ -157,10 +150,7 @@ Widget orderHeader(wsize, hsize) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          "Doaba Indian Restaurant",
-          style: TextStyle(fontSize: hsize * 0.035, color: Colors.black),
-        ),
+
         SizedBox(
           height: hsize * 0.01,
         ),
@@ -168,9 +158,9 @@ Widget orderHeader(wsize, hsize) {
           padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
           child: Row(
             children: [
-              const Icon(
+               Icon(
                 Icons.email,
-                color: Colors.green,
+                color: AppConfig.primaryColor,
               ),
               Text(
                 " doabaindianrestaurant@gmail.com",
@@ -183,9 +173,9 @@ Widget orderHeader(wsize, hsize) {
           padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
           child: Row(
             children: [
-              const Icon(
+               Icon(
                 Icons.phone,
-                color: Colors.green,
+                color: AppConfig.primaryColor,
               ),
               Text(
                 " +16143760951",

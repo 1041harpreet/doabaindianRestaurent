@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/home_provider.dart';
-import 'package:restaurent_app/screens/auth/loader_screen.dart';
-import 'package:restaurent_app/screens/auth/login_screen.dart';
-import 'package:restaurent_app/screens/auth/splash_screen.dart';
-import 'package:restaurent_app/services/connection_service.dart';
-import 'package:restaurent_app/services/notification_service/notification.dart';
-import 'package:restaurent_app/widgets/toast_service.dart';
+import 'package:restaurentapp/config/config.dart';
+import 'package:restaurentapp/provider/home_provider.dart';
+import 'package:restaurentapp/screens/auth/loader_screen.dart';
+import 'package:restaurentapp/screens/auth/login_screen.dart';
+import 'package:restaurentapp/screens/auth/splash_screen.dart';
+import 'package:restaurentapp/services/connection_service.dart';
+import 'package:restaurentapp/services/notification_service/notification.dart';
+import 'package:restaurentapp/widgets/toast_service.dart';
 
 void main() async {
 
@@ -44,22 +44,10 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   initState() {
       NotificationController.startListeningNotificationEvents();
-      print("connection checking");
-    //Create instance
-    // ConnectionUtil connectionStatus = ConnectionUtil.getInstance();
-    // //Initialize
-    // connectionStatus.initialize();
-    // //Listen for connection change
-
-
-   // NotificationService().request(context);
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
+
 
 
   @override

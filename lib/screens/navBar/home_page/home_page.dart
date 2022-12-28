@@ -7,24 +7,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/config/const.dart';
-import 'package:restaurent_app/provider/auth_provider.dart';
-import 'package:restaurent_app/provider/cart_provider.dart';
-import 'package:restaurent_app/screens/navBar/home_page/notification/main_notiification_page.dart';
-import 'package:restaurent_app/widgets/home_item.dart';
+import 'package:restaurentapp/config/config.dart';
+import 'package:restaurentapp/config/const.dart';
+import 'package:restaurentapp/provider/auth_provider.dart';
+import 'package:restaurentapp/provider/cart_provider.dart';
+import 'package:restaurentapp/screens/navBar/home_page/categories/stream_builder_widget.dart';
+import 'package:restaurentapp/screens/navBar/home_page/notification/main_notiification_page.dart';
+import 'package:restaurentapp/widgets/home_item.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../provider/category_provider.dart';
 import '../../../provider/home_provider.dart';
 import '../../../services/notification_service/notification.dart';
+import '../../../widgets/about_us.dart';
 import '../../../widgets/shimmer.dart';
 import 'carsoul_full_screen.dart';
 import 'categories/category_items.dart';
 import 'categories/all_category.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -37,29 +39,34 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   var d;
   TextEditingController searchController = TextEditingController();
-  final options = const LiveOptions(
-    // Start animation after (default zero)
-    delay: Duration(seconds: 0),
-    // Show each item through (default 250)
-    showItemInterval: Duration(milliseconds: 5),
-    // Animation duration (default 250)
-    showItemDuration: Duration(microseconds: 5),
-    // Animations starts at 0.05 visible
-    // item fraction in sight (default 0.025)
-    visibleFraction: 0.001,
-    // Repeat the animation of the appearance
-    // when scrolling in the opposite direction (default false)
-    // To get the effect as in a showcase for ListView, set true
-    reAnimateOnVisibility: false,
-  );
 
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.watch(categoryProvider).getCategory();
       ref.watch(categoryProvider).getcarsoulItem();
-
+      ref.watch(categoryProvider).getmadeforu();
+      if(ref.watch(homeProvider).show) {
+        _showNewOrderDialog();
+        ref.watch(homeProvider).changeshow(false);
+      }
     });
     super.initState();
+  }
+  _showNewOrderDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0)), //this right here
+          child: Container(
+            // height: 500.0,
+            padding: EdgeInsets.all(8.0),
+            child: Image.asset('assets/images/doaba.jpg')
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -70,245 +77,138 @@ class _HomePageState extends ConsumerState<HomePage> {
     final homeprovider = ref.watch(homeProvider);
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
-    List carsoullist = ["assets/images/image.png"];
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: AppConfig.secmainColor,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            header(wsize, hsize, homeprovider, categoryprovider, authprovider,
-                context),
-            categoryprovider.carload ? carsoulShimmer(context, wsize):
-            CarouselSlider(
-                options: CarouselOptions(
-                  height: hsize * 0.25,
-                  viewportFraction: 0.9,
-                  initialPage: 0,
-                  enableInfiniteScroll: true,
-                  reverse: false,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 4),
-                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enlargeCenterPage: true,
-                  scrollDirection: Axis.horizontal,
-                  enlargeStrategy: CenterPageEnlargeStrategy.height,
-                ),
-                items: <Widget>[
-                  for (var i = 0; i < categoryprovider.carsoulList.length; i++)
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CarsoulFullScreen(url: categoryprovider.carsoulList[i].img),));
-                      },
-                      child: Container(
-                        height: 200.0,
-                        margin: const EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image:
-                            NetworkImage(categoryprovider.carsoulList[i].img),
-                            fit: BoxFit.fitHeight,
-                          ),
-                          borderRadius: BorderRadius.circular(32.0),
-                        ),
-                      ),
-                    ),
-                ],),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0,left: wsize * .05),
-                  child: Text(
-                    "Categories",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: wsize * .05,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MoreCategory(
-                            index: 0,
-                          ),
-                        ));
-                    print('pressed more');
-                  },
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(right: wsize * .03, top: hsize * .01),
-                    child: const Text("More",
-                        style: TextStyle(color: Colors.grey)),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(wsize * .03),
-              child: SizedBox(
-                  height: hsize * .3,
-                  width: MediaQuery.of(context).size.width * 1,
-                  child: categoryprovider.loading
-                      ? ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 8,
-                          itemBuilder: (context, index) {
-                            return homePageShimmer(context, wsize, hsize);
-                          },
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: LiveList.options(
-                              options: options,
-                              itemCount: categoryprovider.category.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index, animation) {
-                                // DocumentSnapshot item = snapshot.data.docs[index];
-                                // print(item);
-                                return FadeTransition(
-                                  opacity: Tween<double>(
-                                    begin: 0,
-                                    end: 1,
-                                  ).animate(animation),
-                                  // And slide transition
-                                  child: SlideTransition(
-                                      position: Tween<Offset>(
-                                        begin: const Offset(0, -0.1),
-                                        end: Offset.zero,
-                                      ).animate(animation),
-                                      // Paste you Widget
-                                      child: GestureDetector(
-                                        onTap: () async{
-                                          Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(builder: (context) =>  CategoryItems(
-                                              name: categoryprovider
-                                                  .category[index]
-                                                  .title,
-                                                index: index,)));
-                                              // MaterialPageRoute(
-                                              //     builder: (context) =>
-                                              //        ));
-                                        },
-                                        child: homeItem(wsize, hsize,
-                                            categoryprovider.category[index]),
-                                      )),
-                                );
-                              }),
-                        )
-                  ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: wsize * .05),
-                  child: Text(
-                    "Made for You",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: wsize * .05,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    // cartprovider.Total();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MoreCategory(
-                            index: 0,
-                          ),
-                        ));
-                    print('pressed more');
-                  },
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(right: wsize * .03, top: hsize * .01),
-                    child: const Text("More",
-                        style: TextStyle(color: Colors.grey)),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(wsize * .03),
-              child: SizedBox(
-                  height: hsize * .3,
-                  width: MediaQuery.of(context).size.width * 1,
-                  child: categoryprovider.loading
-                      ? ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 8,
-                          itemBuilder: (context, index) {
-                            return homePageShimmer(context, wsize, hsize);
-                          },
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: LiveList.options(
-                              options: options,
-                              itemCount: categoryprovider.category.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index, animation) {
-                                // DocumentSnapshot item = snapshot.data.docs[index];
-                                // print(item);
-                                return FadeTransition(
-                                  opacity: Tween<double>(
-                                    begin: 0,
-                                    end: 1,
-                                  ).animate(animation),
-                                  // And slide transition
-                                  child: SlideTransition(
-                                      position: Tween<Offset>(
-                                        begin: const Offset(0, -0.1),
-                                        end: Offset.zero,
-                                      ).animate(animation),
-                                      // Paste you Widget
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CategoryItems(
-                                                          name: categoryprovider
-                                                              .category[index]
-                                                              .title,index: index,)));
-                                        },
-                                        child: homeItem(wsize, hsize,
-                                            categoryprovider.category[index]),
-                                      )),
-                                );
-                              }),
-                        )
-
-                  ),
-            ),
-            const Center(
-                child: Text(
-              "We provide catering services",
-              style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            )),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Image.asset("assets/images/banner.jpg"),
-            )
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldPop = await dialogBox(context);
+        return shouldPop!;
+      },
+      child: SafeArea(
+          child: Scaffold(
+        backgroundColor: AppConfig.secmainColor,
+        floatingActionButton: FloatingActionButton(
+          elevation: 5.0,
+          backgroundColor: Colors.green,
+          onPressed: (){
+          homeprovider.openwhatsapp();
+        },
+         child: Image.asset('assets/images/whats.png',fit: BoxFit.fill),
         ),
-      ),
-    ));
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              header(wsize, hsize, homeprovider, categoryprovider, authprovider,
+                  context),
+              categoryprovider.carload ? carsoulShimmer(context, wsize):
+              CarouselSlider(
+                  options: CarouselOptions(
+                    height: hsize * 0.3,
+                    viewportFraction: 1,
+                    initialPage: 0,
+                    enableInfiniteScroll: true,
+                    reverse: false,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 3),
+                    autoPlayAnimationDuration: const Duration(milliseconds: 400),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enlargeCenterPage: true,
+                    scrollDirection: Axis.horizontal,
+                    enlargeStrategy: CenterPageEnlargeStrategy.height,
+                  ),
+                  items: <Widget>[
+                    for (var i = 0; i < categoryprovider.carsoulList.length; i++)
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => CarsoulFullScreen(url: categoryprovider.carsoulList[i].img),));
+                        },
+                        child: CachedNetworkImage(
+                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) {
+                          return   Image.asset('assets/images/placeholder.png');
+                          },
+                          imageUrl: categoryprovider.carsoulList[i].img,
+                        fit: BoxFit.fill,
+                        )
+                      ),
+                  ],),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0,left: wsize * .05),
+                    child: Text(
+                      "Categories",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: wsize * .05,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MoreCategory(
+                              index: 0,
+                            ),
+                          ));
+                      print('pressed more');
+                    },
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(right: wsize * .03, top: hsize * .01),
+                      child:  Text("See All",
+                          style: TextStyle(color: Colors.grey.shade900)),
+                    ),
+                  ),
+                ],
+              ),
+             listview(hsize, wsize, context, categoryprovider),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: wsize * .05),
+                    child: Text(
+                      "Made for You",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: wsize * .05,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      // cartprovider.Total();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MoreCategory(
+                              index: 0,
+                            ),
+                          ));
+                      print('pressed more');
+                    },
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(right: wsize * .03, top: hsize * .01),
+                      child:  Text("See all",
+                          style: TextStyle(color: Colors.grey.shade900)),
+                    ),
+                  ),
+                ],
+              ),
+              madeforulist(hsize, wsize, context, categoryprovider),
+
+              aboutus(),
+              ],
+          ),
+        ),
+      )),
+    );
   }
 }
 
@@ -418,3 +318,30 @@ Widget header(
   );
 }
 
+dialogBox(context) {
+  return showDialog(
+    context: context,
+    builder: (context) => Theme(
+      data: ThemeData(backgroundColor: Colors.white),
+      child: AlertDialog(
+        title: const Text('Are you sure?'),
+        content: const Text('Do you want to go back?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, false);
+
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context, true);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    ),
+  );
+}

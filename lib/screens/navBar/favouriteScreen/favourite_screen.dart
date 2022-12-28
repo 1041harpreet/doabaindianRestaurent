@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/cart_provider.dart';
-import 'package:restaurent_app/provider/category_provider.dart';
-import 'package:restaurent_app/provider/nav_bar_provider.dart';
+import 'package:restaurentapp/config/config.dart';
+import 'package:restaurentapp/provider/cart_provider.dart';
+import 'package:restaurentapp/provider/category_provider.dart';
+import 'package:restaurentapp/provider/nav_bar_provider.dart';
 
 import '../../../widgets/category_item.dart';
 import '../../../widgets/shimmer.dart';

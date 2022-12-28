@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurent_app/model/category_model.dart';
+import 'package:restaurentapp/model/category_model.dart';
 
 import '../model/favourite_item_model.dart';
 import '../model/slider_model.dart';
@@ -60,15 +60,12 @@ class CategoryService extends ChangeNotifier {
     quantity++;
     total += price;
     notifyListeners();
-
-    notifyListeners();
   }
 
   remquantity(price) {
     if (quantity <= 0) {
       quantity = 0;
       total = 0;
-      notifyListeners();
     } else {
       quantity--;
       total -= price;
@@ -86,10 +83,7 @@ class CategoryService extends ChangeNotifier {
   List category = [];
   List seccategory = [];
 
-  // getSecList(){
-  //   seccategory=(category.toList()..shuffle()).sublist(0,4);
-  //   notifyListeners();
-  // }
+
   //this list is used to store sub category item
   List subcategory = [];
 
@@ -99,7 +93,6 @@ class CategoryService extends ChangeNotifier {
     try {
       var ref = await _firestore.collection('category').get();
       category = ref.docs.map((e) => CategoryItem.fromJson(e.data())).toList();
-      notifyListeners();
     } catch (e) {
       print(e.toString());
     } finally {
@@ -120,7 +113,6 @@ class CategoryService extends ChangeNotifier {
           .get();
       subcategory =
           ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
-      notifyListeners();
     } catch (e) {
       print('get sub is running');
       print(e.toString());
@@ -133,26 +125,40 @@ class CategoryService extends ChangeNotifier {
   //get carsoul item
   bool carload = false;
 
-  changecarload(value) {
-    carload = value;
+  changecarload(value,item) {
+     item= value;
     notifyListeners();
   }
+  List madefulist=[];
+  bool mfuload=false;
 
+getmadeforu()async{
+  changecarload(true, mfuload);
+  try{
+      var ref=await _firestore.collection('madeforu').get();
+      madefulist = ref.docs.map((e) => MadeForUItem.fromJson(e.data())).toList();
+
+  }catch(e){
+     print(e);
+    }finally{
+      changecarload(false, mfuload);
+      notifyListeners();
+    }
+}
   List carsoulList = [];
 
   getcarsoulItem() async {
-    changecarload(true);
+    changecarload(true,carload);
     try {
       // var item=category[index].title;
       var ref = await _firestore.collection('carsoul_slider').get();
       carsoulList = ref.docs.map((e) => SliderItem.fromJson(e.data())).toList();
       print(carsoulList);
-      notifyListeners();
     } catch (e) {
       print('get car is running');
       print(e.toString());
     } finally {
-      changecarload(false);
+      changecarload(false,carload);
       notifyListeners();
     }
   }
@@ -179,7 +185,6 @@ class CategoryService extends ChangeNotifier {
         "category": category,
         "img": item.img
       });
-      notifyListeners();
     } catch (e) {
       print('add fav error');
       print(e.toString());
@@ -199,7 +204,6 @@ class CategoryService extends ChangeNotifier {
           .collection(email)
           .get();
       favList = ref.docs.map((e) => FavItem.fromJson(e.data())).toList();
-      notifyListeners();
     } catch (e) {
       print('add fav is running');
       print(e.toString());
@@ -218,7 +222,6 @@ class CategoryService extends ChangeNotifier {
           .collection(email)
           .doc(item.title)
           .delete();
-      notifyListeners();
     } catch (e) {
       print('remove fav error');
       print(e.toString());

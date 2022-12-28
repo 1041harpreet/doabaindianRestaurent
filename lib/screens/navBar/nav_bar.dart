@@ -5,8 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ant_design.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/cart_provider.dart';
+import 'package:restaurentapp/config/config.dart';
+import 'package:restaurentapp/provider/cart_provider.dart';
 
 import '../../provider/nav_bar_provider.dart';
 

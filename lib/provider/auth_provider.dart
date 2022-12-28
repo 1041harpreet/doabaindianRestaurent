@@ -4,11 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent_app/provider/cart_provider.dart';
-import 'package:restaurent_app/screens/auth/login_screen.dart';
-import 'package:restaurent_app/screens/navBar/nav_bar.dart';
-import 'package:restaurent_app/services/notification_service/notification.dart';
+import 'package:restaurentapp/provider/cart_provider.dart';
+import 'package:restaurentapp/screens/auth/login_screen.dart';
+import 'package:restaurentapp/screens/navBar/nav_bar.dart';
+import 'package:restaurentapp/services/notification_service/notification.dart';
 
 import '../admin/admin_home_page.dart';
 import '../widgets/toast_service.dart';
@@ -68,6 +69,8 @@ class AuthService extends ChangeNotifier {
     ]),
     "phone": FormControl(validators: [
       Validators.required,
+      Validators.number,Validators.maxLength(10),
+      Validators.minLength(10)
     ]),
     'password': FormControl(validators: [
       Validators.required,
@@ -85,11 +88,53 @@ class AuthService extends ChangeNotifier {
         .collection('token')
         .doc(email)
         .set({"token": token});
-    notifyListeners();
+
+  }
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+   signInWithGoogle({required BuildContext context}) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount? googleSignInAccount =
+    await googleSignIn.signIn();
+print(googleSignInAccount);
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+      await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      try {
+        final UserCredential userCredential =
+        await auth.signInWithCredential(credential);
+        user = userCredential.user;
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+          print('aaccoount exist');
+          // handle the error here
+        }
+        else if (e.code == 'invalid-credential') {
+          print('invalid cred');
+          // handle the error here
+        }
+      } catch (e) {
+        print(e);
+        // handle the error here
+      }
+    }
   }
 
   //SIGN UP METHOD
-  Future signUp(email, password, context, username, phone) async {
+   signUp(email, password, context, username, phone) async {
     signuploading(true);
     try {
       await _auth
@@ -115,12 +160,11 @@ class AuthService extends ChangeNotifier {
         await adduser(email, username, phone);
         await getUserInfo();
         await setInitialTotal(email);
-        notifyListeners();
       });
       showSuccessToast(message: 'register successfully', context: context);
       print(_auth.currentUser?.email);
 
-      return null;
+
     } on FirebaseAuthException catch (e) {
       // print(e.toString());
       print(e.code);
@@ -148,11 +192,10 @@ class AuthService extends ChangeNotifier {
   adduser(email, username, phone) async {
     await FirebaseFirestore.instance.collection('users').doc(email).set(
         {"email": email, "username": username, "phone": phone, 'role': "user"});
-    notifyListeners();
   }
 
   //SIGN IN METHOD
-  Future signIn(email, password, context) async {
+   signIn(email, password, context) async {
     signinloading(true);
     try {
       await _auth
@@ -174,9 +217,7 @@ class AuthService extends ChangeNotifier {
         }
 
         showSuccessToast(message: 'login successfully', context: context);
-        notifyListeners();
       });
-      return null;
     } on FirebaseAuthException catch (e) {
       print(e.code);
       if (e.code == "network-request-failed") {
@@ -184,13 +225,13 @@ class AuthService extends ChangeNotifier {
       }
       if (e.code == 'user-not-found') {
         showErrorToast(
-            context: context, message: "User not found, try another email");
+            context: context, message: "User not found");
       }
       if (e.code == 'invalid-email') {
-        showErrorToast(context: context, message: "Email is wrong ");
+        showErrorToast(context: context, message: "Email/password is wrong ");
       }
       if (e.code == 'wrong-password') {
-        showErrorToast(context: context, message: "Password is wrong");
+        showErrorToast(context: context, message: "email/Password is wrong");
       }
       if (e.code == 'user-disabled') {
         showErrorToast(context: context, message: "User deactivated");
@@ -200,7 +241,10 @@ class AuthService extends ChangeNotifier {
         };
       }
     } catch (e) {
+      showErrorToast(context: context, message: "Something went wrong");
+
       print(e.toString());
+      notifyListeners();
     } finally {
       signinloading(false);
       notifyListeners();
@@ -248,6 +292,7 @@ class AuthService extends ChangeNotifier {
   }
 
   resetPassword(email, context) async {
+    resetloading(true);
     try {
       await _auth.sendPasswordResetEmail(email: email).then((value) {
         showSuccessToast(message: "link sent successfully", context: context);
@@ -257,6 +302,9 @@ class AuthService extends ChangeNotifier {
       print(e.toString());
       showErrorToast(
           message: "link sent failed,check your email", context: context);
+    }
+    finally{
+      resetloading(false);
     }
   }
 
@@ -270,7 +318,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  googleSignIn() {}
+
 
   setInitialTotal(email) async {
     try {
@@ -279,14 +327,13 @@ class AuthService extends ChangeNotifier {
           .doc(email)
           .set({"subtotal": 0.0, "total": 0.0, "status": false});
 
-      notifyListeners();
     } catch (e) {
       print('get total error');
       print(e.toString());
     }
   }
 
-  var phone;
+  String phone='';
   String username = '';
   String role = 'user';
 

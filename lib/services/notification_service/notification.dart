@@ -132,9 +132,9 @@ import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/config/const.dart';
-import 'package:restaurent_app/widgets/toast_service.dart';
+import 'package:restaurentapp/config/config.dart';
+import 'package:restaurentapp/config/const.dart';
+import 'package:restaurentapp/widgets/toast_service.dart';
 
 import '../../main.dart';
 

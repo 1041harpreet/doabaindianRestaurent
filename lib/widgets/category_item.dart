@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurent_app/widgets/shimmer.dart';
+import 'package:restaurentapp/widgets/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../config/config.dart';
 Widget Item(wsize,hsize,item,provider,context){

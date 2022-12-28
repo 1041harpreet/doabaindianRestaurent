@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Const {
-  var key="AAAAD0_2908:APA91bGdGFnWuTIGHdukayVhDlcnmAASN2terfMf0SGaT-cmCEPqyWPqPdx2GnWqSDQgaLpduEAgRdZL-s1W8LA9CGXti-CIuF4bizvNwiwEoqGymG3WJVb6a_rjcvyYnONhnIsiVEBv";
+ final String clientID="AV_19mRnmAp7FA-Rz6-WNt24v0UtHZ_tQ6IteKmaSA06448NPi5qaRdCMHSMLMSVIqOxwqI_rC9IznWt";
+ final String secret="EGDBxUw87alcpYQZ0oOabJW31Tqhxn8gmOI4vtGkHLfq2ucQxschBffOyszGleUGUq0bwaOYXW_G3yr5";
+
+
+ var key="AAAAD0_2908:APA91bGdGFnWuTIGHdukayVhDlcnmAASN2terfMf0SGaT-cmCEPqyWPqPdx2GnWqSDQgaLpduEAgRdZL-s1W8LA9CGXti-CIuF4bizvNwiwEoqGymG3WJVb6a_rjcvyYnONhnIsiVEBv";
   size(context) {
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
@@ -14,38 +18,6 @@ class Const {
     "Appetizer ( Non-Vegetarian)",
     "Entrees- Chicken /Murgh"
   ];
-  List<Map<String, List<String>>> fakeData = [
-    {
-      "Appetizer -Vegetarian": [
-        "first item",
-        "second item",
-        "third item",
-        "fourth item",
-      ],
-      "Appetizer Non-Vegetarian": [
-        "first item",
-        "second item",
-        "third item",
-        "fourth item",
-      ],
-      "Entrees – North Indian Vegetarian": [
-        "first item",
-        "second item",
-        "third item",
-        "fourth item",
-      ],
-      "Entrees – Gosht (Goat & Lamb)": [
-        "first item",
-        "second item",
-        "third item",
-        "fourth item",
-      ],
-      "Entrées – Chicken/Murgh": [
-        "first item",
-        "second item",
-        "third item",
-        "fourth item",
-      ],
-    }
-  ];
+
+
 }
