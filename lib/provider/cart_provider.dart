@@ -7,9 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent_app/model/order_item_model.dart';
-import 'package:restaurent_app/provider/auth_provider.dart';
-import 'package:restaurent_app/widgets/toast_service.dart';
+import 'package:restaurentapp/model/order_item_model.dart';
+import 'package:restaurentapp/provider/auth_provider.dart';
+import 'package:restaurentapp/widgets/toast_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // import 'package:mailer/mailer.dart';
@@ -54,7 +54,6 @@ class CartService extends ChangeNotifier {
         print(value.docs.length);
         print('value exist');
       }
-      notifyListeners();
     });
   }
 
@@ -107,18 +106,15 @@ class CartService extends ChangeNotifier {
       await addToTotal(item, count);
       print('total calculated$subtotal');
       showSuccessToast(message: "Item added to cart", context: context);
-      notifyListeners();
     } catch (e) {
       print(e.toString());
     } finally {
       await getBadge();
       changeloading(false);
-      notifyListeners();
+      // notifyListeners();
     }
   }
-
   bool exist = false;
-
   //check specific item available in cart or not
   checkFromCart(item) async {
     await _firestore
@@ -132,9 +128,8 @@ class CartService extends ChangeNotifier {
       exist = value.exists;
       if (exist == true) {
         await getcountValue(item);
-        notifyListeners();
       }
-      notifyListeners();
+      // notifyListeners();
     });
   }
 
@@ -151,7 +146,7 @@ class CartService extends ChangeNotifier {
       availableCount = value.get('count');
       itemTotal = value.get('total');
       print("count value is $availableCount");
-      notifyListeners();
+      // notifyListeners();
     });
   }
 
@@ -159,16 +154,15 @@ class CartService extends ChangeNotifier {
   removeFromCart(item, context) async {
     changecheckload(true);
     try {
-      await removeToTotal(item, item['count']);
+      await removeToTotal(item, item.count);
       await _firestore
           .collection('cart')
           .doc(email)
           .collection(email)
-          .doc(item['title'])
+          .doc(item.title)
           .delete();
       showSuccessToast(message: "item removed from cart", context: context);
       await getTotal();
-      notifyListeners();
       print('deleted');
     } catch (e) {
       if (kDebugMode) {
@@ -176,8 +170,9 @@ class CartService extends ChangeNotifier {
       }
     } finally {
       await getBadge();
+      getorderItem();
       changecheckload(false);
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
@@ -193,24 +188,23 @@ class CartService extends ChangeNotifier {
         .doc(email)
         .update({"subtotal": subtotal, 'total': subtotal + tax});
     await getTotal();
-    notifyListeners();
+    // notifyListeners();
   }
-
   //remove price of item from total
   removeToTotal(item, count) async {
     try {
-      var itemtotal = item['price'] * count;
+      var itemtotal = item.price * count;
       print('item price $itemTotal');
       var stotal = subtotal.toStringAsFixed(2);
       //check bill can be 5.900002
       subtotal = double.tryParse(stotal)! - itemtotal;
-      print('before subtotal$subtotal');
+      print('before subtotal $subtotal');
       await _firestore
           .collection('cart')
           .doc(email)
           .update({"subtotal": subtotal, 'total': subtotal + tax});
       await getTotal();
-      notifyListeners();
+      // notifyListeners();
     } catch (e) {
       print(e.toString());
     }
@@ -226,40 +220,31 @@ class CartService extends ChangeNotifier {
           subtotal = x.toDouble();
           var y = value.get('total');
           total = y.toDouble();
-          notifyListeners();
         }else{
           subtotal=0.0;
           total=0.0;
-          notifyListeners();
         }
-
       });
       print('subtotal is $subtotal');
-      notifyListeners();
+      // notifyListeners();
     } catch (e) {
       print('get total error');
       print(e.toString());
     }
   }
 
-
-
-  checkout() async {
-    // sendMail();
-  }
   List orderItem=[];
   getorderItem() async {
     changeloading(true);
     try{
       var ref = await _firestore.collection('cart').doc(email).collection(email).get();
       orderItem=ref.docs.map((e) => OrderItem.fromJson(e.data())).toList();
-      notifyListeners();
     }
     catch(e){
       print(e.toString());
     }finally{
       changeloading(false);
-      notifyListeners();
+      // notifyListeners();
     }
   }
 }

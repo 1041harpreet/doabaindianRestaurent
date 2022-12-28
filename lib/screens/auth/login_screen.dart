@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent_app/screens/auth/forget_password.dart';
-import 'package:restaurent_app/screens/auth/sign_up_screen.dart';
-import 'package:restaurent_app/screens/navBar/nav_bar.dart';
-import 'package:restaurent_app/widgets/toast_service.dart';
+import 'package:restaurentapp/screens/auth/forget_password.dart';
+import 'package:restaurentapp/screens/auth/sign_up_screen.dart';
+import 'package:restaurentapp/screens/navBar/nav_bar.dart';
+import 'package:restaurentapp/widgets/toast_service.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';

@@ -48,7 +48,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent_app/screens/auth/login_screen.dart';
+import 'package:restaurentapp/screens/auth/login_screen.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
@@ -140,6 +140,12 @@ class SignUpScreen extends ConsumerWidget {
               ),
               // email & password section
               textfieldbtn(size, 'Phone no', 'phone', {
+                ValidationMessage.minLength: (error) =>
+                "The phone no is not valid",
+                ValidationMessage.maxLength: (error) =>
+                "The phone no is not valid",
+                ValidationMessage.number: (error) =>
+                "The phone no is not valid",
                 ValidationMessage.required: (error) =>
                 "The phone no must not be empty",
               }),
@@ -200,6 +206,7 @@ class SignUpScreen extends ConsumerWidget {
               ),
               Button(size, "Sign in with Google", Colors.black, Colors.white,
                   () {
+                authprovider.signInWithGoogle();
                 print('sign in with google');
               }),
               SizedBox(
@@ -318,6 +325,7 @@ Widget textfieldbtn(Size size, lable, controlname, validation) {
       ),
     ),
     child: ReactiveTextField(
+       // keyboardType: TextInputType.phone,
       formControlName: controlname,
       style: GoogleFonts.inter(
         fontSize: 16.0,
