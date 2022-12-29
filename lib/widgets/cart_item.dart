@@ -4,8 +4,8 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ant_design.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
-import 'package:restaurentapp/config/config.dart';
-import 'package:restaurentapp/screens/navBar/home_page/home_page.dart';
+import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent_app/screens/navBar/home_page/home_page.dart';
 
 import 'category_item.dart';
 

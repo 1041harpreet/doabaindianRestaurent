@@ -9,11 +9,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
-import 'package:restaurentapp/provider/cart_provider.dart';
-import 'package:restaurentapp/provider/nav_bar_provider.dart';
-import 'package:restaurentapp/screens/navBar/home_page/home_page.dart';
-import 'package:restaurentapp/screens/navBar/nav_bar.dart';
-import 'package:restaurentapp/widgets/toast_service.dart';
+import 'package:restaurent_app/provider/cart_provider.dart';
+import 'package:restaurent_app/provider/nav_bar_provider.dart';
+import 'package:restaurent_app/screens/navBar/home_page/home_page.dart';
+import 'package:restaurent_app/screens/navBar/nav_bar.dart';
+import 'package:restaurent_app/widgets/toast_service.dart';
 
 import '../../../config/config.dart';
 import '../../../provider/category_provider.dart';
