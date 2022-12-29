@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:restaurentapp/config/config.dart';
-import 'package:restaurentapp/widgets/category_item.dart';
-import 'package:restaurentapp/screens/navBar/home_page/product_details_view.dart';
+import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent_app/widgets/category_item.dart';
+import 'package:restaurent_app/screens/navBar/home_page/product_details_view.dart';
 
 import '../../../../widgets/cart_item.dart';
 import '../../../../widgets/home_item.dart';

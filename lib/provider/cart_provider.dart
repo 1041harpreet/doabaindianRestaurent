@@ -7,9 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurentapp/model/order_item_model.dart';
-import 'package:restaurentapp/provider/auth_provider.dart';
-import 'package:restaurentapp/widgets/toast_service.dart';
+import 'package:restaurent_app/model/order_item_model.dart';
+import 'package:restaurent_app/provider/auth_provider.dart';
+import 'package:restaurent_app/widgets/toast_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // import 'package:mailer/mailer.dart';

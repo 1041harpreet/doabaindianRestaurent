@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurentapp/config/config.dart';
-import 'package:restaurentapp/provider/cart_provider.dart';
-import 'package:restaurentapp/screens/auth/login_screen.dart';
-import 'package:restaurentapp/screens/navBar/nav_bar.dart';
+import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent_app/provider/cart_provider.dart';
+import 'package:restaurent_app/screens/auth/login_screen.dart';
+import 'package:restaurent_app/screens/navBar/nav_bar.dart';
 
 import '../../admin/admin_home_page.dart';
 import '../../provider/auth_provider.dart';
@@ -25,7 +25,7 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
      print('working loader screen');
      if (ref.watch(authProvider).user != null) {
-       await ref.watch(authProvider).getUserInfo();
+       await ref.watch(authProvider).getUserInfo(ref.watch(authProvider).user.email);
        if (ref.watch(authProvider).role == 'admin') {
          print('admin');
          Navigator.of(context).pushAndRemoveUntil(

@@ -48,7 +48,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurentapp/screens/auth/login_screen.dart';
+import 'package:restaurent_app/screens/auth/login_screen.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
@@ -206,7 +206,7 @@ class SignUpScreen extends ConsumerWidget {
               ),
               Button(size, "Sign in with Google", Colors.black, Colors.white,
                   () {
-                authprovider.signInWithGoogle();
+                authprovider.signInWithGoogle(context);
                 print('sign in with google');
               }),
               SizedBox(
