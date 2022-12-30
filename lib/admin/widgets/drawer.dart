@@ -40,6 +40,17 @@ Widget drawer(context,authprovider){
           Navigator.pop(context);
         },
       ),
+      ListTile(
+        leading:  const Icon(
+          Icons.logout,
+          color: Colors.black,
+        ),
+        title:  Text('Log Out',style: AppConfig.blacktext),
+        onTap: () async{
+         await authprovider.signOut(context);
+
+        },
+      ),
     ],
   );
 }

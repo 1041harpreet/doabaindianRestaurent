@@ -14,7 +14,7 @@ class OrderService extends ChangeNotifier{
  List orderList=[];
   getdetail() async {
     changeloading(true);
-    var ref = await FirebaseFirestore.instance.collection('orders').get();
+    var ref = await FirebaseFirestore.instance.collection('orders').orderBy('date',descending: true).limit(10).get();
     orderList=ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
     try{
 

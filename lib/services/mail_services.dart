@@ -18,7 +18,9 @@ class MailService{
       ..subject = 'Order placed $name'
       ..text = 'This is the plain text.\nThis is line 2 of the text part.'
       ..html = "<h1>$name</h1>\n"
-          "<p>Your order payment of $total on ${date}is successfully done</p>\n"
+          "<p>Your order payment of $total on ${date}is successfully done.</p>\n"
+          "<p>Your order payment of $total on ${date}is successfully done.</p>\n"
+
     ;
     try {
       final sendReport = await send(message, smtpServer);
