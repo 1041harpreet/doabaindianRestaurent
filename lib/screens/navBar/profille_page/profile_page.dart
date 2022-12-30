@@ -5,6 +5,8 @@ import 'package:iconify_flutter/icons/bx.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/screens/navBar/cart_Page/cart_page.dart';
+import 'package:restaurent_app/screens/navBar/profille_page/buffet_page.dart';
+import 'package:restaurent_app/screens/navBar/profille_page/gallery.dart';
 
 import '../../../provider/nav_bar_provider.dart';
 import 'aboutus_page.dart';
@@ -73,12 +75,18 @@ Widget optionListView(authprovider, context) {
               color: Colors.black,
             )),
         _separator(),
-        _listItem(
+        _listItem(onClick: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => BuffetPage(),));
+
+        },
             text: 'Buffet',
             icon: const Icon(Icons.food_bank, color: Colors.black),
             showArrow: true),
         _separator(),
-        _listItem(
+        _listItem(onClick: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => GalleryPage(),));
+
+        },
             text: 'Gallery', icon: const Iconify(Bx.image), showArrow: true),
         _separator(),
         _listItem(

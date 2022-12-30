@@ -12,6 +12,7 @@ class AppConfig {
   static TextStyle blackTitle = const TextStyle(color: Colors.black);
   static TextStyle greytext =  TextStyle(color: Colors.grey.shade900,fontWeight: FontWeight.w500);
   static TextStyle blacktext =  TextStyle(color: Colors.grey.shade900,fontWeight: FontWeight.w500);
+  static TextStyle whitetext =  const TextStyle(color: Colors.white,fontWeight: FontWeight.w500);
 
 
 // static var t26 = const TextStyle(color: Colors.black, fontSize: 26);
