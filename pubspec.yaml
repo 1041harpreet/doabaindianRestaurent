@@ -31,30 +31,37 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_riverpod:
-  dio:
-  flutter_secure_storage:
-  flutter_launcher_icons:
-  firebase_core:
-  firebase_messaging:
-  cloud_firestore:
-  carousel_slider:
-  flutter_svg:
-  flutter_styled_toast:
-  shimmer:
-  modal_bottom_sheet:
-  awesome_notifications:
-  firebase_storage:
-  iconify_flutter:
-  auto_size_text:
-  auto_animated:
-  google_fonts:
-  badges:
-  cached_network_image:
-  maps_launcher:
-  url_launcher:
-  reactive_forms:
-  device_preview:
+  flutter_riverpod: ^2.1.3
+  dio: ^4.0.6
+  flutter_secure_storage: ^7.0.1
+  flutter_launcher_icons: ^0.11.0
+  firebase_core: ^2.4.0
+  awesome_notifications_fcm: ^0.7.4+1
+  cloud_firestore: ^4.3.0
+  carousel_slider: ^4.2.1
+  flutter_svg: ^1.1.6
+  flutter_styled_toast: ^2.1.3
+  shimmer: ^2.0.0
+  firebase_storage: ^11.0.9
+  iconify_flutter: ^0.0.5
+  auto_size_text: ^3.0.0
+  auto_animated: ^3.1.0
+  google_fonts: ^3.0.1
+  badges: ^2.0.3
+  cached_network_image: ^3.2.3
+  maps_launcher: ^2.0.1
+  url_launcher: ^6.1.7
+  reactive_forms: ^14.1.0
+  firebase_auth: ^4.2.3
+  connectivity_plus: ^3.0.2
+  data_connection_checker: ^0.3.4
+  mailer: ^5.3.0
+  intl: ^0.17.0
+  get: ^4.6.5
+  flutter_braintree: ^2.3.1
+  flutter_paypal: ^0.0.8
+  google_sign_in: ^5.4.2
+  lottie: ^2.1.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons:

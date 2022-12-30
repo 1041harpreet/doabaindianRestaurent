@@ -1,9 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ant_design.dart';
+import 'package:iconify_flutter/icons/bx.dart';
+import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/screens/navBar/home_page/home_page.dart';
 
 import 'category_item.dart';
+
+// import 'category_item.dart';
 
 Widget CartItem(wsize, hsize, context, item,cartprovider) {
   return Padding(
@@ -31,7 +37,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                 child: SizedBox(
                     width: wsize * 0.25,
                     child: Center(
-                      child: buildImg(hsize, wsize, item['img']),
+                      child: buildImg(hsize, wsize, item.img),
                     )),
               ),
               Padding(
@@ -43,7 +49,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                     Padding(
                       padding: EdgeInsets.only(
                           left: wsize * 0.03, top: wsize * 0.03),
-                      child: AutoSizeText(item['title'],
+                      child: AutoSizeText(item.title,
                           maxLines: 1,
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
@@ -52,16 +58,15 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: wsize * 0.04),
-                      child: item['category'].toString().length > 30
+                      child: item.category.toString().length > 30
                           ? AutoSizeText(
-                          item['category'].toString().substring(0, 30) +
-                              '...',
+                          '${item.category.toString().substring(0, 30)}...',
                           maxLines: 1,
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: wsize * 0.035,
                               color: Colors.black54))
-                          : AutoSizeText(item['category'],
+                          : AutoSizeText(item.category,
                           maxLines: 1,
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
@@ -82,7 +87,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                                         color: Colors.black,
                                         fontSize: 14.0,
                                         fontWeight: FontWeight.bold)),
-                                AutoSizeText("\$${item['price'].toStringAsFixed(2)}",
+                                AutoSizeText("\$${item.price.toStringAsFixed(2)}",
                                     style: TextStyle(
                                         color: AppConfig.primaryColor,
                                         fontSize: 16.0,
@@ -90,7 +95,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                               ]),
                           Padding(
                             padding: const EdgeInsets.only(left: 16.0),
-                            child: AutoSizeText("x ${item['count']}",
+                            child: AutoSizeText("x ${item.count}",
                                 style: TextStyle(
                                     color: AppConfig.primaryColor,
                                     fontSize: 16.0,
@@ -116,7 +121,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                                     fontWeight: FontWeight.bold)),
                           ),
                             Text(
-                              "\$${item['total'].toStringAsFixed(2)}",
+                              "\$${item.total.toStringAsFixed(2)}",
                               style: TextStyle(
                                   color: AppConfig.primaryColor,
                                   fontSize: 16.0,
@@ -124,11 +129,14 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                             ),],),
                           Padding(
                             padding:  EdgeInsets.only(left:wsize*0.07),
-                            child: GestureDetector(
+                            child:
+
+                            GestureDetector(
+
                                 onTap: () async{
                                   await cartprovider.removeFromCart(item, context);
                                 },
-                                child: Icon(Icons.delete,color: AppConfig.primaryColor,)),
+                                child: Iconify(AntDesign.delete,color: AppConfig.primaryColor,)),
                           )
                         ],
                       ),
