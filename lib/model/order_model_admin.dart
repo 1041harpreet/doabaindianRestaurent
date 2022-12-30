@@ -25,7 +25,7 @@ class AdminOrderItem {
   String name;
   String orderID;
   String phone;
-  String note;
+  String? note;
   double tax;
   String status;
 
