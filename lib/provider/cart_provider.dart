@@ -247,6 +247,7 @@ class CartService extends ChangeNotifier {
       // notifyListeners();
     }
   }
+
 }
 
 final cartProvider = ChangeNotifierProvider((ref) {
