@@ -14,6 +14,7 @@ import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
 import 'package:restaurent_app/screens/navBar/home_page/categories/stream_builder_widget.dart';
 import 'package:restaurent_app/screens/navBar/home_page/notification/main_notiification_page.dart';
+import 'package:restaurent_app/widgets/buffet.dart';
 import 'package:restaurent_app/widgets/home_item.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,11 +59,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         return Dialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0)), //this right here
-          child: Container(
-            // height: 500.0,
-            padding: EdgeInsets.all(8.0),
-            child: Image.asset('assets/images/doaba.jpg')
-          ),
+          child: buffet()
         );
       },
     );

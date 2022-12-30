@@ -8,7 +8,7 @@ class MyProfile extends ConsumerWidget {
   const MyProfile({Key? key}) : super(key: key);
 
   Widget buildImage(onpressed) {
-    const image = AssetImage("assets/images/harpreet.jpg");
+    const image = AssetImage("assets/images/avatar.png");
 
     return ClipOval(
       child: Material(
