@@ -53,7 +53,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
+// import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -73,18 +73,21 @@ checkconnection()async{
     // showDialogBox();
     notifyListeners();
   }else{
-    var res = await DataConnectionChecker().hasConnection;
-    if(res){
-      deviceConnected=true;
-      notifyListeners();
-    }
-    else{
-      deviceConnected=false;
-      print('no internet');
-      // showDialogBox();
-
-      notifyListeners();
-    }
+    deviceConnected=true;
+    notifyListeners();
+    return;
+    // var res = await DataConnectionChecker().hasConnection;
+    // if(res){
+    //
+    //   notifyListeners();
+    // }
+    // else{
+    //   deviceConnected=false;
+    //   print('no internet');
+    //   // showDialogBox();
+    //
+    //   notifyListeners();
+    // }
 
   }
   print(deviceConnected);
