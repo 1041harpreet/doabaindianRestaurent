@@ -119,9 +119,13 @@ Widget categoryShimmer(wsize, hsize, context) {
           )
     ]),
   );
+
+}
+Widget checkoutshimmer(context,wsize)
+{
   return ListTile(
     leading:
-        MyShimmerEffectUI.rectangular(height: 150, width: 80, circular: 10.0),
+    MyShimmerEffectUI.rectangular(height: 150, width:wsize, circular: 10.0),
     title: Align(
       alignment: Alignment.centerLeft,
       child: MyShimmerEffectUI.rectangular(
@@ -134,4 +138,9 @@ Widget categoryShimmer(wsize, hsize, context) {
         width: MediaQuery.of(context).size.width * 0.3,
         circular: 0.0),
   );
+}
+
+Widget carsoulShimmer(context,wsize)
+{
+  return MyShimmerEffectUI.rectangular(height: 200, width:wsize*0.9, circular: 10.0);
 }

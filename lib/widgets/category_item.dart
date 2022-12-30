@@ -33,7 +33,7 @@ Widget Item(wsize,hsize,item,provider,context){
                   SizedBox(
                       width: wsize * 0.3,
                       child: Center(
-                        child: buildImg(hsize, wsize, item['img']),
+                        child: buildImg(hsize, wsize, item.img),
                       )),
                 ),
                 Padding(
@@ -45,15 +45,15 @@ Widget Item(wsize,hsize,item,provider,context){
                       Padding(
                         padding: EdgeInsets.only(
                             left: wsize * 0.03, top: wsize * 0.03),
-                        child: item['title'].toString().length > 20
+                        child: item.title.toString().length > 20
                             ? AutoSizeText(
-                            '${item['title'].toString().substring(0, 20)}...',
+                            '${item.title.toString().substring(0, 20)}...',
                             maxLines: 1,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: wsize * 0.04,
                                 color: Colors.black87))
-                            : AutoSizeText(item['title'],
+                            : AutoSizeText(item.title,
                             maxLines: 1,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
@@ -61,7 +61,7 @@ Widget Item(wsize,hsize,item,provider,context){
                                 color: Colors.black87)),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: wsize * 0.04,top: wsize*0.03),
+                        padding: EdgeInsets.only(left: wsize * 0.04,top: wsize*0.01),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -70,7 +70,7 @@ Widget Item(wsize,hsize,item,provider,context){
                                     color: AppConfig.primaryColor,
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.bold)),
-                            AutoSizeText("\$${item['price']}",
+                            AutoSizeText("\$${item.price}",
                                 style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,

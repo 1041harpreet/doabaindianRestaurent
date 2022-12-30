@@ -3,11 +3,8 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 showErrorToast({message,context}) {
   showToast(
-
     message,
-
     context: context,
-    fullWidth: true,
     backgroundColor: Colors.red,
     textStyle: const TextStyle(fontSize: 14, color: Colors.white),
     animation: StyledToastAnimation.slideFromTop,
@@ -24,7 +21,6 @@ showSuccessToast({message,context}) {
   showToast(
     message,
     context: context,
-    fullWidth: true,
     backgroundColor: Colors.green,
     textStyle: const TextStyle(fontSize: 14, color: Colors.white),
     animation: StyledToastAnimation.slideFromTop,

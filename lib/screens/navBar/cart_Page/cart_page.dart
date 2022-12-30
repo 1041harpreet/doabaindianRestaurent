@@ -8,9 +8,16 @@ import 'package:iconify_flutter/icons/ant_design.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
+import 'package:restaurent_app/screens/navBar/cart_Page/checkout_page.dart';
+import '../../../provider/check_out_provider.dart';
+import '../../../provider/nav_bar_provider.dart';
+import '../../../services/notification_service/notification.dart';
 import '../../../widgets/cart_item.dart';
 import '../../../widgets/category_item.dart';
+import '../../../widgets/shimmer.dart';
+import '../home_page/categories/stream_builder_widget.dart';
 
 class AddToCart extends ConsumerStatefulWidget {
   const AddToCart({Key? key}) : super(key: key);
@@ -23,189 +30,341 @@ class _AddToCartState extends ConsumerState<AddToCart> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.watch(cartProvider).getorderItem();
       ref.watch(cartProvider).getTotal();
     });
     super.initState();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final cartprovider = ref.watch(cartProvider);
+    final authprovider = ref.watch(authProvider);
+    final navprovider = ref.watch(NavBarProvider);
+    final checkoutprovider = ref.watch(checkOutProvider);
     print(cartprovider.subtotal.toString());
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppConfig.secmainColor,
-        body: Column(children: [
-          Padding(padding: const EdgeInsets.all(8.0), child: header(wsize)),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 5.0, // soften the shadow
-                      spreadRadius: -1.0, //extend the shadow
-                      offset: Offset(
-                        -2.0, // Move to right 10  horizontally
-                        2.0, // Move to bottom 5 Vertically
-                      ),
-                    )
-                  ],
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25.0),
-                    topRight: Radius.circular(25.0),
-                  ),
-                ),
-                child: StreamBuilder<dynamic>(
-                  stream: FirebaseFirestore.instance
-                      .collection('cart')
-                      .doc('6283578905')
-                      .collection('6283578905')
-                      .snapshots(),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: AppConfig.primaryColor,
-                                )),
-                            const SizedBox(height: 16),
-                            Text("Loading...",
-                                style:
-                                    TextStyle(color: AppConfig.primaryColor)),
+        child: WillPopScope(
+            onWillPop: () async {
+              navprovider.changeindex(0);
+              return false;
+            },
+            child: Scaffold(
+                key: _scaffoldKey,
+                backgroundColor: AppConfig.secmainColor,
+                body: Column(children: [
+                  Padding(
+                      padding: const EdgeInsets.all(8.0), child: header(wsize)),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              blurRadius: 5.0, // soften the shadow
+                              spreadRadius: -1.0, //extend the shadow
+                              offset: Offset(
+                                -2.0, // Move to right 10  horizontally
+                                2.0, // Move to bottom 5 Vertically
+                              ),
+                            )
                           ],
-                        ),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Text(
-                        'error',
-                        style: AppConfig.blackTitle,
-                      );
-                    }
-                    if (snapshot.data.docs.length == 0) {
-                      // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                      //   cartprovider.changeBadge(0);
-                      // });
-                      return noItemWidget();
-                    }
-                    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    //   cartprovider.changeBadge(snapshot.data.docs.length);
-                    // });
-                    return ListView.builder(
-                      itemCount: snapshot.data.docs.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot item = snapshot.data.docs[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              top: 4.0, left: 8.0, right: 8.0),
-                          child: CartItem(wsize, hsize, context, item,cartprovider),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-          cartprovider.subtotal == 0.0
-              ? Container()
-              : Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white70,
-                  ),
-                  width: wsize,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Subtotal",
-                              style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: hsize * 0.02,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text("\$${cartprovider.subtotal.toStringAsFixed(2)}",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black)),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "taxs",
-                              style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: hsize * 0.02,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text("\$${cartprovider.tax}",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black)),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text("Total : ",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppConfig.primaryColor,
-                                    fontSize: 18.0)),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25.0),
+                            topRight: Radius.circular(25.0),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Text("\$${cartprovider.total.toStringAsFixed(2)}",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                    fontSize: 16.0)),
-                          ),
+                        ),
+                        child: Column(children: [
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppConfig.primaryColor),
-                                  onPressed: () async {
-                                  },
-                                  child: const Text("Checkout")),
-                            ),
-                          )
-                        ],
-                      )
-                    ],
+                              child: cartlistBuilder(
+                                  wsize, hsize, cartprovider, context)),
+                          cartprovider.subtotal == 0.0
+                              ? Container()
+                              : Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white70,
+                                  ),
+                                  width: wsize,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(7.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Subtotal",
+                                              style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize: hsize * 0.02,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "\$${cartprovider.subtotal.toStringAsFixed(2)}",
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black)),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(7.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Tax",
+                                              style: TextStyle(
+                                                  color: Colors.black54,
+                                                  fontSize: hsize * 0.02,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "\$${cartprovider.tax.toStringAsFixed(2)}",
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black)),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(7.0),
+                                            child: Text("Total : ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    color:
+                                                        AppConfig.primaryColor,
+                                                    fontSize: 18.0)),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: Text(
+                                                "\$${cartprovider.total.toStringAsFixed(2)}",
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black,
+                                                    fontSize: 16.0)),
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              AppConfig
+                                                                  .primaryColor),
+                                                  onPressed: () async {
+                                                    print('checkout');
+
+                                                    checkoutprovider
+                                                        .checkoutForm
+                                                        .control('fullname')
+                                                        .patchValue(authprovider
+                                                            .username);
+                                                    checkoutprovider
+                                                        .checkoutForm
+                                                        .control('phone')
+                                                        .patchValue(authprovider
+                                                            .phone
+                                                            .toString());
+                                                    checkoutprovider
+                                                        .checkoutForm
+                                                        .control('email')
+                                                        .patchValue(authprovider
+                                                            .user.email);
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const CheckoutPage(),
+                                                        ));
+                                                  },
+                                                  child:
+                                                      const Text("Checkout")),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+
+
+
+                          //   // StreamBuilder<dynamic>(
+                          //   //   stream: FirebaseFirestore.instance
+                          //   //       .collection('cart')
+                          //   //       .doc(cartprovider.email)
+                          //   //       .collection(cartprovider.email)
+                          //   //       .snapshots(),
+                          //   //   builder: (context, AsyncSnapshot snapshot) {
+                          //   //     if (!snapshot.hasData) {
+                          //   //       return Center(
+                          //   //         child: Column(
+                          //   //           mainAxisSize: MainAxisSize.min,
+                          //   //           children: [
+                          //   //             SizedBox(
+                          //   //                 width: 24,
+                          //   //                 height: 24,
+                          //   //                 child: CircularProgressIndicator(
+                          //   //                   strokeWidth: 2,
+                          //   //                   color: AppConfig.primaryColor,
+                          //   //                 )),
+                          //   //             const SizedBox(height: 16),
+                          //   //             Text("Loading...",
+                          //   //                 style:
+                          //   //                     TextStyle(color: AppConfig.primaryColor)),
+                          //   //           ],
+                          //   //         ),
+                          //   //       );
+                          //   //     }
+                          //   //     if (snapshot.hasError) {
+                          //   //       return Text(
+                          //   //         'error',
+                          //   //         style: AppConfig.blackTitle,
+                          //   //       );
+                          //   //     }
+                          //   //     if (snapshot.data.docs.length == 0) {
+                          //   //       return noItemWidget();
+                          //   //     }
+                          //   //
+                          //   //     return Column(
+                          //   //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   //       children: [
+                          //   //         Expanded(
+                          //   //             child: ListView.builder(
+                          //   //           itemCount: snapshot.data.docs.length,
+                          //   //           itemBuilder: (context, index) {
+                          //   //             DocumentSnapshot item = snapshot.data.docs[index];
+                          //   //             return Padding(
+                          //   //               padding: const EdgeInsets.only(
+                          //   //                   top: 4.0, left: 8.0, right: 8.0),
+                          //   //               child: CartItem(
+                          //   //                   wsize, hsize, context, item, cartprovider),
+                          //   //             );
+                          //   //           },
+                          //   //         )),
+                          //   //         Container(
+                          //   //           decoration: const BoxDecoration(
+                          //   //             color: Colors.white70,
+                          //   //           ),
+                          //   //           width: wsize,
+                          //   //           child: Column(
+                          //   //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   //             children: [
+                          //   //               Padding(
+                          //   //                 padding: const EdgeInsets.all(7.0),
+                          //   //                 child: Row(
+                          //   //                   mainAxisAlignment:
+                          //   //                   MainAxisAlignment.spaceBetween,
+                          //   //                   children: [
+                          //   //                     Text(
+                          //   //                       "Subtotal",
+                          //   //                       style: TextStyle(
+                          //   //                           color: Colors.black54,
+                          //   //                           fontSize: hsize * 0.02,
+                          //   //                           fontWeight: FontWeight.bold),
+                          //   //                     ),
+                          //   //                     Text(
+                          //   //                         "\$${cartprovider.subtotal.toStringAsFixed(2)}",
+                          //   //                         style: const TextStyle(
+                          //   //                             fontWeight: FontWeight.w500,
+                          //   //                             color: Colors.black)),
+                          //   //                   ],
+                          //   //                 ),
+                          //   //               ),
+                          //   //               Padding(
+                          //   //                 padding: const EdgeInsets.all(7.0),
+                          //   //                 child: Row(
+                          //   //                   mainAxisAlignment:
+                          //   //                   MainAxisAlignment.spaceBetween,
+                          //   //                   children: [
+                          //   //                     Text(
+                          //   //                       "Tax",
+                          //   //                       style: TextStyle(
+                          //   //                           color: Colors.black54,
+                          //   //                           fontSize: hsize * 0.02,
+                          //   //                           fontWeight: FontWeight.bold),
+                          //   //                     ),
+                          //   //                     Text(
+                          //   //                         "\$${cartprovider.tax.toStringAsFixed(2)}",
+                          //   //                         style: const TextStyle(
+                          //   //                             fontWeight: FontWeight.w500,
+                          //   //                             color: Colors.black)),
+                          //   //                   ],
+                          //   //                 ),
+                          //   //               ),
+                          //   //               Row(
+                          //   //                 children: [
+                          //   //                   Padding(
+                          //   //                     padding: const EdgeInsets.all(7.0),
+                          //   //                     child: Text("Total : ",
+                          //   //                         style: TextStyle(
+                          //   //                             fontWeight: FontWeight.w500,
+                          //   //                             color: AppConfig.primaryColor,
+                          //   //                             fontSize: 18.0)),
+                          //   //                   ),
+                          //   //                   Padding(
+                          //   //                     padding: const EdgeInsets.only(right: 8.0),
+                          //   //                     child: Text(
+                          //   //                         "\$${cartprovider.total.toStringAsFixed(2)}",
+                          //   //                         style: const TextStyle(
+                          //   //                             fontWeight: FontWeight.w500,
+                          //   //                             color: Colors.black,
+                          //   //                             fontSize: 16.0)),
+                          //   //                   ),
+                          //   //                   Expanded(
+                          //   //                     child: Padding(
+                          //   //                       padding: const EdgeInsets.all(8.0),
+                          //   //                       child: ElevatedButton(
+                          //   //                           style: ElevatedButton.styleFrom(
+                          //   //                               backgroundColor:
+                          //   //                               AppConfig.primaryColor),
+                          //   //                           onPressed: () async {
+                          //   //                             print('checkout');
+                          //   //
+                          //   //                             checkoutprovider.checkoutForm.control('fullname').patchValue(authprovider.username);
+                          //   //                             checkoutprovider.checkoutForm.control('phone').patchValue( authprovider.phone.toString());
+                          //   //                             checkoutprovider.checkoutForm.control('email').patchValue(authprovider.user.email);
+                          //   //                             Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutPage(),));
+                          //   //
+                          //   //                           },
+                          //   //                           child: const Text("Checkout")),
+                          //   //                     ),
+                          //   //                   )
+                          //   //                 ],
+                          //   //               )
+                          //   //             ],
+                          //   //           ),
+                          //   //         )
+                          //   //       ],);
+                          //   //
+                          //   //   },
+                          //   // ),
+                          // ),
+                        ]),
+                      ),
+                    ),
                   ),
-                )
-        ]),
-      ),
-    );
+                ]),),),);
   }
 }
 
@@ -221,4 +380,3 @@ Widget header(wsize) {
     )
   ]);
 }
-

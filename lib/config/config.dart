@@ -10,6 +10,11 @@ class AppConfig {
   //typography
  // TextStyle greySmallText = TextStyle(fontSize: 15, color: AppConfig.greyColor);
   static TextStyle blackTitle = const TextStyle(color: Colors.black);
-  // static var t26 = const TextStyle(color: Colors.black, fontSize: 26);
+  static TextStyle greytext =  TextStyle(color: Colors.grey.shade900,fontWeight: FontWeight.w500);
+  static TextStyle blacktext =  TextStyle(color: Colors.grey.shade900,fontWeight: FontWeight.w500);
+  static TextStyle whitetext =  const TextStyle(color: Colors.white,fontWeight: FontWeight.w500);
+
+
+// static var t26 = const TextStyle(color: Colors.black, fontSize: 26);
   // static var catItem = const TextStyle(color: Colors.black54, fontSize: 18,fontWeight: FontWeight.bold);
 }

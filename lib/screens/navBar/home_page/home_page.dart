@@ -1,395 +1,218 @@
 import 'package:auto_animated/auto_animated.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/config/const.dart';
+import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
+import 'package:restaurent_app/screens/navBar/home_page/categories/stream_builder_widget.dart';
+import 'package:restaurent_app/screens/navBar/home_page/notification/main_notiification_page.dart';
+import 'package:restaurent_app/widgets/buffet.dart';
 import 'package:restaurent_app/widgets/home_item.dart';
-import 'package:restaurent_app/screens/navBar/order_screen/order_page.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../provider/category_provider.dart';
+import '../../../provider/home_provider.dart';
+import '../../../services/notification_service/notification.dart';
+import '../../../widgets/about_us.dart';
 import '../../../widgets/shimmer.dart';
+import 'carsoul_full_screen.dart';
 import 'categories/category_items.dart';
 import 'categories/all_category.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 
-class HomePage extends ConsumerWidget {
-  HomePage({Key? key}) : super(key: key);
-
-  var d;
-  TextEditingController searchController = TextEditingController();
-  final options = const LiveOptions(
-    // Start animation after (default zero)
-    delay: Duration(seconds: 0),
-
-    // Show each item through (default 250)
-    showItemInterval: Duration(milliseconds: 30),
-
-    // Animation duration (default 250)
-    showItemDuration: Duration(microseconds: 30),
-
-    // Animations starts at 0.05 visible
-    // item fraction in sight (default 0.025)
-    visibleFraction: 0.01,
-
-    // Repeat the animation of the appearance
-    // when scrolling in the opposite direction (default false)
-    // To get the effect as in a showcase for ListView, set true
-    reAnimateOnVisibility: false,
-  );
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  @override
+  var d;
+  TextEditingController searchController = TextEditingController();
+
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.watch(categoryProvider).getCategory();
+      ref.watch(categoryProvider).getcarsoulItem();
+      ref.watch(categoryProvider).getmadeforu();
+      if(ref.watch(homeProvider).show) {
+        _showNewOrderDialog();
+        ref.watch(homeProvider).changeshow(false);
+      }
+    });
+    super.initState();
+  }
+  _showNewOrderDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0)), //this right here
+          child: buffet()
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final categoryprovider = ref.watch(categoryProvider);
     final cartprovider = ref.watch(cartProvider);
+    final authprovider = ref.watch(authProvider);
+    final homeprovider = ref.watch(homeProvider);
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
-    List carsoullist = ["assets/images/image.png"];
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: AppConfig.secmainColor,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            header(wsize, hsize),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 3.0, horizontal: 16.0),
-              child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                height: 50.0,
-                child: TextFormField(
-
-                  decoration: InputDecoration(
-                    hintText: "Search any food",
-
-                    hintStyle: TextStyle(color: AppConfig.primaryColor),
-                    prefixIcon: Icon(Icons.search,color: AppConfig.primaryColor),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: AppConfig.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: AppConfig.primaryColor),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: AppConfig.primaryColor),
-                    ),
-                    // prefixIcon:
-                  ),
-                ),
-              )
-            ),
-            CarouselSlider(
-                options: CarouselOptions(
-                  height: hsize * 0.25,
-                  viewportFraction: 0.9,
-                  initialPage: 0,
-                  enableInfiniteScroll: true,
-                  reverse: false,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 4),
-                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enlargeCenterPage: true,
-                  scrollDirection: Axis.horizontal,
-                  enlargeStrategy: CenterPageEnlargeStrategy.height,
-                ),
-                items: carsoullist.map((e) {
-                  return Builder(
-                    builder: (context) {
-                      return Container(
-                        height: 200.0,
-                        decoration: BoxDecoration(
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.circular(10.0),
-                          image: DecorationImage(
-                            image: AssetImage(e),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.all(10.0),
-                      );
-                    },
-                  );
-                }).toList()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: wsize * .05),
-                  child: Text(
-                    "Categories",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: wsize * .05,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    // cartprovider.Total();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MoreCategory(
-                            index: 0,
-                          ),
-                        ));
-                    print('pressed more');
-                  },
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(right: wsize * .03, top: hsize * .01),
-                    child: const Text("More",
-                        style: TextStyle(color: Colors.grey)),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(wsize * .03),
-              child: SizedBox(
-                height: hsize * .3,
-                width: MediaQuery.of(context).size.width * 1,
-                child: StreamBuilder<dynamic>(
-                    stream: FirebaseFirestore.instance
-                        .collection('category')
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (!snapshot.hasData) {
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 8,
-                          itemBuilder: (context, index) {
-                            return homePageShimmer(context, wsize, hsize);
-                          },
-                        );
-                        // return Center(
-                        //   child: Column(
-                        //     mainAxisSize: MainAxisSize.min,
-                        //     children: [
-                        //       SizedBox(
-                        //           width: 24,
-                        //           height: 24,
-                        //           child: CircularProgressIndicator(
-                        //             strokeWidth: 2,
-                        //             color: AppConfig.primaryColor,
-                        //           )),
-                        //       const SizedBox(height: 16),
-                        //       Text("Loading...",
-                        //           style:
-                        //               TextStyle(color: AppConfig.primaryColor)),
-                        //     ],
-                        //   ),
-                        // );
-                      }
-                      if (snapshot.hasError) {
-                        return Text(
-                          'error',
-                          style: AppConfig.blackTitle,
-                        );
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: LiveList.options(
-                            options: options,
-                            itemCount: snapshot.data.docs.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index, animation) {
-                              DocumentSnapshot item = snapshot.data.docs[index];
-                              print(item);
-                              return FadeTransition(
-                                opacity: Tween<double>(
-                                  begin: 0,
-                                  end: 1,
-                                ).animate(animation),
-                                // And slide transition
-                                child: SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(0, -0.1),
-                                      end: Offset.zero,
-                                    ).animate(animation),
-                                    // Paste you Widget
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CategoryItems(
-                                                        name: item['title'])));
-                                      },
-                                      child: homeItem(wsize, hsize, item),
-                                    )),
-                              );
-                            }),
-                      );
-                    }),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: wsize * .05),
-                  child: Text(
-                    "Best For U",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: wsize * .05,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MoreCategory(
-                            index: 0,
-                          ),
-                        ));
-                    print('pressed more');
-                    // print(Const();
-                  },
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(right: wsize * .03, top: hsize * .01),
-                    child: const Text("More",
-                        style: TextStyle(color: Colors.grey)),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(wsize * .03),
-              child: SizedBox(
-                height: hsize * .3,
-                width: MediaQuery.of(context).size.width * 1,
-                child: StreamBuilder<dynamic>(
-                    stream: FirebaseFirestore.instance
-                        .collection('category')
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: AppConfig.primaryColor,
-                                  )),
-                              const SizedBox(height: 16),
-                              Text("Loading...",
-                                  style:
-                                      TextStyle(color: AppConfig.primaryColor)),
-                            ],
-                          ),
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return Text(
-                          'error',
-                          style: AppConfig.blackTitle,
-                        );
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: LiveList.options(
-                            options: options,
-                            itemCount: snapshot.data.docs.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index, animation) {
-                              DocumentSnapshot item = snapshot.data.docs[index];
-                              print(item);
-                              return FadeTransition(
-                                opacity: Tween<double>(
-                                  begin: 0,
-                                  end: 1,
-                                ).animate(animation),
-                                // And slide transition
-                                child: SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(0, -0.1),
-                                      end: Offset.zero,
-                                    ).animate(animation),
-                                    // Paste you Widget
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CategoryItems(
-                                                        name: item['title'])));
-                                      },
-                                      child: homeItem(wsize, hsize, item),
-                                    )),
-                              );
-                            }),
-                      );
-                    }),
-              ),
-            ),
-            const Center(
-                child: Text(
-              "We provide catering services",
-              style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            )),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Image.asset("assets/images/banner.jpg"),
-            )
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldPop = await dialogBox(context);
+        return shouldPop!;
+      },
+      child: SafeArea(
+          child: Scaffold(
+        backgroundColor: AppConfig.secmainColor,
+        floatingActionButton: FloatingActionButton(
+          elevation: 5.0,
+          backgroundColor: Colors.green,
+          onPressed: (){
+          homeprovider.openwhatsapp();
+        },
+         child: Image.asset('assets/images/whats.png',fit: BoxFit.fill),
         ),
-      ),
-    ));
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              header(wsize, hsize, homeprovider, categoryprovider, authprovider,
+                  context),
+              categoryprovider.carload ? carsoulShimmer(context, wsize):
+              CarouselSlider(
+                  options: CarouselOptions(
+                    height: hsize * 0.3,
+                    viewportFraction: 1,
+                    initialPage: 0,
+                    enableInfiniteScroll: true,
+                    reverse: false,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(seconds: 3),
+                    autoPlayAnimationDuration: const Duration(milliseconds: 400),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enlargeCenterPage: true,
+                    scrollDirection: Axis.horizontal,
+                    enlargeStrategy: CenterPageEnlargeStrategy.height,
+                  ),
+                  items: <Widget>[
+                    for (var i = 0; i < categoryprovider.carsoulList.length; i++)
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => CarsoulFullScreen(url: categoryprovider.carsoulList[i].img),));
+                        },
+                        child: CachedNetworkImage(
+                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) {
+                          return   Image.asset('assets/images/placeholder.png');
+                          },
+                          imageUrl: categoryprovider.carsoulList[i].img,
+                        fit: BoxFit.fill,
+                        )
+                      ),
+                  ],),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0,left: wsize * .05),
+                    child: Text(
+                      "Categories",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: wsize * .05,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MoreCategory(
+                              index: 0,
+                            ),
+                          ));
+                      print('pressed more');
+                    },
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(right: wsize * .03, top: hsize * .01),
+                      child:  Text("See All",
+                          style: TextStyle(color: Colors.grey.shade900)),
+                    ),
+                  ),
+                ],
+              ),
+             listview(hsize, wsize, context, categoryprovider),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: wsize * .05),
+                    child: Text(
+                      "Made for You",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: wsize * .05,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      // cartprovider.Total();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MoreCategory(
+                              index: 0,
+                            ),
+                          ));
+                      print('pressed more');
+                    },
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(right: wsize * .03, top: hsize * .01),
+                      child:  Text("See all",
+                          style: TextStyle(color: Colors.grey.shade900)),
+                    ),
+                  ),
+                ],
+              ),
+              madeforulist(hsize, wsize, context, categoryprovider),
+
+              aboutus(),
+              ],
+          ),
+        ),
+      )),
+    );
   }
 }
 
-Widget buildImage(hsize, wsize, img) {
-  return Container(
-      // height: hsize * .,
-      // width: wsize * .3,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(wsize * 0.025),
-        boxShadow: [
-          BoxShadow(
-              offset: const Offset(2.0, 2.0),
-              color: Colors.black26,
-              blurRadius: wsize * .025)
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-        child: Image.network(
-          img,
-          fit: BoxFit.cover,
-        ),
-      ));
-}
 
-Widget header(wsize, hsize) {
+
+
+Widget header(
+    wsize, hsize, homeprovider, categoryprovider, authprovider, context) {
   return Padding(
     padding: EdgeInsets.only(
         top: wsize * 0.03, right: wsize * 0.03, left: wsize * 0.03),
@@ -440,24 +263,7 @@ Widget header(wsize, hsize) {
                       width: wsize * .4,
                       child: GestureDetector(
                         onTap: () async {
-                          const query = '40.15902603552938, -83.08269070574414';
-                          var latitude='40.15902603552938';
-                          var longitude='-83.08269070574414';
-                          final uri = Uri(
-                              scheme: 'geo',
-                              host: '0,0',
-                              queryParameters: {'q': query});
-                          String googleUrl =
-                              'https://www.google.com/maps/dir/?api=1&destination=$latitude,$longitude';
-                          try {
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            } else {
-                              print('cant launch');
-                            }
-                          } catch (e) {
-                            print(e.toString());
-                          }
+                          homeprovider.openMap();
                         },
                         child: AutoSizeText(
                           "230 W Olentangy St, Powell, OH 43065, USA",
@@ -485,16 +291,53 @@ Widget header(wsize, hsize) {
               borderRadius: BorderRadius.circular(8.0),
               child: GestureDetector(
                 onTap: () async {
-                  // print(re);
+                  // categoryprovider.getAllFeedPosts();
+                  Navigator.push(context, PageRouteBuilder(
+                    pageBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation) {
+                      return const NotificationPage();
+                    },
+                  ),
+                  );
+
                 },
                 child: Icon(
-                  Icons.notifications_rounded,
+                  Icons.notifications_on_sharp,
                   color: AppConfig.primaryColor,
                   size: wsize * 0.09,
                 ),
               )),
         )
       ]),
+    ),
+  );
+}
+
+dialogBox(context) {
+  return showDialog(
+    context: context,
+    builder: (context) => Theme(
+      data: ThemeData(backgroundColor: Colors.white),
+      child: AlertDialog(
+        title: const Text('Are you sure?'),
+        content: const Text('Do you want to go back?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, false);
+
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context, true);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
     ),
   );
 }
