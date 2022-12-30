@@ -311,52 +311,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                       () async {
                         BuildContext parentContext = context;
                         print('checkout start ');
-                        // String admintoken = '';
                         if (checkoutprovider.checkoutForm.valid) {
                           print(cartprovider.total);
 
-
-
-                          String usertoken = NotificationController().token;
-                          // await FirebaseFirestore.instance
-                          //     .collection('token')
-                          //     .doc('1042harpreet@gmail.com')
-                          //     .get()
-                          //     .then((value) {
-                          //   admintoken = value.get('token');
-                          //   print('admin token is ' + admintoken);
-                          // });
-                          // print(checkoutprovider.checkoutForm.value);
-                          // checkoutprovider.sendToAdmin(
-                          //     checkoutprovider.checkoutForm
-                          //         .control('email')
-                          //         .value,
-                          //     'orderId',
-                          //     checkoutprovider,
-                          //     cartprovider.total,
-                          //     cartprovider.tax,
-                          //     cartprovider.orderItem);
-                          NotificationController().createNewNotification(
-                              "Hey ${checkoutprovider.checkoutForm.control('fullname').value}! Your order is confirmed",
-                              "Your order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is placed. ",
-                              usertoken);
-                          // NotificationController().createNewNotification(
-                          //     'Hey Harpreet singh! Order From ${checkoutprovider.checkoutForm.control('fullname').value}',
-                          //     "New order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is Placed.",
-                          //     admintoken);
-                          // MailService().userMail(
-                          //     checkoutprovider.checkoutForm
-                          //         .control('email')
-                          //         .value,
-                          //     checkoutprovider.checkoutForm
-                          //         .control('fullname')
-                          //         .value,
-                          //     checkoutprovider.date,
-                          //     cartprovider.total.toStringAsFixed(2));
-
-                          showSuccessToast(
-                              context: context, message: "order Successfully just for test");
-                        } else {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -377,8 +334,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                             "currency": "USD"
                                           }
                                       ],
-                                    }),
+                                    },cartprovider),
                               ));
+                        } else {
                           showErrorToast(
                               message: 'fill the detail first',
                               context: context);
