@@ -321,6 +321,7 @@ class AuthService extends ChangeNotifier {
   String role = 'user';
 
   getUserInfo(email) async {
+   // await CartService(email).getBadge();
     try {
       print('getting user info');
       await FirebaseFirestore.instance

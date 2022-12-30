@@ -69,7 +69,7 @@ Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, ta
                   .value,
               params['paymentId'],
               checkoutprovider,
-              cartprovider.total,
+              roundDouble(cartprovider.total, 2),
               cartprovider.tax,
               cartprovider.orderItem);
           NotificationController().createNewNotification(
@@ -80,13 +80,6 @@ Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, ta
               'Hey Harpreet singh! Order From ${checkoutprovider.checkoutForm.control('fullname').value}',
               "New order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is Placed.",
               admintoken);
-
-
-
-
-
-
-
         }
 
 

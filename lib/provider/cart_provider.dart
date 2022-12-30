@@ -9,6 +9,7 @@ import 'package:mailer/smtp_server.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent_app/model/order_item_model.dart';
 import 'package:restaurent_app/provider/auth_provider.dart';
+import 'package:restaurent_app/services/round_off.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,7 +21,7 @@ class CartService extends ChangeNotifier {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  //set total ,subtotal, status initial
+
   //set loading in cart screen
   bool cartloading = false;
   bool checkoutloading = false;
@@ -55,6 +56,7 @@ class CartService extends ChangeNotifier {
         print('value exist');
       }
     });
+
   }
 
   changeBadge(int value) {
@@ -75,7 +77,6 @@ class CartService extends ChangeNotifier {
     try {
       await checkFromCart(item);
       if (exist == true) {
-        await getcountValue(item);
         await _firestore
             .collection('cart')
             .doc(email)
@@ -114,6 +115,19 @@ class CartService extends ChangeNotifier {
       // notifyListeners();
     }
   }
+
+  // add bill to total
+  addToTotal(item, count) async {
+    var itemtotal = item.price * count;
+    subtotal = subtotal + itemtotal;
+    await _firestore
+        .collection('cart')
+        .doc(email)
+        .update({"subtotal": subtotal, 'total': subtotal + tax});
+    await getTotal();
+    // notifyListeners();
+  }
+
   bool exist = false;
   //check specific item available in cart or not
   checkFromCart(item) async {
@@ -124,31 +138,34 @@ class CartService extends ChangeNotifier {
         .doc(item.title)
         .get()
         .then((value) async {
-      print("value exist " + value.exists.toString());
+      print("value exist ${value.exists}");
       exist = value.exists;
       if (exist == true) {
-        await getcountValue(item);
+        availableCount = value.get('count');
+        itemTotal = value.get('total');
+        print("count value is $availableCount");
+        // await getcountValue(item);
       }
-      // notifyListeners();
+      notifyListeners();
     });
   }
 
   //check how much item available in cart
-  getcountValue(item) async {
-    await _firestore
-        .collection('cart')
-        .doc(email)
-        .collection(email)
-        .doc(item.title)
-        .get()
-        .then((value) {
-      print("count value in firebase is ${value.get('count')}");
-      availableCount = value.get('count');
-      itemTotal = value.get('total');
-      print("count value is $availableCount");
-      // notifyListeners();
-    });
-  }
+  // getcountValue(item) async {
+  //   await _firestore
+  //       .collection('cart')
+  //       .doc(email)
+  //       .collection(email)
+  //       .doc(item.title)
+  //       .get()
+  //       .then((value) {
+  //     print("count value in firebase is ${value.get('count')}");
+  //     availableCount = value.get('count');
+  //     itemTotal = value.get('total');
+  //     print("count value is $availableCount");
+  //     // notifyListeners();
+  //   });
+  // }
 
   //remove from cart :
   removeFromCart(item, context) async {
@@ -179,17 +196,6 @@ class CartService extends ChangeNotifier {
   //update from cart :
   updateCart() {}
 
-  // add bill to total
-  addToTotal(item, count) async {
-    var itemtotal = item.price * count;
-    subtotal = subtotal + itemtotal;
-    await _firestore
-        .collection('cart')
-        .doc(email)
-        .update({"subtotal": subtotal, 'total': subtotal + tax});
-    await getTotal();
-    // notifyListeners();
-  }
   //remove price of item from total
   removeToTotal(item, count) async {
     try {
@@ -226,7 +232,7 @@ class CartService extends ChangeNotifier {
         }
       });
       print('subtotal is $subtotal');
-      // notifyListeners();
+      notifyListeners();
     } catch (e) {
       print('get total error');
       print(e.toString());
@@ -255,8 +261,6 @@ final cartProvider = ChangeNotifierProvider((ref) {
   var state = CartService(authprovider.user.email);
   print(authprovider.user.email);
   print(authprovider.phone);
-
-
   state.getBadge();
   return state;
 });
