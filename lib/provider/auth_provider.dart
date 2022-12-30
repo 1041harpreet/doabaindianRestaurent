@@ -237,24 +237,24 @@ class AuthService extends ChangeNotifier {
   //SIGN OUT METHOD
   Future signOut(context) async {
     await _auth.signOut();
+    showSuccessToast(message: 'Logout successfully', context: context);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const LoginScreen(),
         ),
         (route) => false);
     await AwesomeNotificationsFcm().unsubscribeToTopic('all');
-    showSuccessToast(message: 'Logout successfully', context: context);
     print('signout');
   }
 
   //CHANGE password
-  changePassword(String currentPassword, String newPassword, context) async {
+  changePassword(email,String currentPassword, String newPassword, context) async {
     print('pressed');
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
     } else {
       final cred = EmailAuthProvider.credential(
-          email: '1041harpreet@gmail.com', password: currentPassword);
+          email: email, password: currentPassword);
       print(cred);
       user?.reauthenticateWithCredential(cred).then((value) {
         print(value);
