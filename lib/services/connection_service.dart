@@ -76,18 +76,7 @@ checkconnection()async{
     deviceConnected=true;
     notifyListeners();
     return;
-    // var res = await DataConnectionChecker().hasConnection;
-    // if(res){
-    //
-    //   notifyListeners();
-    // }
-    // else{
-    //   deviceConnected=false;
-    //   print('no internet');
-    //   // showDialogBox();
-    //
-    //   notifyListeners();
-    // }
+
 
   }
   print(deviceConnected);
