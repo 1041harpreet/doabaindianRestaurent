@@ -7,7 +7,6 @@ import 'package:maps_launcher/maps_launcher.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
 
 import '../services/connection_service.dart';
 import '../widgets/toast_service.dart';
