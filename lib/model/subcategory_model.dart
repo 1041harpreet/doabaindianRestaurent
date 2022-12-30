@@ -16,9 +16,9 @@ class SubCategoryItem {
   });
 
   String title;
-  String description;
-  String img;
-  double price;
+  String? description;
+  String? img;
+  double? price;
 
   factory SubCategoryItem.fromJson(Map<String, dynamic> json) =>
       SubCategoryItem(

@@ -311,13 +311,13 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                       () async {
                         BuildContext parentContext = context;
                         print('checkout start ');
+
                         if (checkoutprovider.checkoutForm.valid) {
                           print(cartprovider.total);
-
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => makePayment(checkoutprovider,parentContext,
+                                builder: (context) => makePayment(cartprovider,checkoutprovider,parentContext,
                                     roundDouble(cartprovider.total, 2), 5.0, {
                                       "items": [
                                         for (var i = 0;
@@ -334,9 +334,14 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                             "currency": "USD"
                                           }
                                       ],
-                                    },cartprovider),
+                                    }),
                               ));
+
+
+
+
                         } else {
+
                           showErrorToast(
                               message: 'fill the detail first',
                               context: context);

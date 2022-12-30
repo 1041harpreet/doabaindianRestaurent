@@ -12,7 +12,7 @@ import '../mail_services.dart';
 import '../notification_service/notification.dart';
 import '../round_off.dart';
 
-Widget makePayment(checkoutprovider,parentcontext, double total, tax, itemlist,cartprovider) {
+Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, tax, itemlist) {
   var sub = total - tax;
   double subtotal = roundDouble(sub, 2);
   print(subtotal);
@@ -39,47 +39,54 @@ Widget makePayment(checkoutprovider,parentcontext, double total, tax, itemlist,c
       ],
       note: "Contact us for any questions on your order.",
       onSuccess: (params) async {
+        showSuccessToast(
+            context: parentcontext, message: "Payment Successfully Completed");
         if(params['status']=="success"){
           print('success');
           String admintoken = '';
-          //used to send the email
-          // MailService().userMail(
-          //     checkoutprovider.checkoutForm
-          //         .control('email')
-          //         .value,
-          //     checkoutprovider.checkoutForm
-          //         .control('fullname')
-          //         .value,
-          //     params['paymentId'],
-          //     '\$20');
-          // String usertoken = NotificationController().token;
-          // await FirebaseFirestore.instance
-          //     .collection('token')
-          //     .doc('1042harpreet@gmail.com')
-          //     .get()
-          //     .then((value) {
-          //   admintoken = value.get('token');
-          //   print('admin token is ' + admintoken);
-          // });
-          // checkoutprovider.sendToAdmin(
-          //     checkoutprovider.checkoutForm
-          //         .control('email')
-          //         .value,
-          //     '',
-          //     checkoutprovider,
-          //     cartprovider.total,
-          //     cartprovider.tax,
-          //     cartprovider.orderItem);
-          // NotificationController().createNewNotification(
-          //     "Hey ${checkoutprovider.checkoutForm.control('fullname').value}! Your order is confirmed",
-          //     "Your order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is placed. ",
-          //     usertoken);
-          // NotificationController().createNewNotification(
-          //     'Hey Harpreet singh! Order From ${checkoutprovider.checkoutForm.control('fullname').value}',
-          //     "New order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is Placed.",
-          //     admintoken);
-          showSuccessToast(
-              context: parentcontext, message: "order Successfully just for test");
+          MailService().userMail(
+              checkoutprovider.checkoutForm
+                  .control('email')
+                  .value,
+              checkoutprovider.checkoutForm
+                  .control('fullname')
+                  .value,
+              params['paymentId'],
+              '\$20');
+          String usertoken = NotificationController().token;
+          await FirebaseFirestore.instance
+              .collection('token')
+              .doc('1042harpreet@gmail.com')
+              .get()
+              .then((value) {
+            admintoken = value.get('token');
+            print('admin token is ' + admintoken);
+          });
+          print(checkoutprovider.checkoutForm.value);
+          checkoutprovider.sendToAdmin(
+              checkoutprovider.checkoutForm
+                  .control('email')
+                  .value,
+              params['paymentId'],
+              checkoutprovider,
+              cartprovider.total,
+              cartprovider.tax,
+              cartprovider.orderItem);
+          NotificationController().createNewNotification(
+              "Hey ${checkoutprovider.checkoutForm.control('fullname').value}! Your order is confirmed",
+              "Your order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is placed. ",
+              usertoken);
+          NotificationController().createNewNotification(
+              'Hey Harpreet singh! Order From ${checkoutprovider.checkoutForm.control('fullname').value}',
+              "New order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is Placed.",
+              admintoken);
+
+
+
+
+
+
+
         }
 
 
@@ -89,11 +96,8 @@ Widget makePayment(checkoutprovider,parentcontext, double total, tax, itemlist,c
         print("onError: $error");
       },
       onCancel: (params) {
-        String usertoken = NotificationController().token;
-        NotificationController().createNewNotification(
-            "Hey ${checkoutprovider.checkoutForm.control('fullname').value}! Your order is canceled",
-            "",
-            usertoken);
+        showErrorToast(
+            context: parentcontext, message: "Payment Failed");
         print('cancelled: $params');
       });
 }

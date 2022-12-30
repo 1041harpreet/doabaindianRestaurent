@@ -103,19 +103,23 @@ class CategoryService extends ChangeNotifier {
 
 //used to get subcategory items
   getsubcategory(item) async {
+    print(item);
     changesubloading(true);
+    var ref = await _firestore
+        .collection('category')
+        .doc(item.toString())
+        .collection(item.toString())
+        .get();
+    print(ref);
+    subcategory =
+        ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
+    print(subcategory);
     try {
       // var item=category[index].title;
-      var ref = await _firestore
-          .collection('category')
-          .doc(item.toString())
-          .collection(item.toString())
-          .get();
-      subcategory =
-          ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
+
     } catch (e) {
       print('get sub is running');
-      print(e.toString());
+      print(e);
     } finally {
       changesubloading(false);
       notifyListeners();
