@@ -11,7 +11,7 @@ class AboutUsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(backgroundColor: AppConfig.primaryColor),
       backgroundColor: AppConfig.secmainColor,
-      body: aboutus(),
+      body: SingleChildScrollView(child: aboutus()),
     );
   }
 }

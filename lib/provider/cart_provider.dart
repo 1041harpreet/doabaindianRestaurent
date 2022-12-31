@@ -247,7 +247,7 @@ class CartService extends ChangeNotifier {
       orderItem=ref.docs.map((e) => OrderItem.fromJson(e.data())).toList();
     }
     catch(e){
-      print(e.toString());
+      print(e);
     }finally{
       changeloading(false);
       // notifyListeners();

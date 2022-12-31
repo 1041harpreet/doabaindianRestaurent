@@ -84,8 +84,10 @@ class _HomePageState extends ConsumerState<HomePage> {
         floatingActionButton: FloatingActionButton(
           elevation: 5.0,
           backgroundColor: Colors.green,
-          onPressed: (){
-          homeprovider.openwhatsapp();
+          onPressed: ()async{
+            print('hello running');
+           await authprovider.updateAnother();
+          // homeprovider.openwhatsapp();
         },
          child: Image.asset('assets/images/whats.png',fit: BoxFit.fill),
         ),

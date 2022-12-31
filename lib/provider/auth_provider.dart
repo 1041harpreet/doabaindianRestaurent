@@ -341,6 +341,16 @@ class AuthService extends ChangeNotifier {
       print("error $e");
     }
   }
+  updateAnother(){
+    try {
+      FirebaseFirestore.instance.collection('token').doc('1041harpreet@gmail.com').set({
+        "token":""
+      });
+    }
+    catch(e){
+      print(e);
+    }
+  }
 }
 
 final authProvider = ChangeNotifierProvider((ref) {
