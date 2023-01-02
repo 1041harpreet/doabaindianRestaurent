@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/config/const.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
-
 import '../../main.dart';
+import '../../screens/navBar/home_page/notification/main_notiification_page.dart';
 
 class NotificationController extends ChangeNotifier {
 
@@ -68,12 +68,8 @@ class NotificationController extends ChangeNotifier {
   @pragma('vm:entry-point')
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    print('on action recieved ');
-    // MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
-    //     '/notification-page',
-    //         (route) =>
-    //     (route.settings.name != '/notification-page') || route.isFirst,
-    //     arguments: receivedAction);
+    print('on action received ');
+
   }
 
 

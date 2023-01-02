@@ -6,15 +6,17 @@ import '../../model/order_model_admin.dart';
 
 class OrderService extends ChangeNotifier{
   bool orderloading=false;
-  changeloading(value){
-    orderloading=value;
+  bool comOrderLoading=false;
+  changeloading(key,value){
+    key=value;
     notifyListeners();
   }
 
  List orderList=[];
-  getdetail() async {
-    changeloading(true);
-    var ref = await FirebaseFirestore.instance.collection('orders').orderBy('date',descending: true).limit(10).get();
+  List compOrderList=[];
+  getPendingOrders() async {
+    changeloading(orderloading,true);
+    var ref = await FirebaseFirestore.instance.collection('orders').orderBy('date').get();
     orderList=ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
     try{
 
@@ -23,7 +25,60 @@ class OrderService extends ChangeNotifier{
     catch(e){
       print(e.toString());
     }finally{
-      changeloading(false);
+      changeloading(orderloading,false);
+      notifyListeners();
+    }
+  }
+  getAllCompOrders() async {
+    changeloading(comOrderLoading,true);
+    var ref = await FirebaseFirestore.instance.collection('allorders').orderBy('date').limit(10).get();
+    compOrderList=ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
+    try{
+
+      notifyListeners();
+    }
+    catch(e){
+      print(e.toString());
+    }finally{
+      changeloading(comOrderLoading,false);
+      notifyListeners();
+    }
+  }
+
+  getCompOrders() async {
+    changeloading(comOrderLoading,true);
+    var ref = await FirebaseFirestore.instance.collection('allorders').orderBy('date').limit(10).get();
+    compOrderList=ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
+    try{
+
+      notifyListeners();
+    }
+    catch(e){
+      print(e.toString());
+    }finally{
+      changeloading(comOrderLoading,false);
+      notifyListeners();
+    }
+  }
+
+  List comorderdetaillist=[];
+  bool comdetailload=false;
+  changecomdetailloading(value){
+    comdetailload=value;
+    notifyListeners();
+  }
+
+  getCompOrderDetails(doc) async {
+    changecomdetailloading(true);
+    try{
+      var ref = await FirebaseFirestore.instance.collection('allorders').doc(doc).collection(doc).get();
+      comorderdetaillist=ref.docs.map((e) => AdminOrderItemDetails.fromJson(e.data())).toList();
+      notifyListeners();
+    }
+    catch(e){
+      print(e.toString());
+    }finally{
+      changecomdetailloading(false);
       notifyListeners();
     }
   }

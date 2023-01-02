@@ -4,20 +4,20 @@ import 'package:restaurent_app/admin/provider/order_provider.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/category_provider.dart';
 import 'package:restaurent_app/screens/auth/sign_up_screen.dart';
-class OrderDetail extends ConsumerStatefulWidget {
+class CompletedOrderDetail extends ConsumerStatefulWidget {
   var orderList;
   int index;
   String doc;
-  OrderDetail({Key? key,required this.orderList,required this.index,required this.doc}) : super(key: key);
+  CompletedOrderDetail({Key? key,required this.orderList,required this.index,required this.doc}) : super(key: key);
   @override
-  ConsumerState<OrderDetail> createState() => _OrderDetailState();
+  ConsumerState<CompletedOrderDetail> createState() => _CompletedOrderDetailState();
 }
 
-class _OrderDetailState extends ConsumerState<OrderDetail> {
+class _CompletedOrderDetailState extends ConsumerState<CompletedOrderDetail> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.watch(orderProvider).getorderdetails(widget.doc);
+      ref.watch(orderProvider).getCompOrderDetails(widget.doc);
     });
     super.initState();
   }
@@ -46,10 +46,10 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
               row("DATE : ",widget.orderList[widget.index].date),
 
               const Text("Order Detail : ", style: TextStyle(fontSize: 20.0,color: Colors.black,fontWeight: FontWeight.bold)),
-              orderprovider.detailload ? const Center(child: CircularProgressIndicator()):
+              orderprovider.comdetailload ? const Center(child: CircularProgressIndicator()):
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: orderprovider.orderdetaillist.length,
+                itemCount: orderprovider.comorderdetaillist.length,
                 itemBuilder: (context, index) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,7 +58,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
 
-                          orderprovider.orderdetaillist[index].title,
+                          orderprovider.comorderdetaillist[index].title,
                           style: AppConfig.blackTitle,
                         ),
                       ),
@@ -66,14 +66,14 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
 
-                          'X ${orderprovider.orderdetaillist[index].count}',
+                          'X ${orderprovider.comorderdetaillist[index].count}',
                           style: AppConfig.blackTitle,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          orderprovider.orderdetaillist[index].total
+                          orderprovider.comorderdetaillist[index].total
                               .toString(),
                           style: AppConfig.blackTitle,
                         ),
@@ -86,14 +86,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
               row("Total : ",'\$${widget.orderList[widget.index].total}'),
               row("Status : ",'${widget.orderList[widget.index].status}'),
 
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Button(MediaQuery.of(context).size, "Mark as Complete",
-                    Colors.black, AppConfig.primaryColor, () {
-                  print('mark as complete');
-                }),
-              ),
+
               const SizedBox(
                 height: 10.0,
               ),
@@ -101,8 +94,8 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
                 padding: const EdgeInsets.all(8.0),
                 child: Button(MediaQuery.of(context).size, "Delete",
                     Colors.black, AppConfig.primaryColor, () {
-                  print('mark as complete');
-                }),
+                      print('mark as complete');
+                    }),
               )
 
             ]),

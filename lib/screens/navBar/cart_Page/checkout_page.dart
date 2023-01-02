@@ -340,8 +340,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
 
 
 
-                        } else {
-
+                        }
+                        else {
                           showErrorToast(
                               message: 'fill the detail first',
                               context: context);

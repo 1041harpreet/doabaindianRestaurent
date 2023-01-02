@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:restaurent_app/screens/navBar/profille_page/profile_page.dart';
 
 import '../../config/config.dart';
+import '../completed_order_screen.dart';
 
-Widget drawer(context,authprovider){
+Widget drawer(context,authprovider,orderprovider){
  return  ListView(
     // Important: Remove any padding from the ListView.
     padding: EdgeInsets.zero,
@@ -35,9 +37,9 @@ Widget drawer(context,authprovider){
           Icons.bookmark_border,
           color: Colors.black,
         ),
-        title:  Text('All Orders',style: AppConfig.blacktext),
-        onTap: () {
-          Navigator.pop(context);
+        title:  Text('Completed Orders',style: AppConfig.blacktext),
+        onTap: ()async {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedOrderScreen(),));
         },
       ),
       ListTile(
@@ -47,7 +49,8 @@ Widget drawer(context,authprovider){
         ),
         title:  Text('Log Out',style: AppConfig.blacktext),
         onTap: () async{
-         await authprovider.signOut(context);
+          logoutdialogBox(context, authprovider);
+         // await authprovider.signOut(context);
 
         },
       ),

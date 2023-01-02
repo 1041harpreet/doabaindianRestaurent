@@ -1,48 +1,4 @@
-// import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:restaurent_app/config/config.dart';
-//
-// class LoginScreen extends StatelessWidget {
-//   LoginScreen({Key? key}) : super(key: key);
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final wsize=MediaQuery.of(context).size.width;
-//     final hsize=MediaQuery.of(context).size.height;
-//     return SafeArea(
-//       child: Scaffold(
-//         backgroundColor: AppConfig.secmainColor,
-//         body: SingleChildScrollView(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             crossAxisAlignment: CrossAxisAlignment.stretch,
-//             children: [
-//               // Text(
-//               //   'Welcome back',
-//               //   style: GoogleFonts.inter(
-//               //     fontSize: 17,
-//               //     color: Colors.black,
-//               //
-//               //   ),
-//               // ),
-//               const SizedBox(height: 8),
-//               Text(
-//                 'Login to your account',
-//                 style: GoogleFonts.inter(
-//                   fontSize:wsize*0.08 ,
-//                   color: Colors.black,
-//                   fontWeight: FontWeight.w700,
-//                 ),
-//               ),
-//
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
