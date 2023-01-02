@@ -1,42 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../../config/config.dart';
+import '../../../auth/sign_up_screen.dart';
 
-Widget notificationItem(context){
+Widget notificationItem(context,notificationprovider,index){
   return Material(
     color: AppConfig.secmainColor,
     child: InkWell(
       onTap: () {
-        showModalBottomSheet(
-            context: context,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(16),
-                topLeft: Radius.circular(16),
-              ),
-            ),
-            builder: (builder) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 0),
-                    child: Row(
-                      children: const [
-                        Text(
-                          'Details',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Expanded(child: Text("NotificationDetail(notification.id") ),
-                ],
-              );
-            });
+        detail(context,notificationprovider,index);
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -48,7 +20,7 @@ Widget notificationItem(context){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
-              backgroundColor: const Color(0xfffce3a4),
+              backgroundColor: AppConfig.primaryColor,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.asset(
@@ -62,9 +34,9 @@ Widget notificationItem(context){
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children:  [
                   Text(
-                    "notification.data['title']" ,
+                    "Your Order is ${notificationprovider.notificationList[index].status ? "Confirmed" : "Canceled"}" ,
                     style: TextStyle(
                       color: Color(0xffa58038),
                       fontWeight: FontWeight.bold,
@@ -72,7 +44,7 @@ Widget notificationItem(context){
                     ),
                   ),
                   Text(
-                    "notification.data['description'] ",
+                    "Date :  ${notificationprovider.notificationList[index].date}",
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Color(0xffa58038)),
@@ -85,7 +57,7 @@ Widget notificationItem(context){
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: const Color(0xfffce3a4),
+                color:AppConfig.primaryColor,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.chevron_right, color: Colors.white),
@@ -94,5 +66,62 @@ Widget notificationItem(context){
         ),
       ),
     ),
+  );
+}
+Future detail(context,np,index){
+  bool status=true;
+  final size=MediaQuery.of(context).size;
+  return showModalBottomSheet(
+    backgroundColor: AppConfig.secmainColor,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(16),
+          topLeft: Radius.circular(16),
+        ),
+      ),
+      builder: (builder) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                'Details',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black
+                ),
+              ),
+            ),
+           status==false ?
+            Column(children: [
+            row("CANCEL ID","2345678934"),
+            row("STATUS","FAILED"),],)
+               : Column(children: [
+              row("ORDER ID","${np.notificationList[index].orderID}"),
+              row("EMAIL ID","${np.notificationList[index].email}"),
+              row("DATE","${np.notificationList[index].date}"),
+              row("Tax","${np.notificationList[index].tax}"),
+              row("TOTAL","${np.notificationList[index].total}"),
+              row("STATUS","Confirmed"),],),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Button(size,"DELETE",Colors.white,AppConfig.primaryColor,(){}),
+            )
+          ],
+        );
+      });
+}
+
+Widget row(key,value){
+  return Padding(
+    padding: const EdgeInsets.only(top: 8.0,left: 16.0),
+    child: Row(children: [
+      Text("${key} :",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 17.0),),
+      Text("${value} ",style: AppConfig.greytext,),
+
+    ],),
   );
 }

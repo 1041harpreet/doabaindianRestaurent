@@ -1,10 +1,8 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent_app/model/category_model.dart';
-
 import '../model/favourite_item_model.dart';
 import '../model/slider_model.dart';
 import '../model/subcategory_model.dart';
@@ -81,7 +79,7 @@ class CategoryService extends ChangeNotifier {
 
   //this list is used to store categor item
   List category = [];
-  List seccategory = [];
+  // List seccategory = [];
 
 
   //this list is used to store sub category item
@@ -89,14 +87,14 @@ class CategoryService extends ChangeNotifier {
 
   //used to get category items
   getCategory() async {
-    changeloading(true);
+    // changeloading(true);
     try {
       var ref = await _firestore.collection('category').get();
       category = ref.docs.map((e) => CategoryItem.fromJson(e.data())).toList();
     } catch (e) {
       print(e.toString());
     } finally {
-      changeloading(false);
+      // changeloading(false);
       notifyListeners();
     }
   }
@@ -111,8 +109,7 @@ class CategoryService extends ChangeNotifier {
         .collection(item.toString())
         .get();
     print(ref);
-    subcategory =
-        ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
+    subcategory = ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
     print(subcategory);
     try {
       // var item=category[index].title;

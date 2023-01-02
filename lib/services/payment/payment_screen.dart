@@ -4,6 +4,7 @@ import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:restaurent_app/config/const.dart';
+import 'package:restaurent_app/screens/navBar/profille_page/profile_page.dart';
 import 'package:restaurent_app/services/payment/payment_failed_screen.dart';
 import 'package:restaurent_app/services/payment/payment_success_screen.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
@@ -40,7 +41,7 @@ Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, ta
       note: "Contact us for any questions on your order.",
       onSuccess: (params) async {
         showSuccessToast(
-            context: parentcontext, message: "Payment Successfully Completed");
+            context: parentcontext, message: "Payment Successfully Completed,Check your email.");
         if(params['status']=="success"){
           print('success');
           String admintoken = '';
@@ -60,7 +61,7 @@ Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, ta
               .get()
               .then((value) {
             admintoken = value.get('token');
-            print('admin token is ' + admintoken);
+            print('admin token is $admintoken');
           });
           print(checkoutprovider.checkoutForm.value);
           checkoutprovider.sendToAdmin(
@@ -77,7 +78,7 @@ Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, ta
               "Your order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is placed. ",
               usertoken);
           NotificationController().createNewNotification(
-              'Hey Harpreet singh! Order From ${checkoutprovider.checkoutForm.control('fullname').value}',
+              'Hey ! Order From ${checkoutprovider.checkoutForm.control('fullname').value}',
               "New order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is Placed.",
               admintoken);
         }

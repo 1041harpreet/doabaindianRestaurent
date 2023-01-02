@@ -66,7 +66,7 @@ class CartService extends ChangeNotifier {
 
   double subtotal = 0.0;
   double total = 0.0;
-  double tax = 5.0;
+  double tax = 0.0;
 
   int availableCount = 0;
   double itemTotal = 0.0;

@@ -23,7 +23,7 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.watch(orderProvider).getdetail();
+      ref.watch(orderProvider).getPendingOrders();
     });
     super.initState();
   }
@@ -38,11 +38,11 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
       child: Scaffold(
           appBar: AppBar(
               backgroundColor: AppConfig.primaryColor,
-              title: Text("Your Orders"),
+              title: Text("Your Pending Orders"),
               actions: [
                 IconButton(
                     onPressed: () async{
-                      await orderprovider.getdetail();
+                      await orderprovider.getPendingOrders();
 
                     },
                     icon: const Icon(Icons.refresh))
@@ -50,7 +50,7 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
           drawer: Drawer(
             backgroundColor: Colors.white,
             width: wsize * .7,
-            child: drawer(context,authprovider),
+            child: drawer(context,authprovider,orderprovider),
           ),
           backgroundColor: AppConfig.secmainColor,
           body: orderprovider.orderloading
@@ -63,7 +63,6 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
                   :
               ListView.builder(
               shrinkWrap: true,
-              // scrollDirection: Axis.vertical,
               itemCount: orderprovider.orderList.length,
               itemBuilder: (context, index) {
                 return GestureDetector(

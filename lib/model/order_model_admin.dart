@@ -20,13 +20,13 @@ class AdminOrderItem {
   });
 
   String email;
-  double total;
+  var total;
   String date;
   String name;
   String orderID;
   String phone;
   String? note;
-  double tax;
+  var tax;
   String status;
 
   factory AdminOrderItem.fromJson(Map<String, dynamic> json) => AdminOrderItem(
@@ -67,7 +67,7 @@ class AdminOrderItemDetails {
   });
 
   String title;
-  double total;
+  var total;
   int count;
 
 
