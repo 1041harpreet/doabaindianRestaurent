@@ -126,23 +126,25 @@ class AuthService extends ChangeNotifier {
         password: password,
       )
           .then((value) async {
-        if (role == 'admin') {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => const AdminHomePage(),
-              ),
-              (route) => false);
-        } else {
+        await adduser(email, username, phone,'');
+        await getUserInfo(_auth.currentUser?.email);
+        await setInitialTotal(email);
+
+        // if (role == 'admin') {
+        //   Navigator.of(context).pushAndRemoveUntil(
+        //       MaterialPageRoute(
+        //         builder: (context) => const AdminHomePage(),
+        //       ),
+        //       (route) => false);
+        // } else {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const NavBar(),
               ),
               (route) => false);
-        }
+        // }
 
-        await adduser(email, username, phone,'');
-        await getUserInfo(_auth.currentUser?.email);
-        await setInitialTotal(email);
+
       });
       showSuccessToast(message: 'register successfully', context: context);
       print(_auth.currentUser?.email);

@@ -44,12 +44,12 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
       onSuccess: (params) async {
         var fullname = checkoutprovider.checkoutForm.control('fullname').value;
         var email = checkoutprovider.checkoutForm.control('email').value;
+        String usertoken = NotificationController().token;
         showSuccessToast(
             context: parentcontext,
             message: "Payment Successfully Completed,Check your email.");
         if (params['status'] == "success") {
           print('success');
-          String usertoken = NotificationController().token;
           await checkoutprovider.getAdminToken();
           //used to send notification to user
           NotificationController().createNewNotification(
@@ -86,11 +86,12 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
         print("onError: $error");
       },
       onCancel: (params) {
+        String usertoken = NotificationController().token;
         showErrorToast(context: parentcontext, message: "Payment Failed");
         NotificationController().createNewNotification(
             'Hey ! Your Payment is failed',
             "Please try Again .!",
-            checkoutprovider.admintoken);
+            usertoken);
         print('cancelled: $params');
       });
 }
