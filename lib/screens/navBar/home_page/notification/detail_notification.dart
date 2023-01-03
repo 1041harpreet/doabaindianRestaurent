@@ -99,17 +99,17 @@ Future detail(context,np,index){
             row("CANCEL ID","2345678934"),
             row("STATUS","FAILED"),],)
                : Column(children: [
-              row("ORDER ID","${np.notificationList[index].orderID}"),
-              row("EMAIL ID","${np.notificationList[index].email}"),
-              row("DATE","${np.notificationList[index].date}"),
-              row("Tax","${np.notificationList[index].tax}"),
-              row("TOTAL","${np.notificationList[index].total}"),
-              row("STATUS","Confirmed"),],),
+              row("ORDER ID"," ${np.notificationList[index].orderID}"),
+              row("EMAIL ID"," ${np.notificationList[index].email}"),
+              row("DATE"," ${np.notificationList[index].date}"),
+              row("Tax"," \$${np.notificationList[index].tax}"),
+              row("TOTAL"," \$${np.notificationList[index].total}"),
+              row("STATUS","CONFIRMED"),],),
 
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Button(size,"DELETE",Colors.white,AppConfig.primaryColor,(){}),
-            )
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Button(size,"DELETE",Colors.white,AppConfig.primaryColor,(){}),
+            // )
           ],
         );
       });

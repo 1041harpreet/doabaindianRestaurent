@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:intl/intl.dart';
 class CheckOutService extends ChangeNotifier{
+  FirebaseFirestore _firestore=FirebaseFirestore.instance;
   FormGroup checkoutForm = FormGroup({
     "fullname": FormControl(
         validators: [Validators.required]),
@@ -33,12 +34,12 @@ class CheckOutService extends ChangeNotifier{
   });
  var date='';
 
-  sendToAdmin(email,orderId,checkoutprovider,total,tax,orderItem,status){
+  sendToAdmin(email,orderId,checkoutprovider,total,tax,orderItem){
     var now=DateTime.now();
     date= DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
    var name=date+email;
    print(date);
-    FirebaseFirestore.instance.collection('orders').doc(name).set({
+    _firestore.collection('orders').doc(name).set({
      "date":date,
       "email":email,
       "name":checkoutprovider.checkoutForm.control('fullname').value,
@@ -46,12 +47,12 @@ class CheckOutService extends ChangeNotifier{
       "tax":tax,
       "phone":checkoutprovider.checkoutForm.control('phone').value,
       "orderID":orderId,
-      "status":status,
+      "status":false,
       'note':checkoutprovider.checkoutForm.control('additional').value
 
     });
     for(var i = 0; i < orderItem.length; i++ ){
-      FirebaseFirestore.instance.collection('orders').doc(name).collection(name).doc(orderItem[i].title).set(
+      _firestore.collection('orders').doc(name).collection(name).doc(orderItem[i].title).set(
           {
             "title":orderItem[i].title,
             "count":orderItem[i].count,
@@ -61,7 +62,17 @@ class CheckOutService extends ChangeNotifier{
       });
     }
   }
-
+  String admintoken = '';
+  getAdminToken()async{
+    await _firestore
+        .collection('token')
+        .doc('1042harpreet@gmail.com')
+        .get()
+        .then((value) {
+      admintoken = value.get('token');
+      print('admin token is $admintoken');
+    });
+  }
 }
 final checkOutProvider = ChangeNotifierProvider((ref) {
   return CheckOutService();

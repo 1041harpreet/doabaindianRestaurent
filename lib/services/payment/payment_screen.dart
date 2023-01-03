@@ -13,10 +13,12 @@ import '../mail_services.dart';
 import '../notification_service/notification.dart';
 import '../round_off.dart';
 
-Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, tax, itemlist) {
+Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
+    tax, itemlist, notificationprovider) {
   var sub = total - tax;
   double subtotal = roundDouble(sub, 2);
   print(subtotal);
+  print(total);
   return UsePaypal(
       sandboxMode: true,
       clientId: Const().clientID,
@@ -40,49 +42,43 @@ Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, ta
       ],
       note: "Contact us for any questions on your order.",
       onSuccess: (params) async {
+        var fullname = checkoutprovider.checkoutForm.control('fullname').value;
+        var email = checkoutprovider.checkoutForm.control('email').value;
         showSuccessToast(
-            context: parentcontext, message: "Payment Successfully Completed,Check your email.");
-        if(params['status']=="success"){
+            context: parentcontext,
+            message: "Payment Successfully Completed,Check your email.");
+        if (params['status'] == "success") {
           print('success');
-          String admintoken = '';
-          MailService().userMail(
-              checkoutprovider.checkoutForm
-                  .control('email')
-                  .value,
-              checkoutprovider.checkoutForm
-                  .control('fullname')
-                  .value,
-              params['paymentId'],
-              '\$20');
           String usertoken = NotificationController().token;
-          await FirebaseFirestore.instance
-              .collection('token')
-              .doc('1042harpreet@gmail.com')
-              .get()
-              .then((value) {
-            admintoken = value.get('token');
-            print('admin token is $admintoken');
-          });
-          print(checkoutprovider.checkoutForm.value);
+          await checkoutprovider.getAdminToken();
+          //used to send notification to user
+          NotificationController().createNewNotification(
+              "Hey ${fullname}! Your order is confirmed",
+              "Your order on ${email} of total ${cartprovider.total} is placed. ",
+              usertoken);
+          //used to send notification to admin
+          NotificationController().createNewNotification(
+              'Hey ! Order From ${fullname}',
+              "New order on ${email} of total ${cartprovider.total} is Placed.",
+              checkoutprovider.admintoken);
+          //used to send email to user
+          MailService().userMail(
+              email, fullname, checkoutprovider.date, total, params['paymentId']);
+          //used to send mail to admin
+          MailService().adminMail(
+              fullname, checkoutprovider.date, total, params['paymentId']);
+          //used to send data to admin
           checkoutprovider.sendToAdmin(
-              checkoutprovider.checkoutForm
-                  .control('email')
-                  .value,
+              email,
               params['paymentId'],
               checkoutprovider,
               roundDouble(cartprovider.total, 2),
               cartprovider.tax,
-              cartprovider.orderItem,false);
-          NotificationController().createNewNotification(
-              "Hey ${checkoutprovider.checkoutForm.control('fullname').value}! Your order is confirmed",
-              "Your order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is placed. ",
-              usertoken);
-          NotificationController().createNewNotification(
-              'Hey ! Order From ${checkoutprovider.checkoutForm.control('fullname').value}',
-              "New order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is Placed.",
-              admintoken);
+              cartprovider.orderItem);
+          //add on to notification
+          notificationprovider.addToNotification(
+              params['paymentId'], email, true, tax, total, checkoutprovider.date);
         }
-
 
         print("onSuccess: ${params}");
       },
@@ -90,8 +86,11 @@ Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, ta
         print("onError: $error");
       },
       onCancel: (params) {
-        showErrorToast(
-            context: parentcontext, message: "Payment Failed");
+        showErrorToast(context: parentcontext, message: "Payment Failed");
+        NotificationController().createNewNotification(
+            'Hey ! Your Payment is failed',
+            "Please try Again .!",
+            checkoutprovider.admintoken);
         print('cancelled: $params');
       });
 }

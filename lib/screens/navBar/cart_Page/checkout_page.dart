@@ -9,6 +9,7 @@ import 'package:restaurent_app/provider/cart_provider.dart';
 import 'package:restaurent_app/services/payment/payment_failed_screen.dart';
 
 import '../../../provider/check_out_provider.dart';
+import '../../../provider/notification_provider.dart';
 import '../../../services/mail_services.dart';
 import '../../../services/notification_service/notification.dart';
 import '../../../services/payment/payment_screen.dart';
@@ -38,6 +39,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     final cartprovider = ref.watch(cartProvider);
     final authprovider = ref.watch(authProvider);
     final checkoutprovider = ref.watch(checkOutProvider);
+    final notificationprovider = ref.watch(notificationProvider);
     final size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
@@ -313,12 +315,12 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                         print('checkout start ');
 
                         if (checkoutprovider.checkoutForm.valid) {
-                          print(cartprovider.total);
+                          print(roundDouble(cartprovider.total, 2));
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => makePayment(cartprovider,checkoutprovider,parentContext,
-                                    roundDouble(cartprovider.total, 2), 5.0, {
+                                    roundDouble(cartprovider.total, 2), cartprovider.tax, {
                                       "items": [
                                         for (var i = 0;
                                         i < cartprovider.orderItem.length;
@@ -334,8 +336,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                             "currency": "USD"
                                           }
                                       ],
-                                    }),
-                              ));
+                                    },notificationprovider),
+                              ),);
 
 
 
