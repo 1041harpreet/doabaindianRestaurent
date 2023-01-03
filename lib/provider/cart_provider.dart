@@ -150,23 +150,6 @@ class CartService extends ChangeNotifier {
     });
   }
 
-  //check how much item available in cart
-  // getcountValue(item) async {
-  //   await _firestore
-  //       .collection('cart')
-  //       .doc(email)
-  //       .collection(email)
-  //       .doc(item.title)
-  //       .get()
-  //       .then((value) {
-  //     print("count value in firebase is ${value.get('count')}");
-  //     availableCount = value.get('count');
-  //     itemTotal = value.get('total');
-  //     print("count value is $availableCount");
-  //     // notifyListeners();
-  //   });
-  // }
-
   //remove from cart :
   removeFromCart(item, context) async {
     changecheckload(true);
@@ -193,9 +176,6 @@ class CartService extends ChangeNotifier {
     }
   }
 
-  //update from cart :
-  updateCart() {}
-
   //remove price of item from total
   removeToTotal(item, count) async {
     try {
@@ -217,7 +197,6 @@ class CartService extends ChangeNotifier {
   }
 
   //get total bill :
-
   getTotal() async {
     try {
       await _firestore.collection('cart').doc(email).get().then((value) {

@@ -27,7 +27,7 @@ class AdminOrderItem {
   String phone;
   String? note;
   var tax;
-  String status;
+  bool status;
 
   factory AdminOrderItem.fromJson(Map<String, dynamic> json) => AdminOrderItem(
       email: json["email"],
