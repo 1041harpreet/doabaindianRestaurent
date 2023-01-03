@@ -28,37 +28,35 @@ class MoreCategory extends ConsumerStatefulWidget {
 class _MoreCategoryState extends ConsumerState<MoreCategory>
     with TickerProviderStateMixin {
   late TabController _controller;
-  final options = const LiveOptions(
-    // Start animation after (default zero)
-    delay: Duration(seconds: 0),
+  // final options = const LiveOptions(
+  //   // Start animation after (default zero)
+  //   delay: Duration(seconds: 0),
+  //
+  //   // Show each item through (default 250)
+  //   showItemInterval: Duration(milliseconds: 10),
+  //
+  //   // Animation duration (default 250)
+  //   showItemDuration: Duration(microseconds: 10),
+  //
+  //   // Animations starts at 0.05 visible
+  //   // item fraction in sight (default 0.025)
+  //   visibleFraction: 0.01,
+  //
+  //   // Repeat the animation of the appearance
+  //   // when scrolling in the opposite direction (default false)
+  //   // To get the effect as in a showcase for ListView, set true
+  //   reAnimateOnVisibility: false,
+  // );
 
-    // Show each item through (default 250)
-    showItemInterval: Duration(milliseconds: 10),
-
-    // Animation duration (default 250)
-    showItemDuration: Duration(microseconds: 10),
-
-    // Animations starts at 0.05 visible
-    // item fraction in sight (default 0.025)
-    visibleFraction: 0.01,
-
-    // Repeat the animation of the appearance
-    // when scrolling in the opposite direction (default false)
-    // To get the effect as in a showcase for ListView, set true
-    reAnimateOnVisibility: false,
-  );
-
-  late int selectedIndex;
 
   @override
   void initState() {
-    print(widget.index);
-    selectedIndex = widget.index;
-    print(selectedIndex);
+
     _controller =
-        TabController(length: 13, vsync: this, initialIndex: selectedIndex);
+        TabController(length: 13, vsync: this, initialIndex: widget.index);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-     await ref.watch(categoryProvider).getsubcategory(await ref.watch(categoryProvider).catogries[selectedIndex]);
+      await ref.watch(categoryProvider).getCategory();
+     await ref.watch(categoryProvider).getsubcategory(ref.watch(categoryProvider).catogries[widget.index]);
     });
     _controller.addListener(()async {
       ref.watch(categoryProvider).subloading==true;

@@ -1,8 +1,10 @@
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent_app/model/category_model.dart';
+
 import '../model/favourite_item_model.dart';
 import '../model/slider_model.dart';
 import '../model/subcategory_model.dart';
@@ -25,7 +27,7 @@ class CategoryService extends ChangeNotifier {
     'Breads – Made in Tandoor',
     'Chutneys & Sides',
     'Dessert',
-    ' Entrees – (Chicken or Murgh)',
+    ' Entrees – Chicken Dishes',
     'Entrees – Gosht (Goat & Lamb)',
     'Entrees – North Indian Vegetarian',
     'Entrees – Seafood (Fish & Shrimp)',
@@ -79,7 +81,7 @@ class CategoryService extends ChangeNotifier {
 
   //this list is used to store categor item
   List category = [];
-  // List seccategory = [];
+  List seccategory = [];
 
 
   //this list is used to store sub category item
@@ -101,25 +103,24 @@ class CategoryService extends ChangeNotifier {
 
 //used to get subcategory items
   getsubcategory(item) async {
-    print(item);
     changesubloading(true);
     var ref = await _firestore
         .collection('category')
         .doc(item.toString())
         .collection(item.toString())
         .get();
-    print(ref);
-    subcategory = ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
+
+    subcategory =
+        ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
     print(subcategory);
     try {
-      // var item=category[index].title;
 
     } catch (e) {
-      print('get sub is running');
+      print('get sub failed');
       print(e);
     } finally {
       changesubloading(false);
-      notifyListeners();
+      // notifyListeners();
     }
   }
 

@@ -90,22 +90,6 @@ Widget listBuilder(wsize, hsize, cprovider, catname, context) {
   );
 }
 
-const options = LiveOptions(
-  // Start animation after (default zero)
-  delay: Duration(seconds: 0),
-  // Show each item through (default 250)
-  showItemInterval: Duration(milliseconds: 0),
-  // Animation duration (default 250)
-  showItemDuration: Duration(microseconds: 0),
-  // Animations starts at 0.05 visible
-  // item fraction in sight (default 0.025)
-  visibleFraction: 0.001,
-  // Repeat the animation of the appearance
-  // when scrolling in the opposite direction (default false)
-  // To get the effect as in a showcase for ListView, set true
-  reAnimateOnVisibility: false,
-);
-
 Widget listview(hsize, wsize, context, categoryprovider) {
   return Padding(
     padding: EdgeInsets.all(wsize * .03),
@@ -122,24 +106,12 @@ Widget listview(hsize, wsize, context, categoryprovider) {
               )
             : Padding(
                 padding: const EdgeInsets.only(top: 5.0),
-                child: LiveList.options(
-                    options: options,
+                child: ListView.builder(
+
                     itemCount: categoryprovider.category.length,
                     scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index, animation) {
-                      return FadeTransition(
-                        opacity: Tween<double>(
-                          begin: 0,
-                          end: 1,
-                        ).animate(animation),
-                        // And slide transition
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0, -0.1),
-                            end: Offset.zero,
-                          ).animate(animation),
-                          // Paste you Widget
-                          child: GestureDetector(
+                    itemBuilder: (context, index) {
+                      return  GestureDetector(
                             onTap: () {
                               Navigator.push(
                                   context,
@@ -152,8 +124,8 @@ Widget listview(hsize, wsize, context, categoryprovider) {
                             },
                             child: homeItem(
                                 wsize, hsize, categoryprovider.category[index]),
-                          ),
-                        ),
+
+
                       );
                     }),
               )),
@@ -181,24 +153,11 @@ Widget madeforulist(hsize, wsize, context, categoryprovider) {
                   )
                 : Padding(
                     padding: const EdgeInsets.only(top: 5.0),
-                    child: LiveList.options(
-                        options: options,
+                    child: ListView.builder(
                         itemCount: categoryprovider.madefulist.length,
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index, animation) {
-                          return FadeTransition(
-                            opacity: Tween<double>(
-                              begin: 0,
-                              end: 1,
-                            ).animate(animation),
-                            // And slide transition
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0, -0.1),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              // Paste you Widget
-                              child: GestureDetector(
+                        itemBuilder: (context, index) {
+                          return  GestureDetector(
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -209,8 +168,7 @@ Widget madeforulist(hsize, wsize, context, categoryprovider) {
                                 },
                                 child: largeItem(wsize, hsize,
                                     categoryprovider.madefulist[index]),
-                              ),
-                            ),
+
                           );
                         }),
                   )),
