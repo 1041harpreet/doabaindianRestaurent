@@ -85,8 +85,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           elevation: 5.0,
           backgroundColor: Colors.green,
           onPressed: ()async{
-            NotificationController().createNewNotification('title', 'body','cv-x0JLHScOSw6GnKvmZfV:APA91bHkgoynTeUR92GbbI8Ji52kXnlvh1RRkYFyz8QkJiX56FKeVRgjzTEG37qJGkMJZn0Mmbf85mCRxIZKybPxtI-7EYNCdDazjFJoKEi_8MR9Oe68EioFdtWdIsWMEPLR3JIXQoR4' );
-          // homeprovider.openwhatsapp();
+          homeprovider.openwhatsapp();
         },
          child: Image.asset('assets/images/whats.png',fit: BoxFit.fill),
         ),

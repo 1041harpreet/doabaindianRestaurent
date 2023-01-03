@@ -173,23 +173,12 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                                                                   .primaryColor),
                                                   onPressed: () async {
                                                     print('checkout');
-
-                                                    checkoutprovider
-                                                        .checkoutForm
-                                                        .control('fullname')
-                                                        .patchValue(authprovider
-                                                            .username);
-                                                    checkoutprovider
-                                                        .checkoutForm
-                                                        .control('phone')
-                                                        .patchValue(authprovider
-                                                            .phone
-                                                            .toString());
-                                                    checkoutprovider
-                                                        .checkoutForm
-                                                        .control('email')
-                                                        .patchValue(authprovider
-                                                            .user.email);
+                                                    checkoutprovider.checkoutForm.patchValue(
+                                                        {
+                                                          "fullname":authprovider.username,
+                                                          "phone":authprovider.phone.toString(),
+                                                          "email":authprovider.user.email
+                                                        });
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
