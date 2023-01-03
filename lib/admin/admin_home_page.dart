@@ -11,6 +11,7 @@ import 'package:restaurent_app/admin/widgets/drawer.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/services/connection_service.dart';
+import 'package:restaurent_app/widgets/toast_service.dart';
 
 class AdminHomePage extends ConsumerStatefulWidget {
   const AdminHomePage({Key? key}) : super(key: key);
@@ -40,9 +41,32 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
               backgroundColor: AppConfig.primaryColor,
               title: Text("Your Pending Orders"),
               actions: [
+                PopupMenuButton(
+                  color: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  onSelected: (value) {
+                    // your logic
+                  },
+                  itemBuilder: (BuildContext bc) {
+                    return [
+                      PopupMenuItem(
+                        onTap: ()async{
+                          print('working');
+                          await orderprovider.getAllPendingOrders();
+                          showSuccessToast(context: context,message: "Updated Successfully");
+                        },
+                        value: '/all',
+                        child: Text("See all Pending Orders", style: AppConfig.blackTitle),
+                      ),
+
+                    ];
+                  },
+                ),
                 IconButton(
                     onPressed: () async{
                       await orderprovider.getPendingOrders();
+                      showSuccessToast(context: context,message: "Updated Successfully");
 
                     },
                     icon: const Icon(Icons.refresh))

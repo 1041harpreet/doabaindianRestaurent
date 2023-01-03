@@ -33,7 +33,7 @@ class CheckOutService extends ChangeNotifier{
   });
  var date='';
 
-  sendToAdmin(email,orderId,checkoutprovider,total,tax,orderItem){
+  sendToAdmin(email,orderId,checkoutprovider,total,tax,orderItem,status){
     var now=DateTime.now();
     date= DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
    var name=date+email;
@@ -46,7 +46,7 @@ class CheckOutService extends ChangeNotifier{
       "tax":tax,
       "phone":checkoutprovider.checkoutForm.control('phone').value,
       "orderID":orderId,
-      "status":"pending",
+      "status":status,
       'note':checkoutprovider.checkoutForm.control('additional').value
 
     });
@@ -61,6 +61,7 @@ class CheckOutService extends ChangeNotifier{
       });
     }
   }
+
 }
 final checkOutProvider = ChangeNotifierProvider((ref) {
   return CheckOutService();

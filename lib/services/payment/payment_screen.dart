@@ -72,7 +72,7 @@ Widget makePayment(cartprovider,checkoutprovider,parentcontext, double total, ta
               checkoutprovider,
               roundDouble(cartprovider.total, 2),
               cartprovider.tax,
-              cartprovider.orderItem);
+              cartprovider.orderItem,false);
           NotificationController().createNewNotification(
               "Hey ${checkoutprovider.checkoutForm.control('fullname').value}! Your order is confirmed",
               "Your order on ${checkoutprovider.checkoutForm.control('email').value} of total ${cartprovider.total} is placed. ",
