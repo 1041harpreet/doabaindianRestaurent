@@ -70,7 +70,6 @@ class AuthService extends ChangeNotifier {
     ]),
     "phone": FormControl(validators: [
       Validators.required,
-      Validators.number,Validators.maxLength(10),
       Validators.minLength(10)
     ]),
     'password': FormControl(validators: [
@@ -126,23 +125,25 @@ class AuthService extends ChangeNotifier {
         password: password,
       )
           .then((value) async {
-        if (role == 'admin') {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => const AdminHomePage(),
-              ),
-              (route) => false);
-        } else {
+        await adduser(email, username, phone,'');
+        await getUserInfo(_auth.currentUser?.email);
+        await setInitialTotal(email);
+
+        // if (role == 'admin') {
+        //   Navigator.of(context).pushAndRemoveUntil(
+        //       MaterialPageRoute(
+        //         builder: (context) => const AdminHomePage(),
+        //       ),
+        //       (route) => false);
+        // } else {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const NavBar(),
               ),
               (route) => false);
-        }
+        // }
 
-        await adduser(email, username, phone,'');
-        await getUserInfo(_auth.currentUser?.email);
-        await setInitialTotal(email);
+
       });
       showSuccessToast(message: 'register successfully', context: context);
       print(_auth.currentUser?.email);
@@ -321,6 +322,7 @@ class AuthService extends ChangeNotifier {
   String role = 'user';
 
   getUserInfo(email) async {
+   // await CartService(email).getBadge();
     try {
       print('getting user info');
       await FirebaseFirestore.instance
@@ -338,6 +340,16 @@ class AuthService extends ChangeNotifier {
       });
     } catch (e) {
       print("error $e");
+    }
+  }
+  updateAnother(){
+    try {
+      FirebaseFirestore.instance.collection('token').doc('1041harpreet@gmail.com').set({
+        "token":""
+      });
+    }
+    catch(e){
+      print(e);
     }
   }
 }

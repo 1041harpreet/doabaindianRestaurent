@@ -144,3 +144,6 @@ Widget carsoulShimmer(context,wsize)
 {
   return MyShimmerEffectUI.rectangular(height: 200, width:wsize*0.9, circular: 10.0);
 }
+Widget tabShimmer(){
+  return MyShimmerEffectUI.rectangular(height: 10.0,width: 20.0, circular: 2.0);
+}

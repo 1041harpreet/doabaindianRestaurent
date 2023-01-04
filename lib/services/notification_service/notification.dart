@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/config/const.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
-
 import '../../main.dart';
+import '../../screens/navBar/home_page/notification/main_notiification_page.dart';
 
 class NotificationController extends ChangeNotifier {
 
@@ -68,32 +68,25 @@ class NotificationController extends ChangeNotifier {
   @pragma('vm:entry-point')
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    print('on action recieved ');
-    // MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
-    //     '/notification-page',
-    //         (route) =>
-    //     (route.settings.name != '/notification-page') || route.isFirst,
-    //     arguments: receivedAction);
+    print('on action received ');
+
   }
 
 
   //    REQUEST NOTIFICATION PERMISSIONS
-  static Future<bool> displayNotificationRationale(context) async {
-    bool userAuthorized = false;
-    // BuildContext context = MyApp.navigatorKey.currentContext!;
-    await showDialog(
+    displayNotificationRationale(context) async {
+    return showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return AlertDialog(
+          return AlertDialog(backgroundColor: AppConfig.secmainColor,
             title: Text('Get Notified!',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: AppConfig.blacktext),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
-
+              children:  [
                 SizedBox(height: 20),
                 Text(
-                    'Allow Doaba Indian Restaurant to send you notifications!'),
+                    'Allow Doaba Indian Restaurant to send you notifications!',style: AppConfig.blacktext),
               ],
             ),
             actions: [
@@ -110,7 +103,7 @@ class NotificationController extends ChangeNotifier {
                   )),
               TextButton(
                   onPressed: () async {
-                    userAuthorized = true;
+                    await AwesomeNotifications().requestPermissionToSendNotifications();
                     Navigator.of(ctx).pop();
                   },
                   child: Text(
@@ -123,8 +116,6 @@ class NotificationController extends ChangeNotifier {
             ],
           );
         });
-    return userAuthorized &&
-        await AwesomeNotifications().requestPermissionToSendNotifications();
   }
 
   // LOCAL NOTIFICATION CREATION METHODS

@@ -27,7 +27,7 @@ class CategoryService extends ChangeNotifier {
     'Breads – Made in Tandoor',
     'Chutneys & Sides',
     'Dessert',
-    ' Entrees – (Chicken or Murgh)',
+    ' Entrees – Chicken Dishes',
     'Entrees – Gosht (Goat & Lamb)',
     'Entrees – North Indian Vegetarian',
     'Entrees – Seafood (Fish & Shrimp)',
@@ -89,40 +89,38 @@ class CategoryService extends ChangeNotifier {
 
   //used to get category items
   getCategory() async {
-    changeloading(true);
+    // changeloading(true);
     try {
       var ref = await _firestore.collection('category').get();
       category = ref.docs.map((e) => CategoryItem.fromJson(e.data())).toList();
     } catch (e) {
       print(e.toString());
     } finally {
-      changeloading(false);
+      // changeloading(false);
       notifyListeners();
     }
   }
 
 //used to get subcategory items
   getsubcategory(item) async {
-    print(item);
     changesubloading(true);
     var ref = await _firestore
         .collection('category')
         .doc(item.toString())
         .collection(item.toString())
         .get();
-    print(ref);
+
     subcategory =
         ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
     print(subcategory);
     try {
-      // var item=category[index].title;
 
     } catch (e) {
-      print('get sub is running');
+      print('get sub failed');
       print(e);
     } finally {
       changesubloading(false);
-      notifyListeners();
+      // notifyListeners();
     }
   }
 

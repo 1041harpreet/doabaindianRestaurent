@@ -11,6 +11,10 @@ import 'package:restaurent_app/admin/widgets/drawer.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/services/connection_service.dart';
+import 'package:restaurent_app/widgets/toast_service.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+
+import '../services/notification_service/notification.dart';
 
 class AdminHomePage extends ConsumerStatefulWidget {
   const AdminHomePage({Key? key}) : super(key: key);
@@ -22,8 +26,14 @@ class AdminHomePage extends ConsumerStatefulWidget {
 class _AdminHomePageState extends ConsumerState<AdminHomePage> {
   @override
   void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        print('not allowed');
+        NotificationController().displayNotificationRationale(context);
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.watch(orderProvider).getdetail();
+      ref.watch(orderProvider).getPendingOrders();
     });
     super.initState();
   }
@@ -38,156 +48,149 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
       child: Scaffold(
           appBar: AppBar(
               backgroundColor: AppConfig.primaryColor,
-              title: header(wsize),
+              title: Text("Your Pending Orders"),
               actions: [
+                PopupMenuButton(
+                  color: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  onSelected: (value) {
+                    // your logic
+                  },
+                  itemBuilder: (BuildContext bc) {
+                    return [
+                      PopupMenuItem(
+                        onTap: ()async{
+                          print('working');
+                          await orderprovider.getAllPendingOrders();
+                          showSuccessToast(context: context,message: "Updated Successfully");
+                        },
+                        value: '/all',
+                        child: Text("See all Pending Orders", style: AppConfig.blackTitle),
+                      ),
+
+                    ];
+                  },
+                ),
                 IconButton(
-                    onPressed: () {
-                      authprovider.signOut(context);
+                    onPressed: () async{
+                      await orderprovider.getPendingOrders();
+                      showSuccessToast(context: context,message: "Updated Successfully");
+
                     },
-                    icon: const Icon(Icons.logout))
+                    icon: const Icon(Icons.refresh))
               ]),
           drawer: Drawer(
             backgroundColor: Colors.white,
-            child: drawer(context,authprovider),
             width: wsize * .7,
+            child: drawer(context,authprovider,orderprovider),
           ),
           backgroundColor: AppConfig.secmainColor,
-          body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text("Your orders",
-                          style:
-                              TextStyle(color: Colors.black, fontSize: 20.0)),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: IconButton(
-                          onPressed: () async {
-                            await orderprovider.getdetail();
-                          },
-                          icon: const Icon(
-                            Icons.refresh,
-                            color: Colors.black,
-                          ),
-                        ))
-                  ],
-                ),
-                orderprovider.orderloading
-                    ? const Center(child: CircularProgressIndicator())
-                    : orderprovider.orderList.isEmpty
-                        ? Center(
-                            child: Text("No order yet",
-                                style: AppConfig.blackTitle),
-                          )
-                        :
-                ListView.builder(
-                  shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: orderprovider.orderList.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OrderDetail(
-                                index: index,
-                                orderList:
-                                orderprovider.orderList,
-                                doc: orderprovider
-                                    .orderList[index]
-                                    .date +
-                                    orderprovider
-                                        .orderList[index]
-                                        .email,
-                              )));
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                          BorderRadius.circular(5.0)),
-                      // height: 100.0,
-                      child: Column(children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Text("Email :",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 17.0)),
-                                    orderprovider.orderList[index].email.length>25 ? Text(
-                                        '${orderprovider
-                                            .orderList[index]
-                                            .email.toString().substring(0,20)}...',
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13.0)) :
-                                    Text(
-                                        orderprovider
-                                            .orderList[index]
-                                            .email,
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13.0)),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      "Total Bill : ",
+          body: orderprovider.orderloading
+              ? const Center(child: CircularProgressIndicator())
+              : orderprovider.orderList.isEmpty
+                  ? Center(
+                      child: Text("No order yet",
+                          style: AppConfig.blackTitle),
+                    )
+                  :
+              ListView.builder(
+              shrinkWrap: true,
+              itemCount: orderprovider.orderList.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => OrderDetail(
+                              index: index,
+                              orderList:
+                              orderprovider.orderList,
+                              doc: orderprovider
+                                  .orderList[index]
+                                  .date +
+                                  orderprovider
+                                      .orderList[index]
+                                      .email,
+                            )));
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                        BorderRadius.circular(5.0)),
+                    // height: 100.0,
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text("Email :",
                                       style: TextStyle(
-                                          fontSize: 17.0,
-                                          color: Colors.black),
-                                    ),
-                                    Text(
-                                      "\$${orderprovider.orderList[index].total.toStringAsFixed(2)}",
-                                      style: const TextStyle(
-                                          fontSize: 17.0,
                                           color: Colors.black,
-                                          fontWeight:
-                                          FontWeight.bold),
-                                    )
-                                  ],
-                                )
-                              ]),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    "Date : ${orderprovider.orderList[index].date}",
-                                    style: AppConfig.blackTitle),
-                                Text(
-                                  "Phone : ${orderprovider.orderList[index].phone}",
-                                  style: AppConfig.blackTitle,
-                                )
-                              ]),
-                        ),
-                      ]),
-                    ),
-                  );
-                },
-                ),
-
-              ],
-            ),
-          )),
+                                          fontSize: 17.0)),
+                                  orderprovider.orderList[index].email.length>25 ? Text(
+                                      '${orderprovider
+                                          .orderList[index]
+                                          .email.toString().substring(0,20)}...',
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13.0)) :
+                                  Text(
+                                      orderprovider
+                                          .orderList[index]
+                                          .email,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13.0)),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Total Bill : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    "\$${orderprovider.orderList[index].total.toStringAsFixed(2)}",
+                                    style: const TextStyle(
+                                        fontSize: 17.0,
+                                        color: Colors.black,
+                                        fontWeight:
+                                        FontWeight.bold),
+                                  )
+                                ],
+                              )
+                            ]),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  "Date : ${orderprovider.orderList[index].date}",
+                                  style: AppConfig.blackTitle),
+                              Text(
+                                "Phone : ${orderprovider.orderList[index].phone}",
+                                style: AppConfig.blackTitle,
+                              )
+                            ]),
+                      ),
+                    ]),
+                  ),
+                );
+              },
+              )),
     );
   }
 }
