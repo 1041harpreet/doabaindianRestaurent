@@ -104,9 +104,9 @@ class CartService extends ChangeNotifier {
           "total": total
         });
       }
+      showSuccessToast(message: "Item added to cart", context: context);
       await addToTotal(item, count);
       print('total calculated$subtotal');
-      showSuccessToast(message: "Item added to cart", context: context);
     } catch (e) {
       print(e.toString());
     } finally {

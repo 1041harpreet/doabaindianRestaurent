@@ -12,6 +12,9 @@ import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/services/connection_service.dart';
 import 'package:restaurent_app/widgets/toast_service.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+
+import '../services/notification_service/notification.dart';
 
 class AdminHomePage extends ConsumerStatefulWidget {
   const AdminHomePage({Key? key}) : super(key: key);
@@ -23,6 +26,12 @@ class AdminHomePage extends ConsumerStatefulWidget {
 class _AdminHomePageState extends ConsumerState<AdminHomePage> {
   @override
   void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        print('not allowed');
+        NotificationController().displayNotificationRationale(context);
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.watch(orderProvider).getPendingOrders();
     });

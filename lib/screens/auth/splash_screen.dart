@@ -3,8 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:restaurent_app/provider/auth_provider.dart';
 
+import '../../services/notification_service/notification.dart';
+import '../navBar/profille_page/profile_page.dart';
 import 'loader_screen.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -15,7 +20,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    super.initState();
      Timer(
       const Duration(milliseconds: 250),
             () => Navigator.pushReplacement(
@@ -23,6 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
               builder: (context) => const LoaderScreen(),
             )));
+    super.initState();
+
   }
 
   @override

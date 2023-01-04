@@ -62,15 +62,16 @@ class CheckOutService extends ChangeNotifier{
       });
     }
   }
-  String admintoken = '';
+
+  String adminToken = '';
   getAdminToken()async{
     await _firestore
         .collection('token')
         .doc('1042harpreet@gmail.com')
         .get()
         .then((value) {
-      admintoken = value.get('token');
-      print('admin token is $admintoken');
+      adminToken = value.get('token');
+      print('admin token is $adminToken');
     });
   }
 }

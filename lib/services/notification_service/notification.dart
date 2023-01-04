@@ -74,22 +74,19 @@ class NotificationController extends ChangeNotifier {
 
 
   //    REQUEST NOTIFICATION PERMISSIONS
-  static Future<bool> displayNotificationRationale(context) async {
-    bool userAuthorized = false;
-    // BuildContext context = MyApp.navigatorKey.currentContext!;
-    await showDialog(
+    displayNotificationRationale(context) async {
+    return showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return AlertDialog(
+          return AlertDialog(backgroundColor: AppConfig.secmainColor,
             title: Text('Get Notified!',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: AppConfig.blacktext),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
-
+              children:  [
                 SizedBox(height: 20),
                 Text(
-                    'Allow Doaba Indian Restaurant to send you notifications!'),
+                    'Allow Doaba Indian Restaurant to send you notifications!',style: AppConfig.blacktext),
               ],
             ),
             actions: [
@@ -106,7 +103,7 @@ class NotificationController extends ChangeNotifier {
                   )),
               TextButton(
                   onPressed: () async {
-                    userAuthorized = true;
+                    await AwesomeNotifications().requestPermissionToSendNotifications();
                     Navigator.of(ctx).pop();
                   },
                   child: Text(
@@ -119,8 +116,6 @@ class NotificationController extends ChangeNotifier {
             ],
           );
         });
-    return userAuthorized &&
-        await AwesomeNotifications().requestPermissionToSendNotifications();
   }
 
   // LOCAL NOTIFICATION CREATION METHODS

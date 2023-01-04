@@ -70,7 +70,6 @@ class AuthService extends ChangeNotifier {
     ]),
     "phone": FormControl(validators: [
       Validators.required,
-      Validators.number,Validators.maxLength(10),
       Validators.minLength(10)
     ]),
     'password': FormControl(validators: [
