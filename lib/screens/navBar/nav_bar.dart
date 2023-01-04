@@ -5,8 +5,11 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
+import 'package:restaurent_app/screens/navBar/profille_page/profile_page.dart';
 
 import '../../provider/nav_bar_provider.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import '../../services/notification_service/notification.dart';
 
 class NavBar extends ConsumerStatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -16,8 +19,17 @@ class NavBar extends ConsumerStatefulWidget {
 }
 
 class _NavBarState extends ConsumerState<NavBar> {
-  @override
 
+@override
+  void initState() {
+  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    if (!isAllowed) {
+      print('not allowed');
+      NotificationController().displayNotificationRationale(context);
+    }
+  });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final navbarprovider = ref.watch(NavBarProvider);

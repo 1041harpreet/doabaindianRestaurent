@@ -51,19 +51,6 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
         if (params['status'] == "success") {
           print('success');
           await checkoutprovider.getAdminToken();
-          //used to send notification to user
-          NotificationController().createNewNotification(
-              "Hey ${fullname}! Your order is confirmed",
-              "Your order on ${email} of total ${cartprovider.total} is placed. ",
-              usertoken);
-          //used to send notification to admin
-          NotificationController().createNewNotification(
-              'Hey ! Order From ${fullname}',
-              "New order on ${email} of total ${cartprovider.total} is Placed.",
-              checkoutprovider.admintoken);
-          //used to send email to user
-          MailService().userMail(
-              email, fullname, checkoutprovider.date, total, params['paymentId']);
           //used to send mail to admin
           MailService().adminMail(
               fullname, checkoutprovider.date, total, params['paymentId']);
@@ -75,11 +62,24 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
               roundDouble(cartprovider.total, 2),
               cartprovider.tax,
               cartprovider.orderItem);
+          //used to send notification to user
+          NotificationController().createNewNotification(
+              "Hey ${fullname}! Your order is confirmed",
+              "Your order on ${email} of total ${cartprovider.total} is placed. ",
+              usertoken);
+          //used to send notification to admin
+          NotificationController().createNewNotification(
+              'Hey ! Order From ${fullname}',
+              "New order on ${email} of total ${cartprovider.total} is Placed.",
+              checkoutprovider.adminToken);
+          //used to send email to user
+          MailService().userMail(
+              email, fullname, checkoutprovider.date, total, params['paymentId']);
+
           //add on to notification
           notificationprovider.addToNotification(
               params['paymentId'], email, true, tax, total, checkoutprovider.date);
         }
-
         print("onSuccess: ${params}");
       },
       onError: (error) {
