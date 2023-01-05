@@ -17,7 +17,7 @@ import '../../../services/notification_service/notification.dart';
 import '../../../widgets/cart_item.dart';
 import '../../../widgets/category_item.dart';
 import '../../../widgets/shimmer.dart';
-import '../home_page/categories/stream_builder_widget.dart';
+import '../home_page/categories/builder.dart';
 
 class AddToCart extends ConsumerStatefulWidget {
   const AddToCart({Key? key}) : super(key: key);
