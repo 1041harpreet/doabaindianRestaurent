@@ -247,6 +247,17 @@ class AuthService extends ChangeNotifier {
     await AwesomeNotificationsFcm().unsubscribeToTopic('all');
     print('signout');
   }
+  //delete account
+  // deleteAccount(context)async{
+  //   _auth.currentUser?.delete().then((value) {
+  //     Navigator.of(context).pushAndRemoveUntil(
+  //         MaterialPageRoute(
+  //           builder: (context) => const LoginScreen(),
+  //         ),
+  //             (route) => false);
+  //     // await firestore ,cart,token,notification
+  //   });
+  // }
 
   //CHANGE password
   changePassword(email,String currentPassword, String newPassword, context) async {
@@ -301,8 +312,6 @@ class AuthService extends ChangeNotifier {
       print(e.toString());
     }
   }
-
-
 
   setInitialTotal(email) async {
     try {

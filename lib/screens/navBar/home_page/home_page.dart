@@ -81,6 +81,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: SafeArea(
           child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
             backgroundColor: AppConfig.secmainColor,
             title: header(wsize, hsize, homeprovider, categoryprovider,
                 authprovider, context),
@@ -254,7 +255,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
 Widget header(
     wsize, hsize, homeprovider, categoryprovider, authprovider, context) {
-  return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+  return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
     Padding(
       padding: EdgeInsets.all(wsize * 0.02),
       child: Column(
