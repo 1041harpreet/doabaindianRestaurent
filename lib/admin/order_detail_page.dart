@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurent_app/admin/provider/order_provider.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/category_provider.dart';
-import 'package:restaurent_app/screens/auth/sign_up_screen.dart';
+import 'package:restaurent.app/admin/provider/order_provider.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/category_provider.dart';
+import 'package:restaurent.app/screens/auth/sign_up_screen.dart';
 
 class OrderDetail extends ConsumerStatefulWidget {
   var orderList;

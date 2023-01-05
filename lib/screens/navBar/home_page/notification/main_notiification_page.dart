@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/notification_provider.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/notification_provider.dart';
 
 import 'detail_notification.dart';
 

@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent_app/provider/cart_provider.dart';
-import 'package:restaurent_app/screens/auth/login_screen.dart';
-import 'package:restaurent_app/screens/navBar/nav_bar.dart';
-import 'package:restaurent_app/services/notification_service/notification.dart';
+import 'package:restaurent.app/provider/cart_provider.dart';
+import 'package:restaurent.app/screens/auth/login_screen.dart';
+import 'package:restaurent.app/screens/navBar/nav_bar.dart';
+import 'package:restaurent.app/services/notification_service/notification.dart';
 
 import '../admin/admin_home_page.dart';
 import '../services/auth.dart';

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/auth_provider.dart';
-import 'package:restaurent_app/provider/cart_provider.dart';
-import 'package:restaurent_app/services/payment/payment_failed_screen.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/auth_provider.dart';
+import 'package:restaurent.app/provider/cart_provider.dart';
+import 'package:restaurent.app/services/payment/payment_failed_screen.dart';
 
 import '../../../provider/check_out_provider.dart';
 import '../../../provider/notification_provider.dart';

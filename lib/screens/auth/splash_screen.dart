@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:restaurent_app/provider/auth_provider.dart';
+import 'package:restaurent.app/provider/auth_provider.dart';
 
 import '../../services/notification_service/notification.dart';
 import '../navBar/profille_page/profile_page.dart';

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurent_app/model/category_model.dart';
+import 'package:restaurent.app/model/category_model.dart';
 
 import '../model/favourite_item_model.dart';
 import '../model/slider_model.dart';

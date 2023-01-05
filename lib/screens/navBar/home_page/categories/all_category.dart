@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ant_design.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/screens/navBar/home_page/categories/builder.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/screens/navBar/home_page/categories/builder.dart';
 
 import '../../../../provider/category_provider.dart';
 import '../../../../widgets/home_item.dart';

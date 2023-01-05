@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:restaurent_app/config/const.dart';
-import 'package:restaurent_app/screens/navBar/profille_page/profile_page.dart';
-import 'package:restaurent_app/services/payment/payment_failed_screen.dart';
-import 'package:restaurent_app/services/payment/payment_success_screen.dart';
-import 'package:restaurent_app/widgets/toast_service.dart';
+import 'package:restaurent.app/config/const.dart';
+import 'package:restaurent.app/screens/navBar/profille_page/profile_page.dart';
+import 'package:restaurent.app/services/payment/payment_failed_screen.dart';
+import 'package:restaurent.app/services/payment/payment_success_screen.dart';
+import 'package:restaurent.app/widgets/toast_service.dart';
 
 import '../mail_services.dart';
 import '../notification_service/notification.dart';
@@ -23,7 +23,7 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
       sandboxMode: true,
       clientId: Const().clientID,
       secretKey: Const().secret,
-      returnURL: "https://samplesite.com/return",
+      returnURL: "com.example.restaurent.app://paypalpay",
       cancelURL: "https://samplesite.com/cancel",
       transactions: [
         {
@@ -42,6 +42,7 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
       ],
       note: "Contact us for any questions on your order.",
       onSuccess: (params) async {
+        // Navigator.push(parentcontext, MaterialPageRoute(builder: (context) => SuccessPage(email: '', amount: '', currency: '', transactionId: '',),));
         var fullname = checkoutprovider.checkoutForm.control('fullname').value;
         var email = checkoutprovider.checkoutForm.control('email').value;
         String usertoken = NotificationController().token;
@@ -86,12 +87,12 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
         print("onError: $error");
       },
       onCancel: (params) {
-        String usertoken = NotificationController().token;
-        showErrorToast(context: parentcontext, message: "Payment Failed");
-        NotificationController().createNewNotification(
-            'Hey ! Your Payment is failed',
-            "Please try Again .!",
-            usertoken);
+        // String usertoken = NotificationController().token;
+        // showErrorToast(context: parentcontext, message: "Payment Failed");
+        // NotificationController().createNewNotification(
+        //     'Hey ! Your Payment is failed',
+        //     "Please try Again .!",
+        //     usertoken);
         print('cancelled: $params');
       });
 }

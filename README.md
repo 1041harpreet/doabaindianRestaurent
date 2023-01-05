@@ -1,4 +1,4 @@
-# restaurent_app
+# restaurent.app
 
 A new Flutter project.
 

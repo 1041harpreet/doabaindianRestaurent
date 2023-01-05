@@ -4,7 +4,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ant_design.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
-import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent.app/config/config.dart';
 
 import '../../../widgets/shimmer.dart';
 

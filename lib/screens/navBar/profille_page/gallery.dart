@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/screens/navBar/home_page/carsoul_full_screen.dart';
-import 'package:restaurent_app/widgets/shimmer.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/screens/navBar/home_page/carsoul_full_screen.dart';
+import 'package:restaurent.app/widgets/shimmer.dart';
 
 class GalleryPage extends StatelessWidget {
    GalleryPage({Key? key}) : super(key: key);

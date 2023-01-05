@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:65766094671:android:fd8805d825274d7ce7f73a",
         "android_client_info": {
-          "package_name": "com.example.restaurent_app"
+          "package_name": "com.example.restaurent.app"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "65766094671-2l7pmji27s8e8c5ur4r6k3rld2bsd6so.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.restaurent_app",
+            "package_name": "com.example.restaurent.app",
             "certificate_hash": "e6d83198a94f39ca30bb5ef6e1c09f1326f59eb1"
           }
         },

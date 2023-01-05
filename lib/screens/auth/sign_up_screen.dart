@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent_app/screens/auth/login_screen.dart';
+import 'package:restaurent.app/screens/auth/login_screen.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';

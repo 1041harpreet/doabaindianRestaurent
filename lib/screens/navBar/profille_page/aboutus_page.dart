@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent.app/config/config.dart';
 
 import '../../../widgets/about_us.dart';
 

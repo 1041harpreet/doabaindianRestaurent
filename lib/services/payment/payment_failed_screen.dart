@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:restaurent_app/config/config.dart';
+import 'package:restaurent.app/config/config.dart';
 
 class PaymentFailedScreen extends StatelessWidget {
   const PaymentFailedScreen({super.key});
