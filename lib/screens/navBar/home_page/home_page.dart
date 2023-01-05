@@ -12,7 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent_app/config/config.dart';
 import 'package:restaurent_app/provider/auth_provider.dart';
 import 'package:restaurent_app/provider/cart_provider.dart';
-import 'package:restaurent_app/screens/navBar/home_page/categories/stream_builder_widget.dart';
+import 'package:restaurent_app/screens/navBar/home_page/categories/builder.dart';
 import 'package:restaurent_app/screens/navBar/home_page/notification/main_notiification_page.dart';
 import 'package:restaurent_app/widgets/buffet.dart';
 import 'package:restaurent_app/widgets/home_item.dart';
@@ -87,28 +87,26 @@ class _HomePageState extends ConsumerState<HomePage> {
                 authprovider, context),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: GestureDetector(
-                      onTap: () async {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (BuildContext context,
-                                Animation<double> animation,
-                                Animation<double> secondaryAnimation) {
-                              return const NotificationPage();
-                            },
-                          ),
-                        );
-                      },
-                      child: Icon(
-                        Icons.notifications_on_sharp,
-                        color: AppConfig.primaryColor,
-                        size: wsize * 0.09,
+                padding: const EdgeInsets.only(right: 5.0),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.notifications_on_sharp,
+                    color: AppConfig.primaryColor,
+                    size: wsize * 0.09,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation) {
+                          return const NotificationPage();
+                        },
                       ),
-                    )),
+                    );
+                  },
+                )
               )
             ]),
         backgroundColor: AppConfig.secmainColor,
@@ -257,7 +255,7 @@ Widget header(
     wsize, hsize, homeprovider, categoryprovider, authprovider, context) {
   return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
     Padding(
-      padding: EdgeInsets.all(wsize * 0.02),
+      padding: EdgeInsets.only(top:wsize * 0.02),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

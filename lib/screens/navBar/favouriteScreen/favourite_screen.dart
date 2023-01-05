@@ -10,7 +10,7 @@ import 'package:restaurent_app/provider/nav_bar_provider.dart';
 
 import '../../../widgets/category_item.dart';
 import '../../../widgets/shimmer.dart';
-import '../home_page/categories/stream_builder_widget.dart';
+import '../home_page/categories/builder.dart';
 import '../home_page/product_details_view.dart';
 class FavouriteScreen extends ConsumerStatefulWidget {
   const FavouriteScreen({Key? key}) : super(key: key);

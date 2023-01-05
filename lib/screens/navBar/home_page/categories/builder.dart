@@ -291,110 +291,69 @@ Widget madeforulist(hsize, wsize, context, categoryprovider) {
 }
 
 Widget largeItem(wsize, hsize, item) {
-  return Container(
-      margin: EdgeInsets.all(wsize * 0.02),
-      width: wsize * 0.8,
-      // height: hsize / 5,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(wsize * 0.01),
-        boxShadow: [
-          BoxShadow(
-              offset: const Offset(2.0, 2.0),
-              color: Colors.black26,
-              blurRadius: wsize * .01)
-        ],
-      ),
-      child: Stack(
-        children: [
-          Center(
-            child: SizedBox(
-              // height: hsize*0.21,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(12)),
-                child: CachedNetworkImage(
-                  imageUrl: item.img,
-                  fit: BoxFit.fill,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      Center(
-                          child: CircularProgressIndicator(
-                              value: downloadProgress.progress)),
-                  errorWidget: (context, url, error) =>
-                      const Icon(Icons.error, color: Colors.black),
-                ),
-              ),
+  return Stack(
+    children: [
+      Center(
+        child: SizedBox(
+          height: hsize * 0.3,
+          width: wsize * 0.8,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            child: CachedNetworkImage(
+              imageUrl: item.img,
+              fit: BoxFit.fill,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Center(
+                      child: CircularProgressIndicator(
+                          value: downloadProgress.progress)),
+              errorWidget: (context, url, error) =>
+              const Icon(Icons.error, color: Colors.black),
             ),
           ),
-          Positioned(
-            bottom: 0.0,
-            child: Container(
-              width: wsize,
-              color: Colors.grey.shade300,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 3.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: wsize * 0.02),
-                      child: Text(
-                        item.title,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: wsize * 0.04,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        item.category.toString().length > 35
-                            ? Padding(
-                                padding: EdgeInsets.only(left: wsize * 0.02),
-                                child: Text(
-                                  "${item.category.toString().substring(0, 30)}...",
-                                  style: const TextStyle(
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            : Padding(
-                                padding: EdgeInsets.only(left: wsize * 0.02),
-                                child: Text(
-                                  "${item.category}",
-                                  style: const TextStyle(
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: wsize * 0.02),
-                      child: Text(
-                        "\$${item.price}",
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontSize: wsize * 0.04,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 3.0,
-                    ),
-                  ]),
+        ),
+      ),
+      Positioned(
+        bottom: 0.0,
+        child: Container(
+          width: wsize,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            border: Border.all(width: 2.0, color: Colors.grey.shade200),
+          ),
+          child:
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(
+              height: 3.0,
             ),
-          )
-        ],
+            Text(
+              item.title,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: wsize * 0.045,
+                  fontWeight: FontWeight.bold),
+            ),
+            item.category.toString().length > 35
+                ? Padding(
+              padding: EdgeInsets.only(left: wsize * 0.02),
+              child: Text(
+                "${item.category.toString().substring(0, 30)}...",
+                style: const TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold),
+              ),
+            )
+                :
+            Text(
+              "${item.category}",
+              style: const TextStyle(
+                  color: Colors.black54, fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(
+              height: 3.0,
+            ),
+          ]),
+        ),
       )
-      // Column(
-      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //   crossAxisAlignment: CrossAxisAlignment.start,
-      //   children: [
-      //
-      //
-      //   ],
-      // )
-      );
+    ],
+  );
 }

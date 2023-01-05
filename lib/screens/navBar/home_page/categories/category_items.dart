@@ -9,7 +9,7 @@ import 'package:restaurent_app/provider/category_provider.dart';
 import '../../../../widgets/category_item.dart';
 import '../../../../widgets/shimmer.dart';
 import '../product_details_view.dart';
-import 'stream_builder_widget.dart';
+import 'builder.dart';
 class CategoryItems extends ConsumerStatefulWidget {
   String name;
   int index;
