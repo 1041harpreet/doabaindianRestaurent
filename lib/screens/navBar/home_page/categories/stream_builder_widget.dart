@@ -11,8 +11,9 @@ import 'package:restaurent_app/screens/navBar/home_page/product_details_view.dar
 import '../../../../widgets/cart_item.dart';
 import '../../../../widgets/home_item.dart';
 import '../../../../widgets/shimmer.dart';
+import '../../cart_Page/checkout_page.dart';
 import 'category_items.dart';
-Widget cartlistBuilder(wsize, hsize, cartprovider, context) {
+Widget cartlistBuilder(wsize, hsize, cartprovider, context,checkoutprovider,authprovider) {
   return Padding(
     padding: EdgeInsets.all(wsize * .03),
     child: SizedBox(
@@ -32,21 +33,135 @@ Widget cartlistBuilder(wsize, hsize, cartprovider, context) {
       )
           : Padding(
         padding: const EdgeInsets.only(top: 5.0),
-        child: ListView.builder(
-          itemCount: cartprovider.orderItem.length,
-          itemBuilder: (context, index) {
-            var item = cartprovider.orderItem[index];
-            return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => ProductDetailsView(
-                            item: item, catname: item.category),
-                      ));
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: cartprovider.orderItem.length,
+                itemBuilder: (context, index) {
+                  var item = cartprovider.orderItem[index];
+                  return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => ProductDetailsView(
+                                  item: item, catname: item.category),
+                            ),);
+                      },
+                      child: CartItem(wsize, hsize,context, item, cartprovider));
                 },
-                child: CartItem(wsize, hsize,context, item, cartprovider));
-          },
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.white70,
+              ),
+              width: wsize,
+              child: Column(
+                mainAxisAlignment:
+                MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top :7.0,left: 7.0),
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Subtotal",
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: hsize * 0.02,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                            "\$${cartprovider.subtotal.toStringAsFixed(2)}",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black)),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(7.0),
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Tax",
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: hsize * 0.02,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                            "\$${cartprovider.tax.toStringAsFixed(2)}",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black)),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 7.0),
+                        child: Text("Total : ",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color:
+                                AppConfig.primaryColor,
+                                fontSize: 18.0)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: 8.0),
+                        child: Text(
+                            "\$${cartprovider.total.toStringAsFixed(2)}",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 16.0)),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding:
+                          const EdgeInsets.all(4.0),
+                          child: ElevatedButton(
+                              style:
+                              ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                  AppConfig
+                                      .primaryColor),
+                              onPressed: () async {
+                                print('checkout');
+                                checkoutprovider.checkoutForm.patchValue(
+                                    {
+                                      "fullname":authprovider.username,
+                                      "phone":authprovider.phone.toString(),
+                                      "email":authprovider.user.email
+                                    });
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                      const CheckoutPage(),
+                                    ));
+                              },
+                              child:
+                              const Text("Checkout")),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
         ),),),
   );
 }
