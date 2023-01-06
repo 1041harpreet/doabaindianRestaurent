@@ -2,30 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:restaurent.app/config/config.dart';
 
+import '../../screens/auth/sign_up_screen.dart';
+import '../../screens/navBar/nav_bar.dart';
+
 class PaymentFailedScreen extends StatelessWidget {
-  const PaymentFailedScreen({super.key});
+  String orderID;
+   PaymentFailedScreen({super.key,required this.orderID});
 
   @override
   Widget build(BuildContext context) {
     final wsize=MediaQuery.of(context).size.width;
     final hsize=MediaQuery.of(context).size.height;
-    return Scaffold(
-        backgroundColor: AppConfig.secmainColor,
-        body:SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Lottie.asset(
-                  'assets/images/fail.json',
-                  width: wsize*1,
-                  height: hsize*0.6,
+    return WillPopScope(
+      onWillPop: () async{
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const NavBar(),
+            ),
+                (route) => false);
+        return false;
+        // final shouldPop = await dialogBox(context);
+        // return shouldPop!;
+      },
+      child: Scaffold(
+          backgroundColor: AppConfig.secmainColor,
+          body:SingleChildScrollView(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    'assets/images/fail.json',
+                    width: wsize*1,
+                    height: hsize*0.5,
 
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 8),
-                  child: Text(
+                  ),
+                  Text(
                     'Payment Failed',
                     style: TextStyle(
                       fontSize: 20,
@@ -33,30 +46,31 @@ class PaymentFailedScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold
                     ),
                   ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 8),
-                  child: Text(
-                    'ID : 2345678',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold
+                   Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text(
+                      'ID : $orderID',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(top: 32),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: AppConfig.primaryColor),
-                      onPressed: (){
-
-                      },
-                      child: Text("Transaction details",style: AppConfig.blacktext,),)
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Button(MediaQuery.of(context).size,'Retry',Colors.white,AppConfig.primaryColor,(){
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const NavBar(),
+                          ),
+                              (route) => false);
+                    }),
+                  )
+                ],
+              ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 }

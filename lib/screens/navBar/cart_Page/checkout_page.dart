@@ -26,6 +26,7 @@ class CheckoutPage extends ConsumerStatefulWidget {
 }
 
 class _CheckoutPageState extends ConsumerState<CheckoutPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -43,6 +44,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     final size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
+          key: _scaffoldKey,
             backgroundColor: AppConfig.secmainColor,
             body: ReactiveForm(
               formGroup: checkoutprovider.checkoutForm,
@@ -336,7 +338,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                             "currency": "USD"
                                           }
                                       ],
-                                    },notificationprovider),
+                                    },notificationprovider, _scaffoldKey.currentContext),
                               ),);
 
 

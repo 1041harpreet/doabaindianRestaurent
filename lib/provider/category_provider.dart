@@ -83,7 +83,6 @@ class CategoryService extends ChangeNotifier {
   List category = [];
   List seccategory = [];
 
-
   //this list is used to store sub category item
   List subcategory = [];
 
