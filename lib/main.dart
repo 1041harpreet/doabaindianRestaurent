@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/screens/auth/splash_screen.dart';
-import 'package:restaurent_app/services/notification_service/notification.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/screens/auth/splash_screen.dart';
+import 'package:restaurent.app/services/notification_service/notification.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {

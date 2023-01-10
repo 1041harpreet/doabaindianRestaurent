@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/category_provider.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/category_provider.dart';
 
 import '../../../../widgets/category_item.dart';
 import '../../../../widgets/shimmer.dart';
 import '../product_details_view.dart';
-import 'stream_builder_widget.dart';
+import 'builder.dart';
 class CategoryItems extends ConsumerStatefulWidget {
   String name;
   int index;

@@ -33,10 +33,12 @@ class CheckOutService extends ChangeNotifier{
         ]),
   });
  var date='';
-
+getdate(){
+  var now=DateTime.now();
+  date= DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+}
   sendToAdmin(email,orderId,checkoutprovider,total,tax,orderItem){
-    var now=DateTime.now();
-    date= DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+
    var name=date+email;
    print(date);
     _firestore.collection('orders').doc(name).set({

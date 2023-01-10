@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bx.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/auth_provider.dart';
-import 'package:restaurent_app/screens/navBar/cart_Page/cart_page.dart';
-import 'package:restaurent_app/screens/navBar/profille_page/buffet_page.dart';
-import 'package:restaurent_app/screens/navBar/profille_page/gallery.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/auth_provider.dart';
+import 'package:restaurent.app/screens/navBar/cart_Page/cart_page.dart';
+import 'package:restaurent.app/screens/navBar/profille_page/buffet_page.dart';
+import 'package:restaurent.app/screens/navBar/profille_page/gallery.dart';
 
 import '../../../provider/nav_bar_provider.dart';
 import 'aboutus_page.dart';

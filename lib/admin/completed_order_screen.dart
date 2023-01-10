@@ -5,12 +5,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
-import 'package:restaurent_app/admin/order_detail_page.dart';
-import 'package:restaurent_app/admin/provider/order_provider.dart';
-import 'package:restaurent_app/admin/widgets/drawer.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/auth_provider.dart';
-import 'package:restaurent_app/services/connection_service.dart';
+import 'package:restaurent.app/admin/order_detail_page.dart';
+import 'package:restaurent.app/admin/provider/order_provider.dart';
+import 'package:restaurent.app/admin/widgets/drawer.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/auth_provider.dart';
+import 'package:restaurent.app/services/connection_service.dart';
 
 import '../widgets/toast_service.dart';
 

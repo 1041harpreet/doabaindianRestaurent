@@ -7,17 +7,17 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ant_design.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/auth_provider.dart';
-import 'package:restaurent_app/provider/cart_provider.dart';
-import 'package:restaurent_app/screens/navBar/cart_Page/checkout_page.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/auth_provider.dart';
+import 'package:restaurent.app/provider/cart_provider.dart';
+import 'package:restaurent.app/screens/navBar/cart_Page/checkout_page.dart';
 import '../../../provider/check_out_provider.dart';
 import '../../../provider/nav_bar_provider.dart';
 import '../../../services/notification_service/notification.dart';
 import '../../../widgets/cart_item.dart';
 import '../../../widgets/category_item.dart';
 import '../../../widgets/shimmer.dart';
-import '../home_page/categories/stream_builder_widget.dart';
+import '../home_page/categories/builder.dart';
 
 class AddToCart extends ConsumerStatefulWidget {
   const AddToCart({Key? key}) : super(key: key);
@@ -86,115 +86,9 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                         child: Column(children: [
                           Expanded(
                               child: cartlistBuilder(
-                                  wsize, hsize, cartprovider, context)),
-                          cartprovider.subtotal == 0.0
-                              ? Container()
-                              : Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white70,
-                                  ),
-                                  width: wsize,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(7.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Subtotal",
-                                              style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: hsize * 0.02,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "\$${cartprovider.subtotal.toStringAsFixed(2)}",
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black)),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(7.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Tax",
-                                              style: TextStyle(
-                                                  color: Colors.black54,
-                                                  fontSize: hsize * 0.02,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "\$${cartprovider.tax.toStringAsFixed(2)}",
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black)),
-                                          ],
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(7.0),
-                                            child: Text("Total : ",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color:
-                                                        AppConfig.primaryColor,
-                                                    fontSize: 18.0)),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0),
-                                            child: Text(
-                                                "\$${cartprovider.total.toStringAsFixed(2)}",
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black,
-                                                    fontSize: 16.0)),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          backgroundColor:
-                                                              AppConfig
-                                                                  .primaryColor),
-                                                  onPressed: () async {
-                                                    print('checkout');
-                                                    checkoutprovider.checkoutForm.patchValue(
-                                                        {
-                                                          "fullname":authprovider.username,
-                                                          "phone":authprovider.phone.toString(),
-                                                          "email":authprovider.user.email
-                                                        });
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const CheckoutPage(),
-                                                        ));
-                                                  },
-                                                  child:
-                                                      const Text("Checkout")),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                )
+                                  wsize, hsize, cartprovider, context,checkoutprovider,authprovider)),
+
+
 
 
 

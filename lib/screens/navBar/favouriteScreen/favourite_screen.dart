@@ -3,14 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:restaurent_app/config/config.dart';
-import 'package:restaurent_app/provider/cart_provider.dart';
-import 'package:restaurent_app/provider/category_provider.dart';
-import 'package:restaurent_app/provider/nav_bar_provider.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/cart_provider.dart';
+import 'package:restaurent.app/provider/category_provider.dart';
+import 'package:restaurent.app/provider/nav_bar_provider.dart';
 
 import '../../../widgets/category_item.dart';
 import '../../../widgets/shimmer.dart';
-import '../home_page/categories/stream_builder_widget.dart';
+import '../home_page/categories/builder.dart';
 import '../home_page/product_details_view.dart';
 class FavouriteScreen extends ConsumerStatefulWidget {
   const FavouriteScreen({Key? key}) : super(key: key);
