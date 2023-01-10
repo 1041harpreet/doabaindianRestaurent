@@ -93,6 +93,7 @@ class CategoryService extends ChangeNotifier {
       var ref = await _firestore.collection('category').get();
       category = ref.docs.map((e) => CategoryItem.fromJson(e.data())).toList();
     } catch (e) {
+      category=[];
       print(e.toString());
     } finally {
       // changeloading(false);
@@ -115,6 +116,7 @@ class CategoryService extends ChangeNotifier {
     try {
 
     } catch (e) {
+      subcategory=[];
       print('get sub failed');
       print(e);
     } finally {
@@ -140,6 +142,7 @@ getmadeforu()async{
       madefulist = ref.docs.map((e) => MadeForUItem.fromJson(e.data())).toList();
 
   }catch(e){
+    madefulist=[];
      print(e);
     }finally{
       changecarload(false, mfuload);
@@ -147,7 +150,6 @@ getmadeforu()async{
     }
 }
   List carsoulList = [];
-
   getcarsoulItem() async {
     changecarload(true,carload);
     try {
@@ -156,11 +158,11 @@ getmadeforu()async{
       carsoulList = ref.docs.map((e) => SliderItem.fromJson(e.data())).toList();
       print(carsoulList);
     } catch (e) {
+      carsoulList=[];
       print('get car is running');
       print(e.toString());
     } finally {
       changecarload(false,carload);
-      notifyListeners();
     }
   }
 
@@ -189,9 +191,6 @@ getmadeforu()async{
     } catch (e) {
       print('add fav error');
       print(e.toString());
-    } finally {
-      // changefavloading(false);
-      notifyListeners();
     }
   }
 
@@ -208,9 +207,8 @@ getmadeforu()async{
     } catch (e) {
       print('add fav is running');
       print(e.toString());
-    } finally {
+    }finally{
       changefavloading(false);
-      notifyListeners();
     }
   }
 
@@ -226,9 +224,6 @@ getmadeforu()async{
     } catch (e) {
       print('remove fav error');
       print(e.toString());
-    } finally {
-      // changefavloading(false);
-      notifyListeners();
     }
   }
 }
