@@ -22,9 +22,29 @@ class ForgetPasswordScreen extends ConsumerWidget {
         child: Column(
           children: [
             //to give space from top
-            const Expanded(
+             Expanded(
               flex: 1,
-              child: Center(),
+              child: Row(children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(10.0)),
+                        width: 40.0,
+                        height: 40.0,
+                        child: const Icon(
+                          Icons.arrow_back_ios_new_outlined,
+                          color: Colors.grey,
+                        )),
+                  ),
+                ),
+              ]),
             ),
 
             //page content here
@@ -96,7 +116,7 @@ class ForgetPasswordScreen extends ConsumerWidget {
               authprovider.resetload == true
                   ? loadingButton(size)
                   : Button(
-                  size, "Next", Colors.white, AppConfig.primaryColor,
+                  size, "Send", Colors.white, AppConfig.primaryColor,
                       () async {
                     print('sign up start');
                     if (authprovider.resetPasswordForm.valid) {
