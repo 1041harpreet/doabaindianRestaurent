@@ -18,8 +18,8 @@ class HomeService extends ChangeNotifier {
      notifyListeners();
    }
    openMap() async {
-    double lat = 30.3589;
-    double lng = 76.4497;
+    double lat = 40.158867;
+    double lng = -83.082340;
     try{
       MapsLauncher.launchCoordinates(
           lat, lng, 'Doaba Indian Restaurent ');
@@ -29,9 +29,9 @@ class HomeService extends ChangeNotifier {
 
   }
 
-  openwhatsapp() async {
+  openwhatsapp(context) async {
 
-      var contact = "+916283578905";
+      var contact = "+1 (614) 282-2341";
       var androidUrl = "whatsapp://send?phone=$contact&text=Hi, I need some help";
       var iosUrl = "https://wa.me/$contact?text=${Uri.parse('Hi, I need some help')}";
 
@@ -43,6 +43,7 @@ class HomeService extends ChangeNotifier {
           await launchUrl(Uri.parse(androidUrl));
         }
       } catch(e){
+        showErrorToast(context: context,message: "Failed to open whatsapp");
         print('WhatsApp is not installed.'+e.toString());
       }
     }

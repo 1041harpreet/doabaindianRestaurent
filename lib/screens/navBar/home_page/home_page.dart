@@ -114,7 +114,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           elevation: 5.0,
           backgroundColor: Colors.green,
           onPressed: () async {
-            homeprovider.openwhatsapp();
+            homeprovider.openwhatsapp(context);
           },
           child: Image.asset('assets/images/whats.png', fit: BoxFit.fill),
         ),
