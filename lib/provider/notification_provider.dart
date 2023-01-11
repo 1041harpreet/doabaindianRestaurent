@@ -16,16 +16,20 @@ class NotificationService extends ChangeNotifier{
   }
   //add to user notification page
   addToNotification(String orderid,String email,bool status,tax,total,date){
-    var ref=_firestore.collection('notifications').doc(email).collection(email).doc().set({
-      'orderID':orderid,
-      "email":email,
-      "status":status,
-      "tax":tax,
-      "total":total,
-      "date":date
-    }).then((value) {
-     print('added');
-    });
+    try{
+      var ref=_firestore.collection('notifications').doc(email).collection(email).doc().set({
+        'orderID':orderid,
+        "email":email,
+        "status":status,
+        "tax":tax,
+        "total":total,
+        "date":date
+      }).then((value) {
+        print('added');
+      });
+    }catch(e){
+      print(e);
+    }
   }
   //get notification of user
   List notificationList=[];

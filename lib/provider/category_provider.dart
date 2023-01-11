@@ -105,17 +105,16 @@ class CategoryService extends ChangeNotifier {
 //used to get subcategory items
   getsubcategory(item) async {
     changesubloading(true);
-    var ref = await _firestore
-        .collection('category')
-        .doc(item.toString())
-        .collection(item.toString())
-        .get();
 
-    subcategory =
-        ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
-    print(subcategory);
     try {
-
+      var ref = await _firestore
+          .collection('category')
+          .doc(item.toString())
+          .collection(item.toString())
+          .get();
+      subcategory =
+          ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
+      print(subcategory);
     } catch (e) {
       subcategory=[];
       print('get sub failed');
@@ -136,6 +135,7 @@ class CategoryService extends ChangeNotifier {
   List madefulist=[];
   bool mfuload=false;
 
+  //special item list
 getmadeforu()async{
   changecarload(true, mfuload);
   try{
@@ -150,6 +150,7 @@ getmadeforu()async{
       notifyListeners();
     }
 }
+//used to get list of banners in carsoul list
   List carsoulList = [];
   getcarsoulItem() async {
     changecarload(true,carload);
@@ -198,7 +199,6 @@ getmadeforu()async{
   getFavouriteItem(email) async {
     changefavloading(true);
     try {
-      // var item=category[index].title;
       var ref = await _firestore
           .collection('favourite')
           .doc(email)
@@ -206,7 +206,7 @@ getmadeforu()async{
           .get();
       favList = ref.docs.map((e) => FavItem.fromJson(e.data())).toList();
     } catch (e) {
-      print('add fav is running');
+      favList=[];
       print(e.toString());
     }finally{
       changefavloading(false);
@@ -214,7 +214,6 @@ getmadeforu()async{
   }
 
   removeToFavourite(email, item) async {
-    // changefavloading(true);
     try {
       await _firestore
           .collection('favourite')
