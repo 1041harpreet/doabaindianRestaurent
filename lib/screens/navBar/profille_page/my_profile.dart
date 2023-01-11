@@ -59,11 +59,24 @@ class MyProfile extends ConsumerWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: AppConfig.primaryColor,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+          leading:Padding(
+            padding: const EdgeInsets.only(left: 5.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.black12),
+                      borderRadius: BorderRadius.circular(10.0)),
+                  width: 40.0,
+                  height: 40.0,
+                  child: const Icon(
+                    Icons.arrow_back_ios_new_outlined,
+                    color: Colors.grey,
+                  )),
+            ),
           ),
           actions: [
             PopupMenuButton(

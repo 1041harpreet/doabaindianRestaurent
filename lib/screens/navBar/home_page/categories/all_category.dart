@@ -47,8 +47,6 @@ class _MoreCategoryState extends ConsumerState<MoreCategory>
   //   // To get the effect as in a showcase for ListView, set true
   //   reAnimateOnVisibility: false,
   // );
-
-
   @override
   void initState() {
 
