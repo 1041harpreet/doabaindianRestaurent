@@ -243,6 +243,7 @@ final cartProvider = ChangeNotifierProvider((ref) {
   var state = CartService(authprovider.user.email);
   print(authprovider.user.email);
   print(authprovider.phone);
+  state.getTotal();
   state.getBadge();
   return state;
 });
