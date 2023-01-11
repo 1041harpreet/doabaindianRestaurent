@@ -18,10 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 class CartService extends ChangeNotifier {
   String email;
   CartService(this.email);
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-
   //set loading in cart screen
   bool cartloading = false;
   bool checkoutloading = false;
@@ -108,6 +105,8 @@ class CartService extends ChangeNotifier {
       await addToTotal(item, count);
       print('total calculated$subtotal');
     } catch (e) {
+      showErrorToast(message: "Failed", context: context);
+
       print(e.toString());
     } finally {
       await getBadge();
@@ -213,11 +212,14 @@ class CartService extends ChangeNotifier {
       print('subtotal is $subtotal');
       notifyListeners();
     } catch (e) {
+      subtotal=0.0;
+      total=0.0;
       print('get total error');
       print(e.toString());
     }
   }
 
+  //get list of order items
   List orderItem=[];
   getorderItem() async {
     changeloading(true);
@@ -226,6 +228,7 @@ class CartService extends ChangeNotifier {
       orderItem=ref.docs.map((e) => OrderItem.fromJson(e.data())).toList();
     }
     catch(e){
+      orderItem=[];
       print(e);
     }finally{
       changeloading(false);

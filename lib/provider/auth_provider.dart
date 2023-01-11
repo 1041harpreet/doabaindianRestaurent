@@ -68,10 +68,8 @@ class AuthService extends ChangeNotifier {
     "name": FormControl(validators: [
       Validators.required,
     ]),
-    "phone": FormControl(validators: [
-      Validators.required,
-      Validators.minLength(10)
-    ]),
+    "phone": FormControl(
+        validators: [Validators.required, Validators.minLength(10)]),
     'password': FormControl(validators: [
       Validators.required,
     ]),
@@ -82,13 +80,16 @@ class AuthService extends ChangeNotifier {
   get user => _auth.currentUser;
 
   storeToken(email) async {
-    var token = await NotificationController().requestFirebaseToken();
-    print(token);
-    await FirebaseFirestore.instance
-        .collection('token')
-        .doc(email)
-        .set({"token": token});
-
+    try {
+      var token = await NotificationController().requestFirebaseToken();
+      print(token);
+      await FirebaseFirestore.instance
+          .collection('token')
+          .doc(email)
+          .set({"token": token});
+    } catch (e) {
+      print(e);
+    }
   }
 
   //  signInWithGoogle(context) async {
@@ -116,7 +117,7 @@ class AuthService extends ChangeNotifier {
   // }
 
   //SIGN UP METHOD
-   signUp(email, password, context, username, phone) async {
+  signUp(email, password, context, username, phone) async {
     signuploading(true);
     try {
       await _auth
@@ -125,30 +126,17 @@ class AuthService extends ChangeNotifier {
         password: password,
       )
           .then((value) async {
-        await adduser(email, username, phone,'');
+        await adduser(email, username, phone, '');
         await getUserInfo(_auth.currentUser?.email);
         await setInitialTotal(email);
-
-        // if (role == 'admin') {
-        //   Navigator.of(context).pushAndRemoveUntil(
-        //       MaterialPageRoute(
-        //         builder: (context) => const AdminHomePage(),
-        //       ),
-        //       (route) => false);
-        // } else {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => const NavBar(),
-              ),
-              (route) => false);
-        // }
-
-
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const NavBar(),
+            ),
+            (route) => false);
       });
       showSuccessToast(message: 'register successfully', context: context);
       print(_auth.currentUser?.email);
-
-
     } on FirebaseAuthException catch (e) {
       // print(e.toString());
       print(e.code);
@@ -173,13 +161,18 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  adduser(email, username, phone,img) async {
-    await FirebaseFirestore.instance.collection('users').doc(email).set(
-        {"email": email, "username": username, "phone": phone, 'role': "user","img":img});
+  adduser(email, username, phone, img) async {
+    await FirebaseFirestore.instance.collection('users').doc(email).set({
+      "email": email,
+      "username": username,
+      "phone": phone,
+      'role': "user",
+      "img": img
+    });
   }
 
   //SIGN IN METHOD
-   signIn(email, password, context) async {
+  signIn(email, password, context) async {
     signinloading(true);
     try {
       await _auth
@@ -208,8 +201,7 @@ class AuthService extends ChangeNotifier {
         showErrorToast(context: context, message: "No internet Connection");
       }
       if (e.code == 'user-not-found') {
-        showErrorToast(
-            context: context, message: "User not found");
+        showErrorToast(context: context, message: "User not found");
       }
       if (e.code == 'invalid-email') {
         showErrorToast(context: context, message: "Email/password is wrong ");
@@ -247,6 +239,7 @@ class AuthService extends ChangeNotifier {
     await AwesomeNotificationsFcm().unsubscribeToTopic('all');
     print('signout');
   }
+
   //delete account
   // deleteAccount(context)async{
   //   _auth.currentUser?.delete().then((value) {
@@ -260,13 +253,14 @@ class AuthService extends ChangeNotifier {
   // }
 
   //CHANGE password
-  changePassword(email,String currentPassword, String newPassword, context) async {
+  changePassword(
+      email, String currentPassword, String newPassword, context) async {
     print('pressed');
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
     } else {
-      final cred = EmailAuthProvider.credential(
-          email: email, password: currentPassword);
+      final cred =
+          EmailAuthProvider.credential(email: email, password: currentPassword);
       print(cred);
       user?.reauthenticateWithCredential(cred).then((value) {
         print(value);
@@ -297,8 +291,7 @@ class AuthService extends ChangeNotifier {
       print(e.toString());
       showErrorToast(
           message: "link sent failed,check your email", context: context);
-    }
-    finally{
+    } finally {
       resetloading(false);
     }
   }
@@ -319,14 +312,13 @@ class AuthService extends ChangeNotifier {
           .collection('cart')
           .doc(email)
           .set({"subtotal": 0.0, "total": 0.0, "status": false});
-
     } catch (e) {
       print('get total error');
       print(e.toString());
     }
   }
 
-  String phone='';
+  String phone = '';
   String username = '';
   String role = 'user';
 
@@ -346,16 +338,18 @@ class AuthService extends ChangeNotifier {
         print(username);
       });
     } catch (e) {
+      role = 'user';
       print("error $e");
     }
   }
-  updateAnother(){
+
+  updateAnother() {
     try {
-      FirebaseFirestore.instance.collection('token').doc('1041harpreet@gmail.com').set({
-        "token":""
-      });
-    }
-    catch(e){
+      FirebaseFirestore.instance
+          .collection('token')
+          .doc('1041harpreet@gmail.com')
+          .set({"token": ""});
+    } catch (e) {
       print(e);
     }
   }

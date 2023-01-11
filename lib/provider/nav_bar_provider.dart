@@ -26,8 +26,6 @@ class NavServices extends ChangeNotifier{
 
 }
 final NavBarProvider=ChangeNotifierProvider((ref) {
-  // var screenprovider = ref.watch(screenProvider);
-  // print(  "phone no is "+screenprovider.userData[0].phone);
   return NavServices(
   );
 
