@@ -97,8 +97,6 @@ Widget optionListView(authprovider, context) {
             text: 'Terms & Conditions',
             icon: const Icon(Icons.assignment)),
         _separator(),
-        _listItem(text: 'Rate App', icon: const Icon(Icons.star_border)),
-        _separator(),
         logoutbutton(authprovider, context),
         _separator(),
       ],

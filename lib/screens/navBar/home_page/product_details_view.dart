@@ -155,23 +155,29 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.catname,
+                            widget.item.title,
                             style: GoogleFonts.poppins(
-                              fontSize: 20,
-                              color: Colors.black,
+                              fontSize: wsize*0.05,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              widget.catname.length>30 ?
                               Text(
-                                widget.item.title,
+                                widget.catname.substring(0,30)+'...',
                                 style: GoogleFonts.poppins(
-                                  fontSize: 15.0,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                                  fontSize: wsize*0.045,
+                                  color: Colors.black,
+                                )
+                              ): Text(
+                      widget.catname,
+                      style: GoogleFonts.poppins(
+                        fontSize: wsize*0.045,
+                        color: Colors.black,
+                      )),
                               Text(
                                 '\$${widget.item.price}',
                                 style: GoogleFonts.poppins(
@@ -202,8 +208,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                             border: Border.all(
                                               width: 0.1,
                                             )),
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(10.0),
+                                        child:  Padding(
+                                          padding: EdgeInsets.all(wsize*0.03),
                                           child: Text("-",
                                               style: TextStyle(
                                                   color: Colors.black,
@@ -229,8 +235,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                     padding: const EdgeInsets.only(left: 8.0),
                                     child: GestureDetector(
                                       onTap: () {
-                                        provider
-                                            .addquantity(widget.item.price);
+                                        provider.addquantity(widget.item.price);
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -238,8 +243,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                             border: Border.all(
                                               width: 0.1,
                                             )),
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(10.0),
+                                        child:  Padding(
+                                          padding: EdgeInsets.all(wsize*0.03),
                                           child: Text("+",
                                               style: TextStyle(
                                                   color: Colors.black,

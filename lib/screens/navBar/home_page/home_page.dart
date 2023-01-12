@@ -21,6 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../provider/category_provider.dart';
 import '../../../provider/home_provider.dart';
+import '../../../services/mail_services.dart';
 import '../../../services/notification_service/notification.dart';
 import '../../../widgets/about_us.dart';
 import '../../../widgets/shimmer.dart';
@@ -112,8 +113,9 @@ class _HomePageState extends ConsumerState<HomePage> {
         backgroundColor: AppConfig.secmainColor,
         floatingActionButton: FloatingActionButton(
           elevation: 5.0,
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.transparent,
           onPressed: () async {
+
             homeprovider.openwhatsapp(context);
           },
           child: Image.asset('assets/images/whats.png', fit: BoxFit.fill),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
 
 import '../../../../config/config.dart';
 import '../../../auth/sign_up_screen.dart';
@@ -23,9 +24,7 @@ Widget notificationItem(context,notificationprovider,index){
               backgroundColor: AppConfig.primaryColor,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  'assets/images/avatar.png',
-                ),
+                child: Icon(Icons.check,color: AppConfig.secmainColor,)
               ),
             ),
             const SizedBox(width: 8),

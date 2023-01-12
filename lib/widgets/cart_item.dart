@@ -48,7 +48,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          left: wsize * 0.03, top: wsize * 0.03),
+                          left: wsize * 0.04, top: wsize * 0.03),
                       child: AutoSizeText(item.title.toString().length >25 ? '${item.title.toString().substring(0,25)}...' :item.title.toString() ,
                           maxLines: 1,
                           style: TextStyle(

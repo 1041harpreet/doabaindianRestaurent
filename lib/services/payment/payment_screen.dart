@@ -73,6 +73,9 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
             if (params['status'] == "success") {
               print('success');
               await checkoutprovider.getAdminToken();
+              //used to send email to user
+              MailService().userMail(email, fullname, checkoutprovider.date,
+                  total, params['paymentId']);
               //used to send mail to admin
               MailService().adminMail(
                   fullname, checkoutprovider.date, total, params['paymentId']);
@@ -94,9 +97,7 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
                   'Hey ! Order From ${fullname}',
                   "New order on ${email} of total ${cartprovider.total} is Placed.",
                   checkoutprovider.adminToken);
-              //used to send email to user
-              MailService().userMail(email, fullname, checkoutprovider.date,
-                  total, params['paymentId']);
+
 
               //add on to notification
               notificationprovider.addToNotification(params['paymentId'], email,
@@ -106,7 +107,7 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
         }
       },
       onError: (error) {
-        showErrorToast(message: "Something error", context: context);
+        showErrorToast(message: "Something Went Wrong", context: context);
         print("onError: $error");
       },
       onCancel: (params) {

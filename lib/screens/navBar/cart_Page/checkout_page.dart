@@ -44,6 +44,16 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     final size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
+          appBar: AppBar(backgroundColor: AppConfig.primaryColor,
+          title: Text(
+            'Checkout',
+            style: GoogleFonts.inter(
+              fontSize: 24.0,
+              color: const Color(0xFF15224F),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          ),
           key: _scaffoldKey,
             backgroundColor: AppConfig.secmainColor,
             body: ReactiveForm(
@@ -59,20 +69,6 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                         children: [
                           SizedBox(
                             height: size.height * 0.02,
-                          ),
-                          //header text
-                          Center(
-                            child: Text(
-                              'Checkout',
-                              style: GoogleFonts.inter(
-                                fontSize: 24.0,
-                                color: const Color(0xFF15224F),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: size.height * 0.01,
                           ),
                           Center(
                             child: Text(
@@ -352,7 +348,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                         }
                       },
                       Text(
-                        'Order Now',
+                        'Proceed to Payment',
                         style: GoogleFonts.inter(
                           fontSize: 16.0,
                           color: Colors.white,

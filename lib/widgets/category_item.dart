@@ -44,19 +44,19 @@ Widget Item(wsize,hsize,item,provider,context){
                     children: [
                       Padding(
                         padding: EdgeInsets.only(
-                            left: wsize * 0.03, top: wsize * 0.03),
+                            left: wsize * 0.04, top: wsize * 0.03),
                         child: item.title.toString().length > 20
                             ? AutoSizeText(
                             '${item.title.toString().substring(0, 20)}...',
                             maxLines: 1,
                             style: TextStyle(
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 fontSize: wsize * 0.04,
                                 color: Colors.black87))
                             : AutoSizeText(item.title,
                             maxLines: 1,
                             style: TextStyle(
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 fontSize: wsize * 0.04,
                                 color: Colors.black87)),
                       ),
@@ -68,12 +68,12 @@ Widget Item(wsize,hsize,item,provider,context){
                              AutoSizeText("Price : ",
                                 style: TextStyle(
                                     color: AppConfig.primaryColor,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold)),
+                                    fontSize: wsize*0.045,
+                                    fontWeight: FontWeight.w500)),
                             AutoSizeText("\$${item.price}",
-                                style: const TextStyle(
+                                style:  TextStyle(
                                     color: Colors.black,
-                                    fontSize: 16.0,
+                                    fontSize: wsize*0.045,
                                     fontWeight: FontWeight.bold)),
                           ],
                         ),

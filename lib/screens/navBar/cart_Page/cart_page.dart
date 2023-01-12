@@ -1,7 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ant_design.dart';
@@ -29,6 +32,7 @@ class AddToCart extends ConsumerStatefulWidget {
 class _AddToCartState extends ConsumerState<AddToCart> {
   @override
   void initState() {
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.watch(cartProvider).getorderItem();
       ref.watch(cartProvider).getTotal();
@@ -44,60 +48,55 @@ class _AddToCartState extends ConsumerState<AddToCart> {
     final authprovider = ref.watch(authProvider);
     final navprovider = ref.watch(NavBarProvider);
     final checkoutprovider = ref.watch(checkOutProvider);
-    print(cartprovider.subtotal.toString());
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     return SafeArea(
-        child: WillPopScope(
-            onWillPop: () async {
-              navprovider.changeindex(0);
-              return false;
-            },
-            child: Scaffold(
-                key: _scaffoldKey,
-                backgroundColor: AppConfig.secmainColor,
-                body: Column(children: [
-                  Padding(
-                      padding: const EdgeInsets.all(8.0), child: header(wsize)),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
-                      child: Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 5.0, // soften the shadow
-                              spreadRadius: -1.0, //extend the shadow
-                              offset: Offset(
-                                -2.0, // Move to right 10  horizontally
-                                2.0, // Move to bottom 5 Vertically
-                              ),
-                            )
-                          ],
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25.0),
-                            topRight: Radius.circular(25.0),
-                          ),
+      child: WillPopScope(
+        onWillPop: () async {
+          navprovider.changeindex(0);
+          return false;
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: AppConfig.secmainColor,
+          body: Column(children: [
+            Padding(padding: const EdgeInsets.all(8.0), child: header(wsize)),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 5.0, // soften the shadow
+                        spreadRadius: -1.0, //extend the shadow
+                        offset: Offset(
+                          -2.0, // Move to right 10  horizontally
+                          2.0, // Move to bottom 5 Vertically
                         ),
-                        child: Column(children: [
-                          Expanded(
-                              child: cartlistBuilder(
-                                  wsize, hsize, cartprovider, context,checkoutprovider,authprovider)),
-
-
-
-
-
-
-                        ]),
-                      ),
+                      )
+                    ],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25.0),
+                      topRight: Radius.circular(25.0),
                     ),
                   ),
-                ]),),),);
+                  child: Column(children: [
+                    Expanded(
+                        child: cartlistBuilder(wsize, hsize, cartprovider,
+                            context, checkoutprovider, authprovider)),
+                  ]),
+                ),
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
   }
 }
 
@@ -113,3 +112,18 @@ Widget header(wsize) {
     )
   ]);
 }
+
+showLoadingDialog() => Get.dialog(
+  barrierDismissible: false,
+  barrierColor: Colors.transparent,
+
+  CupertinoAlertDialog(
+    title: SizedBox(
+      width: 20.0,
+      height: 20.0,
+      child: CircularProgressIndicator(color: AppConfig.primaryColor,
+
+      ),
+    ),
+  ),
+);

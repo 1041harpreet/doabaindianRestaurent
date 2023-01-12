@@ -52,13 +52,13 @@ class _NavBarState extends ConsumerState<NavBar> {
           const BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined,size: 30.0), label: "Home",tooltip: "Home Page"),
           BottomNavigationBarItem(
-            icon: Iconify(Carbon.favorite,color:navbarprovider.selectedindex==1 ? AppConfig.primaryColor :Colors.grey,size: 30.0),label: "Favourite"),
+            icon: Iconify(Carbon.favorite_filled,color:navbarprovider.selectedindex==1 ? AppConfig.primaryColor :Colors.grey,size: 30.0),label: "Favourite"),
            BottomNavigationBarItem(
               icon:Badge(
                   badgeContent: Text(cartprovider.badgevalue.toString()),
                   child: const Icon(Icons.shopping_cart,size: 30.0)),
               label: "Cart"),
-          const BottomNavigationBarItem(icon: Icon(Icons.person,size: 30.0), label: "My Profile",)
+          const BottomNavigationBarItem(icon: Icon(Icons.person,size: 30.0), label: "Profile",)
         ],
       ),
     );
