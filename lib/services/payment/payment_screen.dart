@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -25,7 +27,7 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
       sandboxMode: true,
       clientId: Const().clientID,
       secretKey: Const().secret,
-      returnURL: "com.example.restaurent.app://paypalpay",
+      returnURL: Platform.isAndroid ?  "com.example.restaurent.app://paypalpay":"com.xstudioz.doaba://paypalpay",
       cancelURL: "https://samplesite.com/cancel",
       transactions: [
         {
