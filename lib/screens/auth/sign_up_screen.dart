@@ -149,22 +149,22 @@ class SignUpScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Text(
-                'or login with',
-                style: GoogleFonts.inter(
-                  fontSize: 14.0,
-                  color: const Color(0xFF969AA8),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              Button(size, "Sign in with Google", Colors.black, Colors.white,
-                  () {
-                authprovider.signInWithGoogle(context);
-                print('sign in with google');
-              }),
+              // Text(
+              //   'or login with',
+              //   style: GoogleFonts.inter(
+              //     fontSize: 14.0,
+              //     color: const Color(0xFF969AA8),
+              //   ),
+              //   textAlign: TextAlign.center,
+              // ),
+              // SizedBox(
+              //   height: size.height * 0.02,
+              // ),
+              // Button(size, "Sign in with Google", Colors.black, Colors.white,
+              //     () {
+              //   authprovider.signInWithGoogle(context);
+              //   print('sign in with google');
+              // }),
               SizedBox(
                 height: size.height * 0.02,
               ),
