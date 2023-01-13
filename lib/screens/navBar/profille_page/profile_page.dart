@@ -9,6 +9,7 @@ import 'package:restaurent.app/screens/navBar/profille_page/buffet_page.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/gallery.dart';
 
 import '../../../provider/nav_bar_provider.dart';
+import '../../form_update.dart';
 import 'aboutus_page.dart';
 import 'my_profile.dart';
 
@@ -77,10 +78,9 @@ Widget optionListView(authprovider, context) {
         _separator(),
         _listItem(onClick: (){
           Navigator.push(context, MaterialPageRoute(builder: (context) => BuffetPage(),));
-
         },
             text: 'Buffet',
-            icon: const Icon(Icons.food_bank, color: Colors.black),
+            icon: const Icon(Icons.food_bank, ),
             showArrow: true),
         _separator(),
         _listItem(onClick: (){
@@ -90,10 +90,13 @@ Widget optionListView(authprovider, context) {
             text: 'Gallery', icon: const Iconify(Bx.image), showArrow: true),
         _separator(),
         _listItem(
-            onClick: () {}, text: 'Settings', icon: const Icon(Icons.settings)),
+            onClick: () {
+            }, text: 'Settings', icon: const Icon(Icons.settings)),
         _separator(),
         _listItem(
-            onClick: () {},
+            onClick: () {
+
+            },
             text: 'Terms & Conditions',
             icon: const Icon(Icons.assignment)),
         _separator(),

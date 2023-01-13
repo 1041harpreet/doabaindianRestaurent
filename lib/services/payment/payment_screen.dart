@@ -24,7 +24,7 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
   print(subtotal);
   print(total);
   return UsePaypal(
-      sandboxMode: true,
+      sandboxMode: false,
       clientId: Const().clientID,
       secretKey: Const().secret,
       returnURL: Platform.isAndroid ?  "com.example.restaurent.app://paypalpay":"com.xstudioz.doaba://paypalpay",
