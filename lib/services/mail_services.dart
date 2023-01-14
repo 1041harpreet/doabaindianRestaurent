@@ -70,7 +70,7 @@ src="https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.c
     //     username: username, password: password, port: 587);
     final message = Message()
       ..from = Address(username)
-      ..recipients.add('1041harpreet@gmail.com')
+      ..recipients.add('doabarestaurent@gmail.com')
 
       ..subject = 'New Order from : $name'
       ..text = 'DOABA INDIAN RESTAURANT.'

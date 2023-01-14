@@ -24,9 +24,9 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
   print(subtotal);
   print(total);
   return UsePaypal(
-      sandboxMode: false,
-      clientId: Const().clientID,
-      secretKey: Const().secret,
+      sandboxMode: true, //set mode to false
+      clientId: Const().clientID, //change from paypal
+      secretKey: Const().secret, //change from paypal and set return url in paypal
       returnURL: Platform.isAndroid ?  "com.example.restaurent.app://paypalpay":"com.xstudioz.doaba://paypalpay",
       cancelURL: "https://samplesite.com/cancel",
       transactions: [
