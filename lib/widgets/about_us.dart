@@ -43,7 +43,7 @@ Widget aboutus() {
           height: 5.0,
         ),
         Container(
-          color: const Color(0xffFF0000),
+          color:  Colors.red.shade400,
           padding: const EdgeInsets.all(4.0),
           child: Column(children: [Text(
           'We believe that nothing brings people together better than good food – and no matter who are sharing our meal with at that moment, we are all family. This philosophy permeates how we treat you, our customer the second you walk in through the door, you are part of our family.',

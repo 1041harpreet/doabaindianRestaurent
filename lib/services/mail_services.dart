@@ -76,7 +76,7 @@ src="https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.c
       ..text = 'DOABA INDIAN RESTAURANT.'
       ..html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
- <h1>Hi {{name}},</h1>
+ <h1>Hi </h1>
 <p>New Order for DOABA INDIAN RESTAURANT. Your order of Total $total on $date of OrderID $orderid</p>
 <table class="attribute-list" width="100%" cellpadding="0" cellspacing="0">
   <tr>

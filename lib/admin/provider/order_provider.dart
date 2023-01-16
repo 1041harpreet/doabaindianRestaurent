@@ -7,115 +7,176 @@ import '../../widgets/toast_service.dart';
 
 class OrderService extends ChangeNotifier {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  bool orderloading = false;
-  bool comOrderLoading = false;
+  bool pendingloading = false;
+  bool firstComLoading = false;
 
-  changeloading(key, value) {
-    key = value;
+  changeloading(value) {
+    pendingloading = value;
     notifyListeners();
   }
 
-  List orderList = [];
+  List pendingOrderList = [];
   List compOrderList = [];
 
-  getPendingOrders() async {
-    changeloading(orderloading, true);
+  changePmore(value) {
+    noPmore = value;
+    notifyListeners();
+  }
+
+  changePfetching(value) {
+    isPfetching = value;
+    notifyListeners();
+  }
+  DocumentSnapshot? lastdocPending;
+  bool noPmore = false;
+  bool isPfetching = false;
+  getFirstPendingOrders() async {
+    changeloading(true);
 
     try {
       var ref = await _firestore
           .collection('orders')
           .where('status', isEqualTo: false)
-          .limit(10)
+          .limit(limit)
           .get();
-      orderList =
+      pendingOrderList =
           ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
-      notifyListeners();
+      if(ref.docs.isEmpty){
+        print('emtpy');
+      }else {
+        lastdocPending = ref.docs.last;
+      }
     } catch (e) {
       print(e.toString());
     } finally {
-      changeloading(orderloading, false);
-      notifyListeners();
+      changeloading(false);
     }
   }
 
-//get all pending orders
-  getAllPendingOrders() async {
-    changeloading(orderloading, true);
-
+  fetchNextPOrder() async {
+    changePfetching(true);
     try {
+      print(lastdoc?.id);
       var ref = await _firestore
           .collection('orders')
           .where('status', isEqualTo: false)
+      // .orderBy('date', descending: true)
+          .startAfterDocument(lastdoc!)
+          .limit(limit)
           .get();
-      orderList =
-          ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
-      notifyListeners();
+      print(ref.docs.length);
+      if (ref.docs.length < limit) {
+        changePmore(true);
+      }
+      var l = await ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
+      pendingOrderList.addAll(l);
+      print(pendingOrderList.length);
+
+      lastdocPending= ref.docs.last;
     } catch (e) {
-      print(e.toString());
+      print(e);
     } finally {
-      changeloading(orderloading, false);
-      notifyListeners();
+      changePfetching(false);
     }
+  }
+
+  changefirstloading(value) {
+    firstComLoading = value;
+    notifyListeners();
   }
 
   //get only 10 completed orders
   getFirstCompOrders() async {
-    changeloading(comOrderLoading, true);
-    var ref = await _firestore
-        .collection('orders')
-        .where('status', isEqualTo: true)
-        .limit(10)
-        .get();
-    compOrderList =
-        ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
+    changefirstloading(true);
     try {
-      notifyListeners();
-    } catch (e) {
+      var ref = await _firestore
+          .collection('orders')
+          .where('status', isEqualTo: true)
+      // .orderBy('date', descending: true)
+          .limit(limit)
+          .get();
+      compOrderList =
+          ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
+      if(ref.docs.isEmpty){
+        print('emtpy');
+      }else {
+        lastdoc = ref.docs.last;
+      }    } catch (e) {
       print(e.toString());
     } finally {
-      changeloading(comOrderLoading, false);
-      notifyListeners();
+      changefirstloading(false);
     }
   }
 
-  //get all completed orders
-  getAllCompOrders() async {
-    changeloading(comOrderLoading, true);
-    var ref = await _firestore
-        .collection('orders')
-        .where('status', isEqualTo: true)
-        .get();
-    compOrderList =
-        ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
+  // fetch next complete order item
+  DocumentSnapshot? lastdoc;
+  int limit = 10;
+  bool nomore = false;
+  bool isfetching = false;
+
+  changemore(value) {
+    nomore = value;
+    notifyListeners();
+  }
+
+  changefetching(value) {
+    isfetching = value;
+    notifyListeners();
+  }
+
+  fetchNextComOrder() async {
+    changefetching(true);
     try {
-      notifyListeners();
+      print(lastdoc?.id);
+      var ref = await _firestore
+          .collection('orders')
+          .where('status', isEqualTo: true)
+          // .orderBy('date', descending: true)
+          .startAfterDocument(lastdoc!)
+          .limit(limit)
+          .get();
+      print(ref.docs.length);
+      if (ref.docs.length < limit) {
+        changemore(true);
+      }
+        var l = await ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
+        compOrderList.addAll(l);
+        print(compOrderList.length);
+
+      lastdoc = ref.docs.last;
     } catch (e) {
-      print(e.toString());
+      print(e);
     } finally {
-      changeloading(comOrderLoading, false);
-      notifyListeners();
+      changefetching(false);
     }
   }
 
   //mark as completed
-  bool markloading=false;
-  markAsComplete(doc,context)async{
-    changeloading(markloading,true);
-    try{
-      await _firestore.collection('orders').doc(doc).update({
-        "status":true
-      }).then((value) {
-        showSuccessToast(message: "Completed",context: context);
-      });
-    }catch(e){
-      showErrorToast(context: context,message: "Failed");
-    }finally{
-      changeloading(markloading, false);
-    }
+  bool markloading = false;
 
-
+  changemarkloading(value) {
+    markloading = value;
+    notifyListeners();
   }
+
+  markAsComplete(doc, context) async {
+    changemarkloading(true);
+    try {
+      await _firestore
+          .collection('orders')
+          .doc(doc)
+          .update({"status": true}).then((value) {
+        showSuccessToast(message: "Completed", context: context);
+      });
+    } catch (e) {
+      showErrorToast(context: context, message: "Failed");
+    } finally {
+      changemarkloading(false);
+    }
+  }
+
   bool detailLoad = false;
+
 //change loading state
   changeDetailLoading(value) {
     detailLoad = value;
@@ -143,11 +204,16 @@ class OrderService extends ChangeNotifier {
   }
 
   //delete order
-  bool deleteloading=false;
-  deleteOrder(doc, context) async {
-    changeloading(deleteloading, true);
-    try {
+  bool deleteloading = false;
 
+  changedeleteloading(value) {
+    deleteloading = value;
+    notifyListeners();
+  }
+
+  deleteOrder(doc, context) async {
+    changedeleteloading(true);
+    try {
       await _firestore.collection('orders').doc(doc).delete().then((value) {
         showSuccessToast(
             message: "Order Deleted Successfully", context: context);
@@ -155,8 +221,8 @@ class OrderService extends ChangeNotifier {
     } catch (e) {
       print(e);
       showErrorToast(context: context, message: "Failed");
-    }finally{
-      changeloading(deleteloading, false);
+    } finally {
+      changedeleteloading(false);
     }
   }
 }

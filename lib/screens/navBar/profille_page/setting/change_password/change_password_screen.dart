@@ -3,13 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'sign_up_screen.dart';
-import '../../config/config.dart';
-import '../../provider/auth_provider.dart';
-import '../../widgets/toast_service.dart';
 
-class ForgetPasswordScreen extends ConsumerWidget {
-  const ForgetPasswordScreen({Key? key}) : super(key: key);
+import '../../../../../config/config.dart';
+import '../../../../../provider/auth_provider.dart';
+import '../../../../../widgets/toast_service.dart';
+import '../../../../auth/sign_up_screen.dart';
+
+
+class ChangePasswordScreen extends ConsumerWidget {
+  const ChangePasswordScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +24,7 @@ class ForgetPasswordScreen extends ConsumerWidget {
         child: Column(
           children: [
             //to give space from top
-             Expanded(
+            Expanded(
               flex: 1,
               child: Row(children: [
                 Padding(
@@ -30,6 +32,7 @@ class ForgetPasswordScreen extends ConsumerWidget {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
+                      authprovider.changePasswordForm.reset();
                     },
                     child: Container(
                         decoration: BoxDecoration(
@@ -69,7 +72,7 @@ class ForgetPasswordScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: ReactiveForm(
-          formGroup: authprovider.resetPasswordForm,
+          formGroup: authprovider.changePasswordForm,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -78,23 +81,12 @@ class ForgetPasswordScreen extends ConsumerWidget {
               ),
               //header text
               Text(
-                'Find Your Account',
+                'Change Password',
                 style: GoogleFonts.inter(
                   fontSize: 24.0,
                   color: const Color(0xFF15224F),
                   fontWeight: FontWeight.w600,
                 ),
-              ),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-              Text(
-                'Enter your Email link to your account',
-                style: GoogleFonts.inter(
-                  fontSize: 14.0,
-                  color: const Color(0xFF969AA8),
-                ),
-                textAlign: TextAlign.center,
               ),
               //logo section
               SizedBox(
@@ -105,28 +97,39 @@ class ForgetPasswordScreen extends ConsumerWidget {
                 height: size.height * 0.05,
               ),
               // //email & password section
-              textfieldbtn(size, 'Enter your gmail', 'email', {
+              textfieldbtn(size, 'Current Password', 'current', {
                 ValidationMessage.required: (error) =>
-                "The email must not be empty",
+                "Current password must not be empty",
               }),
               SizedBox(
                 height: size.height * 0.02,
               ),
+              textfieldbtn(size, 'New Password', 'new', {
+                ValidationMessage.required: (error) =>
+                "New password must not be empty",
+                ValidationMessage.minLength: (error) =>
+                "Password length must be greater than 6.",
 
-              authprovider.resetload == true
+              }),
+              SizedBox(
+                height: size.height * 0.02,
+              ),
+              authprovider.changePasswordLoading == true
                   ? loadingButton(size)
                   : Button(
-                  size, "Send", Colors.white, AppConfig.primaryColor,
+                  size, "Change Password", Colors.white, AppConfig.primaryColor,
                       () async {
-
-                    if (authprovider.resetPasswordForm.valid) {
-                     await authprovider.resetPassword(authprovider.resetPasswordForm.control('email').value,context);
+                    if (authprovider.changePasswordForm.valid) {
+                     await authprovider.changePassword(
+                          authprovider.changePasswordForm.control('current').value,
+                          authprovider.changePasswordForm.control('new').value,
+                          context);
 
                     } else {
                       print('invalid');
-                      authprovider.resetPasswordForm.markAllAsTouched();
+                      authprovider.changePasswordForm.markAllAsTouched();
                       showErrorToast(
-                          message: 'fill the email first', context: context);
+                          message: 'fill the details first', context: context);
                     }
                   }),
 
@@ -144,63 +147,4 @@ class ForgetPasswordScreen extends ConsumerWidget {
 
 }
 
-// Widget richText(
-//     double fontSize,
-//     ) {
-//   return Text.rich(
-//     TextSpan(
-//       style: GoogleFonts.inter(
-//         fontSize: fontSize,
-//         color: const Color(0xFF21899C),
-//         letterSpacing: 2.000000061035156,
-//       ),
-//       children: const [
-//         TextSpan(
-//           text: 'DOABA INDIAN ',
-//           style: TextStyle(
-//             fontWeight: FontWeight.w800,
-//           ),
-//         ),
-//         TextSpan(
-//           text: 'RESTAURANT',
-//           style: TextStyle(
-//             color: Color(0xFFFE9879),
-//             fontWeight: FontWeight.w800,
-//           ),
-//         ),
-//       ],
-//     ),
-//   );
-// }
-// Widget textfieldbtn(Size size, lable, controlname, validation) {
-//   return Container(
-//     alignment: Alignment.center,
-//     height: size.height * 0.07,
-//     padding: const EdgeInsets.symmetric(horizontal: 16),
-//     decoration: BoxDecoration(
-//       borderRadius: BorderRadius.circular(8.0),
-//       border: Border.all(
-//         width: 1.0,
-//         color: const Color(0xFFEFEFEF),
-//       ),
-//     ),
-//     child: ReactiveTextField(
-//       formControlName: controlname,
-//       style: GoogleFonts.inter(
-//         fontSize: 16.0,
-//         color: const Color(0xFF15224F),
-//       ),
-//       validationMessages: validation,
-//       maxLines: 1,
-//       cursorColor: const Color(0xFF15224F),
-//       decoration: InputDecoration(
-//           labelText: lable,
-//           labelStyle: GoogleFonts.inter(
-//             fontSize: 12.0,
-//             color: const Color(0xFF969AA8),
-//           ),
-//           border: InputBorder.none),
-//     ),
-//   );
-// }
 

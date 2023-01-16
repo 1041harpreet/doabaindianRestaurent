@@ -92,6 +92,8 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
               row("Tax : ", '\$${widget.orderList[widget.index].tax}'),
               row("Total : ", '\$${widget.orderList[widget.index].total}'),
               row("Status : ", '${widget.orderList[widget.index].status}'),
+              row("Note : ", '${widget.orderList[widget.index].note}'),
+
               const Divider(),
               if (widget.orderList[widget.index].status == false)
                 Padding(
@@ -105,7 +107,8 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
                             widget.orderList[widget.index].email,
                         context);
                     Navigator.pop(context);
-                    orderprovider.getPendingOrders();
+                   await orderprovider.getFirstPendingOrders();
+                    await orderprovider.changePmore(false);
                     print('mark as complete');
                   }),
                 ),
