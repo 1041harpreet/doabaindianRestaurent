@@ -43,33 +43,30 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
         child: Scaffold(
           backgroundColor: AppConfig.secmainColor,
           body:Column(children: [
-            Padding(padding: const EdgeInsets.all(8.0), child: header(wsize)),
-            Expanded(child:  Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 5.0, // soften the shadow
-                        spreadRadius: -1.0, //extend the shadow
-                        offset: Offset(
-                          -2.0, // Move to right 10  horizontally
-                          2.0, // Move to bottom 5 Vertically
-                        ),
-                      )
-                    ],
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25.0),
-                      topRight: Radius.circular(25.0),
-                    ),
+            header(wsize),
+            Expanded(child:  Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 5.0, // soften the shadow
+                      spreadRadius: -1.0, //extend the shadow
+                      offset: Offset(
+                        -2.0, // Move to right 10  horizontally
+                        2.0, // Move to bottom 5 Vertically
+                      ),
+                    )
+                  ],
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25.0),
+                    topRight: Radius.circular(25.0),
                   ),
-                  child:
-                  Builder(wsize,hsize,cprovider,context)
-              ),
+                ),
+                child:
+                Builder(wsize,hsize,cprovider,context)
             ),)
           ],)
         ),
@@ -81,7 +78,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
 
 Widget Builder(wsize,hsize,cprovider,context){
   return Padding(
-    padding: EdgeInsets.all(wsize * .03),
+    padding: EdgeInsets.all(wsize * .02),
     child: SizedBox(
         height: hsize * .3,
         width: MediaQuery.of(context).size.width * 1,

@@ -32,10 +32,38 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
         NotificationController().displayNotificationRationale(context);
       }
     });
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.watch(orderProvider).getPendingOrders();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await ref.watch(orderProvider).changePmore(false);
+      await ref.watch(orderProvider).getFirstPendingOrders();
+      controller.addListener(_scrollListener);
     });
+
     super.initState();
+  }
+
+  ScrollController controller = ScrollController();
+
+  Future<void> _scrollListener() async {
+    if (ref.watch(orderProvider).noPmore) {
+      return;
+    }
+    if (controller.offset >= controller.position.maxScrollExtent &&
+        !controller.position.outOfRange) {
+      if (ref.watch(orderProvider).isPfetching) {
+        print('fetching');
+      } else {
+        await ref.watch(orderProvider).fetchNextPOrder();
+        print('else running');
+      }
+      print("at the end of list");
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -50,31 +78,10 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
               backgroundColor: AppConfig.primaryColor,
               title: Text("Your Pending Orders"),
               actions: [
-                PopupMenuButton(
-                  color: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  onSelected: (value) {
-                    // your logic
-                  },
-                  itemBuilder: (BuildContext bc) {
-                    return [
-                      PopupMenuItem(
-                        onTap: ()async{
-                          print('working');
-                          await orderprovider.getAllPendingOrders();
-                          showSuccessToast(context: context,message: "Updated Successfully");
-                        },
-                        value: '/all',
-                        child: Text("See all Pending Orders", style: AppConfig.blackTitle),
-                      ),
-
-                    ];
-                  },
-                ),
                 IconButton(
                     onPressed: () async{
-                      await orderprovider.getPendingOrders();
+                      await   orderprovider.changePmore(false);
+                      await orderprovider.getFirstPendingOrders();
                       showSuccessToast(context: context,message: "Updated Successfully");
 
                     },
@@ -86,119 +93,123 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
             child: drawer(context,authprovider,orderprovider),
           ),
           backgroundColor: AppConfig.secmainColor,
-          body: orderprovider.orderloading
+          body: orderprovider.pendingloading
               ? const Center(child: CircularProgressIndicator())
-              : orderprovider.orderList.isEmpty
-                  ? Center(
-                      child: Text("No order yet",
-                          style: AppConfig.blackTitle),
-                    )
-                  :
-              ListView.builder(
-              shrinkWrap: true,
-              itemCount: orderprovider.orderList.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
+              : orderprovider.pendingOrderList.isEmpty
+              ? Center(
+            child: Text("No order yet", style: AppConfig.blackTitle),
+          )
+              : Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  controller: controller,
+                  shrinkWrap: true,
+                  itemCount: orderprovider.pendingOrderList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
                             builder: (context) => OrderDetail(
                               index: index,
-                              orderList:
-                              orderprovider.orderList,
+                              orderList: orderprovider.pendingOrderList,
                               doc: orderprovider
-                                  .orderList[index]
-                                  .date +
+                                  .pendingOrderList[index].date +
                                   orderprovider
-                                      .orderList[index]
-                                      .email,
-                            )));
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                        BorderRadius.circular(5.0)),
-                    // height: 100.0,
-                    child: Column(children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
+                                      .pendingOrderList[index].email,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                            color: Color(0xffFAECD6),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        // height: 100.0,
+                        child: Column(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text("Email :",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 17.0)),
-                                  orderprovider.orderList[index].email.length>25 ? Text(
-                                      '${orderprovider
-                                          .orderList[index]
-                                          .email.toString().substring(0,20)}...',
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 13.0)) :
-                                  Text(
+                                  Row(
+                                    children: [
+                                      Text("${index + 1}. Email :",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize:
+                                              wsize * 0.04)),
                                       orderprovider
-                                          .orderList[index]
-                                          .email,
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 13.0)),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Total Bill : ",
-                                    style: TextStyle(
-                                        fontSize: 17.0,
-                                        color: Colors.black),
+                                          .pendingOrderList[
+                                      index]
+                                          .email
+                                          .length >
+                                          25
+                                          ? Text(
+                                          '${orderprovider.pendingOrderList[index].email.toString().substring(0, 20)}...',
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 13.0))
+                                          : Text(
+                                          orderprovider
+                                              .pendingOrderList[
+                                          index]
+                                              .email,
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 13.0)),
+                                    ],
                                   ),
-                                  Text(
-                                    "\$${orderprovider.orderList[index].total.toStringAsFixed(2)}",
-                                    style: const TextStyle(
-                                        fontSize: 17.0,
-                                        color: Colors.black,
-                                        fontWeight:
-                                        FontWeight.bold),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        "Total Bill : ",
+                                        style: TextStyle(
+                                            fontSize: 17.0,
+                                            color: Colors.black),
+                                      ),
+                                      Text(
+                                        "\$${orderprovider.pendingOrderList[index].total.toStringAsFixed(2)}",
+                                        style: const TextStyle(
+                                            fontSize: 17.0,
+                                            color: Colors.black,
+                                            fontWeight:
+                                            FontWeight.bold),
+                                      )
+                                    ],
                                   )
-                                ],
-                              )
-                            ]),
+                                ]),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      "Date : ${orderprovider.pendingOrderList[index].date}",
+                                      style: AppConfig.blackTitle),
+                                  Text(
+                                    "Phone : ${orderprovider.pendingOrderList[index].phone}",
+                                    style: AppConfig.blackTitle,
+                                  )
+                                ]),
+                          ),
+                        ]),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  "Date : ${orderprovider.orderList[index].date}",
-                                  style: AppConfig.blackTitle),
-                              Text(
-                                "Phone : ${orderprovider.orderList[index].phone}",
-                                style: AppConfig.blackTitle,
-                              )
-                            ]),
-                      ),
-                    ]),
-                  ),
-                );
-              },
-              )),
+                    );
+                  },
+                ),
+              ),
+              orderprovider.isPfetching
+                  ? Center(child: CircularProgressIndicator())
+                  : Container()
+            ],
+          )),
     );
   }
 }
-
-Widget header(wsize) {
-  return AutoSizeText(
-    "Admin Panel",
-    style: TextStyle(color: Colors.white, fontSize: wsize * 0.06),
-  );
-}
-

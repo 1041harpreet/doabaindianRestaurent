@@ -16,29 +16,7 @@ backgroundColor: AppConfig.secmainColor,
           backgroundColor: AppConfig.primaryColor,
           title: Text("Gallery",style: AppConfig.whitetext,),
       ),
-      body: ListView.builder(
-         scrollDirection: Axis.vertical,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CarsoulFullScreen(url: url,),));
-          },
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-            child: CachedNetworkImage(
-              imageUrl: url,
-              errorWidget: (context, url, error) {
-                return Text(" Something error",style: AppConfig.blacktext,);
-              },
-              placeholder: (context, url)  {
-                return  Center(child: carsoulShimmer(context, wsize),);
-              },
-            ),
-          ),
-        );
-      },)
+      body: Center(child: Text("No Image yet",style: AppConfig.blacktext),)
     );
   }
 }

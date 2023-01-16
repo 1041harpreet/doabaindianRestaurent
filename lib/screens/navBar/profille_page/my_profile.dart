@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
@@ -54,55 +55,13 @@ class MyProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authprovider = ref.watch(authProvider);
+    final size=MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: AppConfig.primaryColor,
-          leading:Padding(
-            padding: const EdgeInsets.only(left: 5.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.black12),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  width: 40.0,
-                  height: 40.0,
-                  child: const Icon(
-                    Icons.arrow_back_ios_new_outlined,
-                    color: Colors.grey,
-                  )),
-            ),
-          ),
           actions: [
-            PopupMenuButton(
-              color: Colors.white,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              onSelected: (value) {
-                // your logic
-              },
-              itemBuilder: (BuildContext bc) {
-                return [
-                  PopupMenuItem(
-                    value: '/username',
-                    child: Text("Edit Username", style: AppConfig.blackTitle),
-                  ),
-                  PopupMenuItem(
-                    value: '/email',
-                    child: Text("Update Email", style: AppConfig.blackTitle),
-                  ),
-                  PopupMenuItem(
-                    value: '/phone',
-                    child: Text("Update Phone no", style: AppConfig.blackTitle),
-                  )
-                ];
-              },
-            )
           ],
           // backgroundColor: Colors.white,
         ),
@@ -129,52 +88,11 @@ class MyProfile extends ConsumerWidget {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        ReactiveTextField(
-                          readOnly: true,
-                          decoration: const InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              labelText: 'Username',
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: OutlineInputBorder()),
-                          formControlName: "username",
-                          style: const TextStyle(color: Colors.black),
-                          // validationMessages: (control) =>
-                          // {'required': 'The Username must not be empty'},
-                        ),
+                        textfieldbtn(size, 'Username', 'username'),
                         const SizedBox(height: 16),
-                        ReactiveTextField(
-                          readOnly: true,
-                          decoration: const InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              labelStyle: TextStyle(color: Colors.black),
-                              labelText: 'email',
-                              border: OutlineInputBorder()),
-                          style: const TextStyle(color: Colors.black),
-                          formControlName: "email",
-
-                        ),
+                        textfieldbtn(size, 'Email', 'email'),
                         const SizedBox(height: 16),
-                        ReactiveTextField(
-                          style: const TextStyle(color: Colors.black),
-                          readOnly: true,
-                          decoration: const InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black)),
-                              labelStyle: TextStyle(color: Colors.black),
-                              labelText: 'Phone No',
-                              border: OutlineInputBorder()),
-                          formControlName: "phone",
-                          // validationMessages: (control) => {
-                          //   'required': 'The Phone No must not be empty',
-                          //   'minLength':
-                          //   'The password must have at least 10 characters'
-                          // },
-                        ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
+                        textfieldbtn(size, 'Phone No', 'phone'),
                       ],
                     ),
                   ),
@@ -184,4 +102,36 @@ class MyProfile extends ConsumerWidget {
       ),
     );
   }
+}
+
+Widget textfieldbtn(Size size, lable, controlname) {
+  return Container(
+    alignment: Alignment.center,
+    height: size.height * 0.07,
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8.0),
+      border: Border.all(
+        width: 1.0,
+        color: const Color(0xFFEFEFEF),
+      ),
+    ),
+    child: ReactiveTextField(
+      readOnly: true,
+      formControlName: controlname,
+      style: GoogleFonts.inter(
+        fontSize: 16.0,
+        color: const Color(0xFF15224F),
+      ),
+      maxLines: 1,
+      cursorColor: const Color(0xFF15224F),
+      decoration: InputDecoration(
+          labelText: lable,
+          labelStyle: GoogleFonts.inter(
+            fontSize: 12.0,
+            color: const Color(0xFF969AA8),
+          ),
+          border: InputBorder.none),
+    ),
+  );
 }

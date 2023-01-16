@@ -7,8 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
+import 'package:restaurent.app/provider/nav_bar_provider.dart';
+import 'package:restaurent.app/provider/notification_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
+import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting.dart';
+import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting_provider.dart';
 import 'package:restaurent.app/services/notification_service/notification.dart';
 
 import '../admin/admin_home_page.dart';
@@ -74,7 +78,13 @@ class AuthService extends ChangeNotifier {
       Validators.required,
     ]),
   });
+  FormGroup changePasswordForm = FormGroup({
+    "current": FormControl(validators: [Validators.required]),
+    "new":
+        FormControl(validators: [Validators.required, Validators.minLength(6)]),
+  });
 
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   get user => _auth.currentUser;
@@ -134,7 +144,9 @@ class AuthService extends ChangeNotifier {
               builder: (context) => const NavBar(),
             ),
             (route) => false);
+        NotificationSettingService().writeValue(true);
       });
+      SignUpForm.reset();
       showSuccessToast(message: 'register successfully', context: context);
       print(_auth.currentUser?.email);
     } on FirebaseAuthException catch (e) {
@@ -162,13 +174,24 @@ class AuthService extends ChangeNotifier {
   }
 
   adduser(email, username, phone, img) async {
-    await FirebaseFirestore.instance.collection('users').doc(email).set({
+    await _firestore.collection('users').doc(email).set({
       "email": email,
       "username": username,
       "phone": phone,
       'role': "user",
       "img": img
     });
+  }
+
+  deleteUser() async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser?.email)
+          .delete();
+    } catch (e) {
+      print(e);
+    }
   }
 
   //SIGN IN METHOD
@@ -192,7 +215,7 @@ class AuthService extends ChangeNotifier {
               ),
               (route) => false);
         }
-
+        loginForm.reset();
         showSuccessToast(message: 'login successfully', context: context);
       });
     } on FirebaseAuthException catch (e) {
@@ -213,6 +236,8 @@ class AuthService extends ChangeNotifier {
         showErrorToast(context: context, message: "User deactivated");
       } else {
         (e) {
+          showErrorToast(context: context, message: "Something Went wrong");
+
           print(e.toString());
         };
       }
@@ -220,7 +245,6 @@ class AuthService extends ChangeNotifier {
       showErrorToast(context: context, message: "Something went wrong");
 
       print(e.toString());
-      notifyListeners();
     } finally {
       signinloading(false);
       notifyListeners();
@@ -241,42 +265,93 @@ class AuthService extends ChangeNotifier {
   }
 
   //delete account
-  // deleteAccount(context)async{
-  //   _auth.currentUser?.delete().then((value) {
-  //     Navigator.of(context).pushAndRemoveUntil(
-  //         MaterialPageRoute(
-  //           builder: (context) => const LoginScreen(),
-  //         ),
-  //             (route) => false);
-  //     // await firestore ,cart,token,notification
-  //   });
-  // }
+  bool deleteload = false;
 
-  //CHANGE password
-  changePassword(
-      email, String currentPassword, String newPassword, context) async {
-    print('pressed');
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-    } else {
-      final cred =
-          EmailAuthProvider.credential(email: email, password: currentPassword);
-      print(cred);
-      user?.reauthenticateWithCredential(cred).then((value) {
-        print(value);
-        user.updatePassword(newPassword).then((_) {
-          print(newPassword);
-          showSuccessToast(
-              context: context, message: "Password update successfully");
-          //Success, do something
-        }).catchError((error) {
-          showErrorToast(message: "something went wrong", context: context);
-          //Error, show something
+  changeDeleteLoad(value) {
+    deleteload = value;
+    notifyListeners();
+  }
+
+  deleteAccount(context, currentPassword) async {
+    changeDeleteLoad(true);
+    try {
+      if (user == null) {
+      } else {
+        final cred = EmailAuthProvider.credential(
+            email: user.email!, password: currentPassword);
+        print(cred);
+        user?.reauthenticateWithCredential(cred).then((value) async {
+          print(value);
+          await NotificationService(user.email).deleteToken();
+          await deleteUser();
+          _auth.currentUser?.delete().then((value) async {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ),
+                (route) => false);
+            NotificationSettingService().unSubscribeNotification();
+            // await firestore ,cart,token,notification, users, favourite
+          }).catchError((err) {
+            print(err);
+            showErrorToast(message: "something went wrong", context: context);
+          });
+        }).catchError((value) {
+            showErrorToast(message: "Something went wrong",context: context);
+
+
+          print(value);
         });
-      }).catchError((err) {
-        print(err);
-        showErrorToast(message: "something went wrong", context: context);
-      });
+      }
+    }
+    catch (e) {
+      print(e);
+      showErrorToast(context: context, message: "Something went wrong");
+    } finally {
+      changeDeleteLoad(false);
+      notifyListeners();
+    }
+  }
+
+//change password
+  bool changePasswordLoading = false;
+
+  changePLoading(value) {
+    changePasswordLoading = value;
+    notifyListeners();
+  }
+
+  changePassword(String currentPassword, String newPassword, context) async {
+    changePLoading(true);
+    print("loading " + changePasswordLoading.toString());
+    final user = FirebaseAuth.instance.currentUser;
+    try {
+      if (user == null) {
+      } else {
+        final cred = EmailAuthProvider.credential(
+            email: user.email!, password: currentPassword);
+        print(cred);
+        user?.reauthenticateWithCredential(cred).then((value) {
+          print(value);
+          user.updatePassword(newPassword).then((_) {
+            print(newPassword);
+            changePasswordForm.reset();
+            showSuccessToast(
+                context: context, message: "Password update successfully");
+            //Success, do something
+          }).catchError((error) {
+            showErrorToast(message: "something went wrong", context: context);
+            //Error, show something
+          });
+        }).catchError((err) {
+          print(err);
+          showErrorToast(message: "something went wrong", context: context);
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      changePLoading(false);
     }
   }
 
@@ -284,13 +359,15 @@ class AuthService extends ChangeNotifier {
     resetloading(true);
     try {
       await _auth.sendPasswordResetEmail(email: email).then((value) {
-        showSuccessToast(message: "link sent successfully", context: context);
+        resetPasswordForm.reset();
+        showSuccessToast(
+            message: "link sent successfully,check your email",
+            context: context);
         print('done');
       });
     } catch (e) {
       print(e.toString());
-      showErrorToast(
-          message: "link sent failed,check your email", context: context);
+      showErrorToast(message: "link sent failed", context: context);
     } finally {
       resetloading(false);
     }
@@ -340,17 +417,6 @@ class AuthService extends ChangeNotifier {
     } catch (e) {
       role = 'user';
       print("error $e");
-    }
-  }
-
-  updateAnother() {
-    try {
-      FirebaseFirestore.instance
-          .collection('token')
-          .doc('1041harpreet@gmail.com')
-          .set({"token": ""});
-    } catch (e) {
-      print(e);
     }
   }
 }

@@ -13,12 +13,31 @@ class NotificationPage extends ConsumerStatefulWidget {
 }
 
 class _NotificationPageState extends ConsumerState<NotificationPage> {
+  ScrollController controller = ScrollController();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.watch(notificationProvider).getNotification();
+      ref.watch(notificationProvider).getFirstNotification();
+      controller.addListener(_scrollListener);
     });
     super.initState();
+  }
+
+  void _scrollListener() {
+    if (controller.offset >= controller.position.maxScrollExtent &&
+        !controller.position.outOfRange) {
+      // ref.watch(notificationProvider).fetchNextNotifications(context);
+
+      print("at the end of list");
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -28,6 +47,15 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         appBar: AppBar(
           backgroundColor: AppConfig.primaryColor,
           title: Text("Notifications"),
+          actions: [
+           Tooltip(child: Padding(
+             padding: const EdgeInsets.all(8.0),
+             child: Icon(Icons.info),
+           ),
+           message: "You can only view latest 10 Notifications",
+             triggerMode: TooltipTriggerMode.tap,
+           )
+          ],
         ),
         backgroundColor: AppConfig.secmainColor,
         body: notificationprovider.loading
@@ -36,12 +64,14 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
               )
             : notificationprovider.notificationList.length == 0
                 ? Center(
-                    child: Text("No Notification",style: AppConfig.blacktext),
+                    child: Text("No Notification", style: AppConfig.blacktext),
                   )
                 : ListView.builder(
+                    controller: controller,
                     itemCount: notificationprovider.notificationList.length,
                     itemBuilder: (context, index) {
-                      return notificationItem(context,notificationprovider,index);
+                      return notificationItem(
+                          context, notificationprovider, index);
                     },
                   ));
   }

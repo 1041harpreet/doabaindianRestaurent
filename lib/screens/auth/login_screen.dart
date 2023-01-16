@@ -145,7 +145,6 @@ class LoginScreen extends ConsumerWidget {
                             authprovider.loginForm.control('email').value,
                             authprovider.loginForm.control('password').value,
                             context);
-                        // authprovider.getUserInfo();
                         print('sign in');
                       } else {
                         print('invalid');

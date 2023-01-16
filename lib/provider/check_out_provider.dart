@@ -38,7 +38,6 @@ getdate(){
   date= DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
 }
   sendToAdmin(email,orderId,checkoutprovider,total,tax,orderItem){
-
    var name=date+email;
    print(date);
     _firestore.collection('orders').doc(name).set({
@@ -50,7 +49,7 @@ getdate(){
       "phone":checkoutprovider.checkoutForm.control('phone').value,
       "orderID":orderId,
       "status":false,
-      'note':checkoutprovider.checkoutForm.control('additional').value
+      'note':checkoutprovider.checkoutForm.control('additional').value ?? ''
 
     });
     for(var i = 0; i < orderItem.length; i++ ){

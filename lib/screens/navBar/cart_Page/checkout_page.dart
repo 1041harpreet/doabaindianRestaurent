@@ -313,7 +313,6 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                         print('checkout start ');
 
                         if (checkoutprovider.checkoutForm.valid) {
-                          print(roundDouble(cartprovider.total, 2));
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -336,12 +335,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                       ],
                                     },notificationprovider, _scaffoldKey.currentContext),
                               ),);
-
-
-
-
                         }
                         else {
+
                           showErrorToast(
                               message: 'fill the detail first',
                               context: context);

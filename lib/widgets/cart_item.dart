@@ -48,7 +48,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          left: wsize * 0.04, top: wsize * 0.03),
+                          left: wsize * 0.04, top: wsize * 0.035),
                       child: AutoSizeText(item.title.toString().length >25 ? '${item.title.toString().substring(0,25)}...' :item.title.toString() ,
                           maxLines: 1,
                           style: TextStyle(
@@ -57,7 +57,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                               color: Colors.black87)),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: wsize * 0.04),
+                      padding: EdgeInsets.only(left: wsize * 0.035),
                       child: item.category.toString().length > 30
                           ? AutoSizeText(
                           '${item.category.toString().substring(0, 30)}...',
@@ -75,7 +75,7 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                          left: wsize * 0.04, top: wsize * 0.01),
+                          left: wsize * 0.04, ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -104,42 +104,40 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: wsize * 0.00, top: wsize * 0.01),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                            Padding(
-                            padding: EdgeInsets.only(left: wsize * 0.04),
-                            child: const Text("SubTotal : ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                            Text(
-                              "\$${item.total.toStringAsFixed(2)}",
-                              style: TextStyle(
-                                  color: AppConfig.primaryColor,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold),
-                            ),],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
                           Padding(
-                            padding:  EdgeInsets.only(left:wsize*0.07),
-                            child:
+                          padding: EdgeInsets.only(left: wsize * 0.04),
+                          child: const Text("SubTotal : ",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                          Text(
+                            "\$${item.total.toStringAsFixed(2)}",
+                            style: TextStyle(
+                                color: AppConfig.primaryColor,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold),
+                          ),],),
+                        Padding(
+                          padding:  EdgeInsets.only(left:wsize*0.07),
+                          child:
 
-                            GestureDetector(
-
-                                onTap: () async{
-                                  await cartprovider.removeFromCart(item, context);
-                                },
-                                child: Iconify(AntDesign.delete,color: AppConfig.primaryColor,)),
-                          )
-                        ],
-                      ),
+                          GestureDetector(
+                              onTap: () async{
+                                await cartprovider.removeFromCart(item, context);
+                              },
+                              child: Material(
+                                color: AppConfig.secmainColor,
+                                  elevation: 5.0,child: Iconify(AntDesign.delete,color: AppConfig.primaryColor,))
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),

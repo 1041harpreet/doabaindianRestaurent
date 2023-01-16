@@ -60,7 +60,7 @@ class _AddToCartState extends ConsumerState<AddToCart> {
           key: _scaffoldKey,
           backgroundColor: AppConfig.secmainColor,
           body: Column(children: [
-            Padding(padding: const EdgeInsets.all(8.0), child: header(wsize)),
+            header(wsize),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(top: 4.0),
