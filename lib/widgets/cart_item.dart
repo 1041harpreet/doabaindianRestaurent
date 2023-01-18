@@ -146,19 +146,6 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
       ));
 }
 
-Widget addToCardButton(cart, context) {
-  return Center(
-    child: ElevatedButton(
-      onPressed: cart.cartItems.length == 0
-          ? null
-          : () {
-        Navigator.of(context).pop();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-      },
-      child: Text('CheckOut', style: AppConfig.blackTitle),
-    ),
-  );
-}
 Widget noItemWidget() {
   return Center(
     child: Column(
@@ -166,9 +153,7 @@ Widget noItemWidget() {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Text('You don\'t have any order yet!!', style: AppConfig.blackTitle),
-        const SizedBox(height: 16),
-        const Icon(Icons.remove_shopping_cart, size: 40),
+        Text('You don\'t have any item yet!!', style: AppConfig.blackTitle),
       ],
     ),
   );

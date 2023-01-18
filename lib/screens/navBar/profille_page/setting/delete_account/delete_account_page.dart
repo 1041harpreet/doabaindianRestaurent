@@ -3,18 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
+import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting_provider.dart';
 
 import '../../../../../provider/notification_provider.dart';
 import '../../../../../widgets/toast_service.dart';
 import '../../../../auth/sign_up_screen.dart';
-
 class DeleteAccount extends ConsumerWidget {
   const DeleteAccount({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final authprovider=ref.watch(authProvider);
+    final navprovider=ref.watch(NavBarProvider);
     final notificationprovider=ref.watch(notificationSettingProvider);
     final nprovider=ref.watch(notificationProvider);
     final size=MediaQuery.of(context).size;
@@ -62,11 +63,11 @@ class DeleteAccount extends ConsumerWidget {
              SizedBox(
                height: size.height * 0.05,
              ),
-             // //email & password section
-             textfieldbtn(size, 'Current Password', 'current', {
+             passwordField(size, 'Enter Your Current Password', 'current', {
                ValidationMessage.required: (error) =>
                "Current password must not be empty",
-             }),
+             },navprovider),
+
              SizedBox(
                height: size.height * 0.05,
              ),

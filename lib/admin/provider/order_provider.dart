@@ -92,7 +92,7 @@ class OrderService extends ChangeNotifier {
       var ref = await _firestore
           .collection('orders')
           .where('status', isEqualTo: true)
-      // .orderBy('date', descending: true)
+      .orderBy('date', descending: true)
           .limit(limit)
           .get();
       compOrderList =
@@ -131,7 +131,7 @@ class OrderService extends ChangeNotifier {
       var ref = await _firestore
           .collection('orders')
           .where('status', isEqualTo: true)
-          // .orderBy('date', descending: true)
+          .orderBy('date', descending: true)
           .startAfterDocument(lastdoc!)
           .limit(limit)
           .get();

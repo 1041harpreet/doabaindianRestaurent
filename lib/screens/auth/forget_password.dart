@@ -108,7 +108,7 @@ class ForgetPasswordScreen extends ConsumerWidget {
               textfieldbtn(size, 'Enter your gmail', 'email', {
                 ValidationMessage.required: (error) =>
                 "The email must not be empty",
-              }),
+              },false),
               SizedBox(
                 height: size.height * 0.02,
               ),

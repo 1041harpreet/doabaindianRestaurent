@@ -208,7 +208,8 @@ class AuthService extends ChangeNotifier {
                 builder: (context) => const AdminHomePage(),
               ),
               (route) => false);
-        } else {
+        }
+        else {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const NavBar(),
@@ -216,6 +217,9 @@ class AuthService extends ChangeNotifier {
               (route) => false);
         }
         loginForm.reset();
+      //   await FavouriteServices().openDb(email);
+      // await FavouriteServices().insertModel(email);
+
         showSuccessToast(message: 'login successfully', context: context);
       });
     } on FirebaseAuthException catch (e) {
@@ -297,7 +301,7 @@ class AuthService extends ChangeNotifier {
             showErrorToast(message: "something went wrong", context: context);
           });
         }).catchError((value) {
-            showErrorToast(message: "Something went wrong",context: context);
+            showErrorToast(message: "Something went wrong,check your Password",context: context);
 
 
           print(value);
@@ -419,6 +423,8 @@ class AuthService extends ChangeNotifier {
       print("error $e");
     }
   }
+
+
 }
 
 final authProvider = ChangeNotifierProvider((ref) {

@@ -15,7 +15,13 @@ class NavServices extends ChangeNotifier{
     AddToCart(),
     ProfileScreen(),
   ];
+  bool isObsecure=true;
 
+  changeSecure(value){
+    isObsecure=value;
+    print(isObsecure);
+    notifyListeners();
+  }
 
 
   int selectedindex=0;

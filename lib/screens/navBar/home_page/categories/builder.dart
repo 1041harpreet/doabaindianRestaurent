@@ -8,6 +8,7 @@ import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/widgets/category_item.dart';
 import 'package:restaurent.app/screens/navBar/home_page/product_details_view.dart';
 
+import '../../../../services/notification_service/notification.dart';
 import '../../../../widgets/cart_item.dart';
 import '../../../../widgets/home_item.dart';
 import '../../../../widgets/shimmer.dart';
@@ -30,9 +31,7 @@ Widget cartlistBuilder(
               },
             )
           : cartprovider.orderItem.isEmpty
-              ? Center(
-                  child: Text("No item here", style: AppConfig.blackTitle),
-                )
+              ? noItemWidget()
               : Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Column(
@@ -40,6 +39,7 @@ Widget cartlistBuilder(
                     children: [
                       Expanded(
                         child: ListView.builder(
+
                           shrinkWrap: true,
                           itemCount: cartprovider.orderItem.length,
                           itemBuilder: (context, index) {

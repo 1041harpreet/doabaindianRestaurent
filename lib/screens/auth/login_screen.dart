@@ -10,6 +10,7 @@ import 'package:restaurent.app/widgets/toast_service.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
+import '../../provider/nav_bar_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authprovider = ref.watch(authProvider);
+    final navprovider = ref.watch(NavBarProvider);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -33,7 +35,7 @@ class LoginScreen extends ConsumerWidget {
             //page content here
             Expanded(
               flex: 9,
-              child: buildCard(size, authprovider, context),
+              child: buildCard(size, authprovider, context,navprovider),
             ),
           ],
         ),
@@ -41,7 +43,7 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildCard(Size size, authprovider, context) {
+  Widget buildCard(Size size, authprovider, context,navprovider) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -94,14 +96,14 @@ class LoginScreen extends ConsumerWidget {
                     "The email must not be empty",
                 ValidationMessage.email: (error) =>
                     'Please enter a valid email',
-              }),
+              },false),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              textfieldbtn(size, 'Password', 'password', {
+              passwordField(size, 'Password', 'password', {
                 ValidationMessage.required: (error) =>
                     "The password must not be empty",
-              }),
+              },navprovider),
               SizedBox(
                 height: size.height * 0.01,
               ),
@@ -152,7 +154,6 @@ class LoginScreen extends ConsumerWidget {
                         showErrorToast(
                             message: 'fill the detail first', context: context);
                       }
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => NavBar(),));
                     }),
               SizedBox(
                 height: size.height * 0.02,
@@ -221,58 +222,27 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget textfieldbtn(Size size, lable, controlname, validation) {
-    return Container(
-      alignment: Alignment.center,
-      height: size.height * 0.07,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(
-          width: 1.0,
-          color: const Color(0xFFEFEFEF),
-        ),
-      ),
-      child: ReactiveTextField(
-        formControlName: controlname,
-        style: GoogleFonts.inter(
-          fontSize: 16.0,
-          color: const Color(0xFF15224F),
-        ),
-        validationMessages: validation,
-        maxLines: 1,
-        cursorColor: const Color(0xFF15224F),
-        decoration: InputDecoration(
-            labelText: lable,
-            labelStyle: GoogleFonts.inter(
-              fontSize: 12.0,
-              color: const Color(0xFF969AA8),
-            ),
-            border: InputBorder.none),
-      ),
-    );
-  }
 
-  Widget loadingButton(Size size) {
-    return Container(
-        alignment: Alignment.center,
-        height: size.height * 0.06,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: AppConfig.primaryColor,
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF4C2E84).withOpacity(0.2),
-              offset: const Offset(0, 15.0),
-              blurRadius: 60.0,
-            ),
-          ],
-        ),
-        child: const Center(
-            child: CircularProgressIndicator(
-          color: Colors.white,
-        )));
-  }
+  // Widget loadingButton(Size size) {
+  //   return Container(
+  //       alignment: Alignment.center,
+  //       height: size.height * 0.06,
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(10.0),
+  //         color: AppConfig.primaryColor,
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: const Color(0xFF4C2E84).withOpacity(0.2),
+  //             offset: const Offset(0, 15.0),
+  //             blurRadius: 60.0,
+  //           ),
+  //         ],
+  //       ),
+  //       child: const Center(
+  //           child: CircularProgressIndicator(
+  //         color: Colors.white,
+  //       )));
+  // }
 
   Widget Button(Size size, title, titlecolor, buttoncolor, ontap) {
     return GestureDetector(
