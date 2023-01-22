@@ -1,5 +1,3 @@
-
-
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +12,7 @@ import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/screens/navBar/home_page/home_page.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
-
+import 'package:avatar_glow/avatar_glow.dart';
 import '../../../config/config.dart';
 import '../../../provider/category_provider.dart';
 import '../../../widgets/category_item.dart';
@@ -31,7 +29,7 @@ class ProductDetailsView extends ConsumerStatefulWidget {
 }
 
 class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
- bool isselected=false;
+  bool isselected = false;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -41,18 +39,16 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final hsize=MediaQuery.of(context).size.height;
-    final wsize=MediaQuery.of(context).size.width;
+    final hsize = MediaQuery.of(context).size.height;
+    final wsize = MediaQuery.of(context).size.width;
     final provider = ref.watch(categoryProvider);
     final cartprovider = ref.watch(cartProvider);
     final navprovider = ref.watch(NavBarProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppConfig.secmainColor,
-
         body: Column(
           children: [
             Padding(
@@ -157,7 +153,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           Text(
                             widget.item.title,
                             style: GoogleFonts.poppins(
-                              fontSize: wsize*0.05,
+                              fontSize: wsize * 0.05,
                               color: Colors.black87,
                               fontWeight: FontWeight.w600,
                             ),
@@ -165,19 +161,18 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              widget.catname.length>30 ?
-                              Text(
-                                widget.catname.substring(0,30)+'...',
-                                style: GoogleFonts.poppins(
-                                  fontSize: wsize*0.045,
-                                  color: Colors.black,
-                                )
-                              ): Text(
-                      widget.catname,
-                      style: GoogleFonts.poppins(
-                        fontSize: wsize*0.045,
-                        color: Colors.black,
-                      )),
+                              widget.catname.length > 30
+                                  ? Text(
+                                      widget.catname.substring(0, 30) + '...',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: wsize * 0.045,
+                                        color: Colors.black,
+                                      ))
+                                  : Text(widget.catname,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: wsize * 0.045,
+                                        color: Colors.black,
+                                      )),
                               Text(
                                 '\$${widget.item.price}',
                                 style: GoogleFonts.poppins(
@@ -199,8 +194,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                     padding: const EdgeInsets.only(right: 8.0),
                                     child: GestureDetector(
                                       onTap: () {
-                                        provider
-                                            .remquantity(widget.item.price);
+                                        provider.remquantity(widget.item.price);
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -208,8 +202,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                             border: Border.all(
                                               width: 0.1,
                                             )),
-                                        child:  Padding(
-                                          padding: EdgeInsets.all(wsize*0.03),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(wsize * 0.03),
                                           child: Text("-",
                                               style: TextStyle(
                                                   color: Colors.black,
@@ -243,8 +237,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                             border: Border.all(
                                               width: 0.1,
                                             )),
-                                        child:  Padding(
-                                          padding: EdgeInsets.all(wsize*0.03),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(wsize * 0.03),
                                           child: Text("+",
                                               style: TextStyle(
                                                   color: Colors.black,
@@ -283,37 +277,44 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          SizedBox(
-                            height: 170,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: provider.subcategory.length,
-                              itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(builder: (context) =>  ProductDetailsView(
-                                        item: provider.subcategory[index],catname: widget.catname,)));
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 6),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: provider.subcategory.length,
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) =>
+                                            ProductDetailsView(
+                                              item: provider.subcategory[index],
+                                              catname: widget.catname,
+                                            )));
+                              },
+                              child: Container(
+                                  margin: const EdgeInsets.all(5.0),
                                   width: 150,
-                                  height: 150,
+                                  // height: 150,
                                   decoration: const BoxDecoration(
                                     color: Colors.white,
                                     // borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child:
-                                  Column(children: [
-                                    buildImg(hsize, wsize, provider.subcategory[index].img),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Text(provider.subcategory[index].title,style: const TextStyle(fontSize: 10.0,color: Colors.black),),
-                                    )
-                                  ],)
-
-                                ),
-                              ),
+                                  child: Column(
+                                    children: [
+                                      buildImg(hsize, wsize,
+                                          provider.subcategory[index].img),
+                                      Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          provider.subcategory[index].title,
+                                          style: GoogleFonts.mulish(
+                                              fontSize: 15.0,
+                                              color: Colors.black),
+                                        ),
+                                      )
+                                    ],
+                                  )),
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -357,32 +358,34 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: AppConfig.greyColor),
                   ),
-                  child:
-                  provider.isselected ?  GestureDetector(
-                    onTap: ()async {
-                      await provider.changeselect();
-                      await provider.removeToFavourite(cartprovider.email,widget.item);
-                    },
-                    child: const Icon(
-                      CupertinoIcons.heart_fill,
-                      size: 30,
-                      color: Colors.red,
-
-                    ),
-                  ):
-                  GestureDetector(
-                    onTap: () async{
-                      print('fav');
-                      await provider.changeselect();
-                      await provider.addToFavourite(cartprovider.email, widget.item, widget.catname);
-                    },
-                    child: const Icon(
-                      CupertinoIcons.heart,
-                      size: 30,
-                      color: Colors.red,
-
-                    ),
-                  ),
+                  child: provider.isselected
+                      ? InkWell(
+                          hoverColor: Colors.black12,
+                          onTap: () async {
+                            await provider.changeselect();
+                            await provider.removeToFavourite(
+                                cartprovider.email, widget.item);
+                          },
+                          child: const Icon(
+                            CupertinoIcons.heart_fill,
+                            size: 45,
+                            color: Colors.red,
+                          ),
+                        )
+                      : InkWell(
+                          hoverColor: Colors.black12,
+                          onTap: () async {
+                            print('fav');
+                            await provider.changeselect();
+                            await provider.addToFavourite(cartprovider.email,
+                                widget.item, widget.catname);
+                          },
+                          child: const Icon(
+                            CupertinoIcons.heart,
+                            size: 45,
+                            color: Colors.red,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(width: 20),

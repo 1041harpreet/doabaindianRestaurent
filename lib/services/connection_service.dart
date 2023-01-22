@@ -42,7 +42,6 @@ checkconnection()async{
   showDialogBox() => Get.dialog(
     barrierDismissible: false,
     CupertinoAlertDialog(
-
       title: const Text('No Connection'),
       content: const Text('Please check your internet connectivity'),
       actions: <Widget>[

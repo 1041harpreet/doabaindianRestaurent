@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -14,6 +15,7 @@ import '../../../services/mail_services.dart';
 import '../../../services/notification_service/notification.dart';
 import '../../../services/payment/payment_screen.dart';
 import '../../../services/payment/payment_success_screen.dart';
+import '../../../services/payment/test_braintree.dart';
 import '../../../services/round_off.dart';
 import '../../../widgets/toast_service.dart';
 import '../../auth/splash_screen.dart';
@@ -313,28 +315,29 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                         print('checkout start ');
 
                         if (checkoutprovider.checkoutForm.valid) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => makePayment(cartprovider,checkoutprovider,parentContext,
-                                    roundDouble(cartprovider.total, 2), cartprovider.tax, {
-                                      "items": [
-                                        for (var i = 0;
-                                        i < cartprovider.orderItem.length;
-                                        i++)
-                                          {
-                                            "name":
-                                            cartprovider.orderItem[i].title,
-                                            "quantity":
-                                            cartprovider.orderItem[i].count,
-                                            "price": roundDouble(
-                                                cartprovider.orderItem[i].price,
-                                                2),
-                                            "currency": "USD"
-                                          }
-                                      ],
-                                    },notificationprovider, _scaffoldKey.currentContext),
-                              ),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => BraintreePayment(),));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => makePayment(cartprovider,checkoutprovider,parentContext,
+                          //           roundDouble(cartprovider.total, 2), cartprovider.tax, {
+                          //             "items": [
+                          //               for (var i = 0;
+                          //               i < cartprovider.orderItem.length;
+                          //               i++)
+                          //                 {
+                          //                   "name":
+                          //                   cartprovider.orderItem[i].title,
+                          //                   "quantity":
+                          //                   cartprovider.orderItem[i].count,
+                          //                   "price": roundDouble(
+                          //                       cartprovider.orderItem[i].price,
+                          //                       2),
+                          //                   "currency": "USD"
+                          //                 }
+                          //             ],
+                          //           },notificationprovider, _scaffoldKey.currentContext),
+                          //     ),);
                         }
                         else {
 

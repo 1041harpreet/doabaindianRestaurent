@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/widgets/category_item.dart';
 import 'package:restaurent.app/screens/navBar/home_page/product_details_view.dart';
@@ -39,7 +40,6 @@ Widget cartlistBuilder(
                     children: [
                       Expanded(
                         child: ListView.builder(
-
                           shrinkWrap: true,
                           itemCount: cartprovider.orderItem.length,
                           itemBuilder: (context, index) {
@@ -328,7 +328,7 @@ Widget largeItem(wsize, hsize, item) {
             ),
             Text(
               item.title,
-              style: TextStyle(
+              style: GoogleFonts.mulish(
                   color: Colors.black,
                   fontSize: wsize * 0.045,
                   fontWeight: FontWeight.bold),

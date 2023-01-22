@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ant_design.dart';
 import 'package:iconify_flutter/icons/bx.dart';
@@ -11,7 +12,7 @@ import 'category_item.dart';
 
 // import 'category_item.dart';
 
-Widget CartItem(wsize, hsize, context, item,cartprovider) {
+Widget CartItem(wsize, hsize, context, item, cartprovider) {
   return Padding(
       padding: EdgeInsets.only(
           left: wsize * 0.02, right: wsize * 0.02, top: wsize * 0.02),
@@ -49,9 +50,12 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                     Padding(
                       padding: EdgeInsets.only(
                           left: wsize * 0.04, top: wsize * 0.035),
-                      child: AutoSizeText(item.title.toString().length >25 ? '${item.title.toString().substring(0,25)}...' :item.title.toString() ,
+                      child: AutoSizeText(
+                          item.title.toString().length > 25
+                              ? '${item.title.toString().substring(0, 25)}...'
+                              : item.title.toString(),
                           maxLines: 1,
-                          style: TextStyle(
+                          style: GoogleFonts.mulish(
                               fontWeight: FontWeight.w500,
                               fontSize: wsize * 0.045,
                               color: Colors.black87)),
@@ -60,22 +64,23 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                       padding: EdgeInsets.only(left: wsize * 0.035),
                       child: item.category.toString().length > 30
                           ? AutoSizeText(
-                          '${item.category.toString().substring(0, 30)}...',
-                          maxLines: 1,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: wsize * 0.035,
-                              color: Colors.black54))
+                              '${item.category.toString().substring(0, 30)}...',
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: wsize * 0.035,
+                                  color: Colors.black54))
                           : AutoSizeText(item.category,
-                          maxLines: 1,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: wsize * 0.035,
-                              color: Colors.black54)),
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: wsize * 0.035,
+                                  color: Colors.black54)),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                          left: wsize * 0.04, ),
+                        left: wsize * 0.04,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -87,7 +92,8 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                                         color: Colors.black,
                                         fontSize: 14.0,
                                         fontWeight: FontWeight.bold)),
-                                AutoSizeText("\$${item.price.toStringAsFixed(2)}",
+                                AutoSizeText(
+                                    "\$${item.price.toStringAsFixed(2)}",
                                     style: TextStyle(
                                         color: AppConfig.primaryColor,
                                         fontSize: 16.0,
@@ -109,33 +115,37 @@ Widget CartItem(wsize, hsize, context, item,cartprovider) {
                       children: [
                         Row(
                           children: [
-                          Padding(
-                          padding: EdgeInsets.only(left: wsize * 0.04),
-                          child: const Text("SubTotal : ",
+                            Padding(
+                              padding: EdgeInsets.only(left: wsize * 0.04),
+                              child: const Text("SubTotal : ",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            Text(
+                              "\$${item.total.toStringAsFixed(2)}",
                               style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold)),
+                                  color: AppConfig.primaryColor,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
-                          Text(
-                            "\$${item.total.toStringAsFixed(2)}",
-                            style: TextStyle(
-                                color: AppConfig.primaryColor,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold),
-                          ),],),
                         Padding(
-                          padding:  EdgeInsets.only(left:wsize*0.07),
-                          child:
-
-                          GestureDetector(
-                              onTap: () async{
-                                await cartprovider.removeFromCart(item, context);
+                          padding: EdgeInsets.only(left: wsize * 0.07),
+                          child: GestureDetector(
+                              onTap: () async {
+                                await cartprovider.removeFromCart(
+                                    item, context);
                               },
                               child: Material(
-                                color: AppConfig.secmainColor,
-                                  elevation: 5.0,child: Iconify(AntDesign.delete,color: AppConfig.primaryColor,))
-                          ),
+                                  color: AppConfig.secmainColor,
+                                  elevation: 5.0,
+                                  child: Iconify(
+                                    AntDesign.delete,
+                                    color: AppConfig.primaryColor,
+                                  ))),
                         )
                       ],
                     ),
@@ -158,4 +168,3 @@ Widget noItemWidget() {
     ),
   );
 }
-
