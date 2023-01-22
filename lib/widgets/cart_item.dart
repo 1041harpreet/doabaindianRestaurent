@@ -134,18 +134,28 @@ Widget CartItem(wsize, hsize, context, item, cartprovider) {
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: wsize * 0.07),
-                          child: GestureDetector(
-                              onTap: () async {
-                                await cartprovider.removeFromCart(
-                                    item, context);
-                              },
-                              child: Material(
-                                  color: AppConfig.secmainColor,
-                                  elevation: 5.0,
-                                  child: Iconify(
-                                    AntDesign.delete,
-                                    color: AppConfig.primaryColor,
-                                  ))),
+                          child:  InkWell(
+                            onTap: () async{
+                              await cartprovider.removeFromCart(
+                                  item, context);
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: .5,
+                                      ),
+                                    ]),
+                                child: Icon(
+                                  Icons.clear,
+                                  color: Colors.black,
+                                  size: 25,
+                                )),
+                          ),
                         )
                       ],
                     ),

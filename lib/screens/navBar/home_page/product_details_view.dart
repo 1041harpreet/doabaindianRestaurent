@@ -94,7 +94,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                         height: 40.0,
                         child: Badge(
                           badgeContent:
-                              Text(cartprovider.badgevalue.toString()),
+                          Text(cartprovider.badgevalue.toString()),
                           child: const Icon(
                             Icons.shopping_cart,
                             color: Colors.grey,
@@ -123,11 +123,11 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                     fit: BoxFit.cover,
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) =>
-                            CircularProgressIndicator(
-                                value: downloadProgress.progress,
-                                color: AppConfig.primaryColor),
+                        CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                            color: AppConfig.primaryColor),
                     errorWidget: (context, url, error) =>
-                        const Icon(Icons.error, color: Colors.black),
+                    const Icon(Icons.error, color: Colors.black),
                   ),
                 ),
                 // Image.network(, fit: BoxFit.cover)),
@@ -138,7 +138,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                 children: [
                   Container(
                     padding:
-                        const EdgeInsets.only(top: 20, right: 14, left: 14),
+                    const EdgeInsets.only(top: 20, right: 14, left: 14),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -163,16 +163,16 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                             children: [
                               widget.catname.length > 30
                                   ? Text(
-                                      widget.catname.substring(0, 30) + '...',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: wsize * 0.045,
-                                        color: Colors.black,
-                                      ))
+                                  widget.catname.substring(0, 30) + '...',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: wsize * 0.045,
+                                    color: Colors.black,
+                                  ))
                                   : Text(widget.catname,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: wsize * 0.045,
-                                        color: Colors.black,
-                                      )),
+                                  style: GoogleFonts.poppins(
+                                    fontSize: wsize * 0.045,
+                                    color: Colors.black,
+                                  )),
                               Text(
                                 '\$${widget.item.price}',
                                 style: GoogleFonts.poppins(
@@ -222,7 +222,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                       padding: EdgeInsets.all(8.0),
                                       child: Text(provider.quantity.toString(),
                                           style:
-                                              TextStyle(color: Colors.black)),
+                                          TextStyle(color: Colors.black)),
                                     ),
                                   ),
                                   Padding(
@@ -277,44 +277,51 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: provider.subcategory.length,
-                            itemBuilder: (context, index) => GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) =>
-                                            ProductDetailsView(
-                                              item: provider.subcategory[index],
-                                              catname: widget.catname,
-                                            )));
-                              },
-                              child: Container(
-                                  margin: const EdgeInsets.all(5.0),
-                                  width: 150,
-                                  // height: 150,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    // borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      buildImg(hsize, wsize,
-                                          provider.subcategory[index].img),
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Text(
-                                          provider.subcategory[index].title,
-                                          style: GoogleFonts.mulish(
-                                              fontSize: 15.0,
-                                              color: Colors.black),
+                          SizedBox(
+                            // width: 150.0,
+                            height: hsize*0.25,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: provider.subcategory.length,
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) =>
+                                              ProductDetailsView(
+                                                item: provider.subcategory[index],
+                                                catname: widget.catname,
+                                              )));
+                                },
+                                child: Container(
+                                    margin: const EdgeInsets.all(5.0),
+                                    // width: wsize*0.5,
+                                    // height: hsize*0.35,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      // borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          child: buildImg(hsize, wsize,
+                                              provider.subcategory[index].img),
+                                          height: hsize*0.2,
                                         ),
-                                      )
-                                    ],
-                                  )),
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text(
+                                            provider.subcategory[index].title,
+                                            style: GoogleFonts.mulish(
+                                                fontSize: hsize*0.02,
+                                                color: Colors.black),
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -360,94 +367,94 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                   ),
                   child: provider.isselected
                       ? InkWell(
-                          hoverColor: Colors.black12,
-                          onTap: () async {
-                            await provider.changeselect();
-                            await provider.removeToFavourite(
-                                cartprovider.email, widget.item);
-                          },
-                          child: const Icon(
-                            CupertinoIcons.heart_fill,
-                            size: 45,
-                            color: Colors.red,
-                          ),
-                        )
+                    hoverColor: Colors.black12,
+                    onTap: () async {
+                      await provider.changeselect();
+                      await provider.removeToFavourite(
+                          cartprovider.email, widget.item);
+                    },
+                    child: const Icon(
+                      CupertinoIcons.heart_fill,
+                      size: 45,
+                      color: Colors.red,
+                    ),
+                  )
                       : InkWell(
-                          hoverColor: Colors.black12,
-                          onTap: () async {
-                            print('fav');
-                            await provider.changeselect();
-                            await provider.addToFavourite(cartprovider.email,
-                                widget.item, widget.catname);
-                          },
-                          child: const Icon(
-                            CupertinoIcons.heart,
-                            size: 45,
-                            color: Colors.red,
-                          ),
-                        ),
+                    hoverColor: Colors.black12,
+                    onTap: () async {
+                      print('fav');
+                      await provider.changeselect();
+                      await provider.addToFavourite(cartprovider.email,
+                          widget.item, widget.catname);
+                    },
+                    child: const Icon(
+                      CupertinoIcons.heart,
+                      size: 45,
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 20),
               Expanded(
                 child: provider.quantity == 0
                     ? InkWell(
-                        onTap: () {
-                          showErrorToast(
-                              context: context, message: "please select item");
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Text(
-                            '+ Add to Cart',
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      )
-                    : InkWell(
-                        onTap: () {
-                          print('cart clicked');
-                          cartprovider.addToCart(widget.item, provider.quantity,
-                              widget.catname, context);
-                          print('cart done');
-                        },
-                        child: cartprovider.cartloading == true
-                            ? Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppConfig.primaryColor,
-                                    strokeWidth: 3.0,
-                                  ),
-                                ))
-                            : Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Text(
-                                  '+ Add to Cart',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+                  onTap: () {
+                    showErrorToast(
+                        context: context, message: "please select item");
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Text(
+                      '+ Add to Cart',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
                       ),
+                    ),
+                  ),
+                )
+                    : InkWell(
+                  onTap: () {
+                    print('cart clicked');
+                    cartprovider.addToCart(widget.item, provider.quantity,
+                        widget.catname, context);
+                    print('cart done');
+                  },
+                  child: cartprovider.cartloading == true
+                      ? Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppConfig.primaryColor,
+                          strokeWidth: 3.0,
+                        ),
+                      ))
+                      : Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Text(
+                      '+ Add to Cart',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

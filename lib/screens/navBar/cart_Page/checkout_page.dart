@@ -123,7 +123,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
+                            padding: const EdgeInsets.only(left: 8.0,top: 4.0),
                             child: Text(
                               'United States (US)',
                               style: GoogleFonts.inter(

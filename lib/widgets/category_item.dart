@@ -33,12 +33,12 @@ Widget Item(wsize, hsize, item, provider, context) {
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child:
-                        // ImageShimmer(context,wsize,hsize),
-                        SizedBox(
-                            width: wsize * 0.3,
-                            child: Center(
-                              child: buildImg(hsize, wsize, item.img),
-                            )),
+                    // ImageShimmer(context,wsize,hsize),
+                    SizedBox(
+                        width: wsize * 0.3,
+                        child: Center(
+                          child: buildImg(hsize, wsize, item.img),
+                        )),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: wsize * 0.02),
@@ -51,18 +51,18 @@ Widget Item(wsize, hsize, item, provider, context) {
                               left: wsize * 0.04, top: wsize * 0.03),
                           child: item.title.toString().length > 20
                               ? AutoSizeText(
-                                  '${item.title.toString().substring(0, 17)}...',
-                                  maxLines: 1,
-                                  style: GoogleFonts.mulish(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: wsize * 0.04,
-                                      color: Colors.black87))
+                              '${item.title.toString().substring(0, 17)}...',
+                              maxLines: 1,
+                              style: GoogleFonts.mulish(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: wsize * 0.04,
+                                  color: Colors.black87))
                               : AutoSizeText(item.title,
-                                  maxLines: 1,
-                                  style: GoogleFonts.mulish(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: wsize * 0.04,
-                                      color: Colors.black87)),
+                              maxLines: 1,
+                              style: GoogleFonts.mulish(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: wsize * 0.04,
+                                  color: Colors.black87)),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
@@ -89,11 +89,13 @@ Widget Item(wsize, hsize, item, provider, context) {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(right: wsize * 0.01),
-                child: Icon(
-                  Icons.favorite,
-                  color: AppConfig.primaryColor,
-                  size: 45,
+                padding: EdgeInsets.only(right: wsize * 0.02),
+                child: Center(
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppConfig.primaryColor,
+                    size: 25,
+                  ),
                 ),
               )
             ]),
@@ -102,8 +104,8 @@ Widget Item(wsize, hsize, item, provider, context) {
 
 Widget buildImg(hsize, wsize, img) {
   return Container(
-      // height: hsize * .216,
-      // width: wsize * .38,
+    // height: hsize * .216,
+    // width: wsize * .38,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(wsize * 0.025),
@@ -121,7 +123,7 @@ Widget buildImg(hsize, wsize, img) {
           progressIndicatorBuilder: (context, url, downloadProgress) =>
               CircularProgressIndicator(value: downloadProgress.progress),
           errorWidget: (context, url, error) =>
-              const Icon(Icons.error, color: Colors.black),
+          const Icon(Icons.error, color: Colors.black),
         ),
       ));
 }
