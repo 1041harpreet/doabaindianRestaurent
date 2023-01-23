@@ -1,4 +1,3 @@
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:dio/dio.dart';
@@ -11,9 +10,7 @@ import '../../main.dart';
 import '../../screens/navBar/home_page/notification/main_notiification_page.dart';
 
 class NotificationController extends ChangeNotifier {
-
-  static final NotificationController _instance =
-  NotificationController._internal();
+  static final NotificationController _instance = NotificationController._internal();
   factory NotificationController() {
     print('notification working');
     print(AwesomeNotifications().getGlobalBadgeCounter());
@@ -24,12 +21,11 @@ class NotificationController extends ChangeNotifier {
   final String _firebaseToken = '';
   String get firebaseToken => _firebaseToken;
 
-
   ReceivedAction? initialAction;
 
   //  INITIALIZATION METHODS
-  static Future<void> initializeLocalNotifications(
-      {required bool debug}) async {
+  static Future<void> initializeLocalNotifications({required bool debug}) async {
+    // AwesomeNotifications().requestPermissionToSendNotifications()
     await AwesomeNotifications().initialize(
         'resource://drawable/res_app_icon',
         [
@@ -46,47 +42,40 @@ class NotificationController extends ChangeNotifier {
         debug: debug);
 
     // Get initial notification action is optional
-    _instance.initialAction = await AwesomeNotifications()
-        .getInitialNotificationAction(removeFromActionEvents: false);
+    _instance.initialAction = await AwesomeNotifications().getInitialNotificationAction(removeFromActionEvents: false);
   }
 
   static Future<void> startListeningNotificationEvents() async {
-    AwesomeNotifications()
-        .setListeners(onActionReceivedMethod: onActionReceivedMethod);
+    AwesomeNotifications().setListeners(onActionReceivedMethod: onActionReceivedMethod);
   }
 
   //    LOCAL NOTIFICATION EVENTS
 
   static Future<void> getInitialNotificationAction() async {
-    ReceivedAction? receivedAction = await AwesomeNotifications()
-        .getInitialNotificationAction(removeFromActionEvents: true);
+    ReceivedAction? receivedAction = await AwesomeNotifications().getInitialNotificationAction(removeFromActionEvents: true);
     if (receivedAction == null) return;
 
     print('Notification action launched app: $receivedAction');
   }
 
   @pragma('vm:entry-point')
-  static Future<void> onActionReceivedMethod(
-      ReceivedAction receivedAction) async {
+  static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
     print('on action received ');
-
   }
 
-
   //    REQUEST NOTIFICATION PERMISSIONS
-    displayNotificationRationale(context) async {
+  displayNotificationRationale(context) async {
     return showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return AlertDialog(backgroundColor: AppConfig.secmainColor,
-            title: Text('Get Notified!',
-                style: AppConfig.blacktext),
+          return AlertDialog(
+            backgroundColor: AppConfig.secmainColor,
+            title: Text('Get Notified!', style: AppConfig.blacktext),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children:  [
+              children: [
                 SizedBox(height: 20),
-                Text(
-                    'Allow Doaba Indian Restaurant to send you notifications!',style: AppConfig.blacktext),
+                Text('Allow Doaba Indian Restaurant to send you notifications!', style: AppConfig.blacktext),
               ],
             ),
             actions: [
@@ -96,10 +85,7 @@ class NotificationController extends ChangeNotifier {
                   },
                   child: Text(
                     'Deny',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: Colors.red),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.red),
                   )),
               TextButton(
                   onPressed: () async {
@@ -108,10 +94,7 @@ class NotificationController extends ChangeNotifier {
                   },
                   child: Text(
                     'Allow',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: Colors.deepPurple),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.deepPurple),
                   )),
             ],
           );
@@ -120,22 +103,20 @@ class NotificationController extends ChangeNotifier {
 
   // LOCAL NOTIFICATION CREATION METHODS
 
-
   static Future<void> resetBadge() async {
     await AwesomeNotifications().resetGlobalBadge();
   }
 
   //  REMOTE TOKEN REQUESTS
-  String token='';
-   Future<String> requestFirebaseToken() async {
+  String token = '';
+  Future<String> requestFirebaseToken() async {
     if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
       print('fcm available');
       try {
         await AwesomeNotificationsFcm().subscribeToTopic('all');
-        token=await AwesomeNotificationsFcm().requestFirebaseAppToken();
-        print('token is '+token);
+        token = await AwesomeNotificationsFcm().requestFirebaseAppToken();
+        print('token is ' + token);
         return token;
-
       } catch (exception) {
         debugPrint('$exception');
       }
@@ -144,51 +125,37 @@ class NotificationController extends ChangeNotifier {
     }
     return '';
   }
+
   var postUrl = "https://fcm.googleapis.com/fcm/send";
-  Future<void> createNewNotification(title,body,String token) async {
-
-
-    final data ={
-      "to" : token,
+  Future<void> createNewNotification(title, body, String token) async {
+    final data = {
+      "to": token,
       "mutable_content": true,
       "priority": "high",
-      "notification": {
-        "badge": 50,
-        "title": title,
-        "body": body
-      },
-      "data" : {
+      "notification": {"badge": 50, "title": title, "body": body},
+      "data": {
         "content": {
           "id": uniqueId(),
           "badge": 50,
           "channelKey": "doaba channel",
           "displayOnForeground": true,
           "notificationLayout": "BigPicture",
-          "largeIcon": "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
-          "bigPicture": "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
+          "largeIcon":
+              "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
+          "bigPicture":
+              "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
           "showWhen": true,
           "autoDismissible": true,
           "privacy": "Private",
-          "payload": {
-            "secret": "Awesome Notifications Rocks!"
-          }
+          "payload": {"secret": "Awesome Notifications Rocks!"}
         },
         "actionButtons": [
-          {
-            "key": "DISMISS",
-            "label": "Dismiss",
-            "actionType": "DismissAction",
-            "isDangerousOption": true,
-            "autoDismissible": true
-          }
+          {"key": "DISMISS", "label": "Dismiss", "actionType": "DismissAction", "isDangerousOption": true, "autoDismissible": true}
         ]
       }
     };
 
-    final headers = {
-      'content-type': 'application/json',
-      'Authorization': 'key=${Const().key}'
-    };
+    final headers = {'content-type': 'application/json', 'Authorization': 'key=${Const().key}'};
 
     BaseOptions options = BaseOptions(
       connectTimeout: 10000,
@@ -207,8 +174,8 @@ class NotificationController extends ChangeNotifier {
       print('exception $e');
     }
   }
-
 }
+
 int uniqueId() {
   return DateTime.now().millisecondsSinceEpoch.remainder(100000);
 }

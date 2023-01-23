@@ -4,15 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/bx.dart';
-import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/provider/nav_bar_provider.dart';
-import 'package:restaurent.app/screens/navBar/home_page/home_page.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
-import 'package:avatar_glow/avatar_glow.dart';
+
 import '../../../config/config.dart';
 import '../../../provider/category_provider.dart';
 import '../../../widgets/category_item.dart';
@@ -21,8 +17,7 @@ class ProductDetailsView extends ConsumerStatefulWidget {
   var item;
   String catname;
 
-  ProductDetailsView({Key? key, required this.item, required this.catname})
-      : super(key: key);
+  ProductDetailsView({Key? key, required this.item, required this.catname}) : super(key: key);
 
   @override
   ConsumerState<ProductDetailsView> createState() => _ProductDetailsViewState();
@@ -64,9 +59,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                       },
                       child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(10.0)),
+                              color: Colors.white, border: Border.all(color: Colors.black12), borderRadius: BorderRadius.circular(10.0)),
                           width: 40.0,
                           height: 40.0,
                           child: const Icon(
@@ -86,15 +79,12 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                         );
                       },
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10.0)),
+                        decoration:
+                            BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black12), borderRadius: BorderRadius.circular(10.0)),
                         width: 40.0,
                         height: 40.0,
                         child: Badge(
-                          badgeContent:
-                          Text(cartprovider.badgevalue.toString()),
+                          badgeContent: Text(cartprovider.badgevalue.toString()),
                           child: const Icon(
                             Icons.shopping_cart,
                             color: Colors.grey,
@@ -121,13 +111,9 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                   child: CachedNetworkImage(
                     imageUrl: widget.item.img,
                     fit: BoxFit.cover,
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) =>
-                        CircularProgressIndicator(
-                            value: downloadProgress.progress,
-                            color: AppConfig.primaryColor),
-                    errorWidget: (context, url, error) =>
-                    const Icon(Icons.error, color: Colors.black),
+                    progressIndicatorBuilder: (context, url, downloadProgress) =>
+                        CircularProgressIndicator(value: downloadProgress.progress, color: AppConfig.primaryColor),
+                    errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.black),
                   ),
                 ),
                 // Image.network(, fit: BoxFit.cover)),
@@ -137,8 +123,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
               child: Stack(
                 children: [
                   Container(
-                    padding:
-                    const EdgeInsets.only(top: 20, right: 14, left: 14),
+                    padding: const EdgeInsets.only(top: 20, right: 14, left: 14),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -162,17 +147,16 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               widget.catname.length > 30
-                                  ? Text(
-                                  widget.catname.substring(0, 30) + '...',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: wsize * 0.045,
-                                    color: Colors.black,
-                                  ))
+                                  ? Text(widget.catname.substring(0, 30) + '...',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: wsize * 0.045,
+                                        color: Colors.black,
+                                      ))
                                   : Text(widget.catname,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: wsize * 0.045,
-                                    color: Colors.black,
-                                  )),
+                                      style: GoogleFonts.poppins(
+                                        fontSize: wsize * 0.045,
+                                        color: Colors.black,
+                                      )),
                               Text(
                                 '\$${widget.item.price}',
                                 style: GoogleFonts.poppins(
@@ -204,10 +188,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                             )),
                                         child: Padding(
                                           padding: EdgeInsets.all(wsize * 0.03),
-                                          child: Text("-",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold)),
+                                          child: Text("-", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                                         ),
                                       ),
                                     ),
@@ -220,9 +201,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                         )),
                                     child: Padding(
                                       padding: EdgeInsets.all(8.0),
-                                      child: Text(provider.quantity.toString(),
-                                          style:
-                                          TextStyle(color: Colors.black)),
+                                      child: Text(provider.quantity.toString(), style: TextStyle(color: Colors.black)),
                                     ),
                                   ),
                                   Padding(
@@ -239,10 +218,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                             )),
                                         child: Padding(
                                           padding: EdgeInsets.all(wsize * 0.03),
-                                          child: Text("+",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold)),
+                                          child: Text("+", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                                         ),
                                       ),
                                     ),
@@ -279,7 +255,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           const SizedBox(height: 10),
                           SizedBox(
                             // width: 150.0,
-                            height: hsize*0.25,
+                            height: hsize * 0.25,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: provider.subcategory.length,
@@ -288,8 +264,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                   Navigator.push(
                                       context,
                                       CupertinoPageRoute(
-                                          builder: (context) =>
-                                              ProductDetailsView(
+                                          builder: (context) => ProductDetailsView(
                                                 item: provider.subcategory[index],
                                                 catname: widget.catname,
                                               )));
@@ -306,17 +281,14 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          child: buildImg(hsize, wsize,
-                                              provider.subcategory[index].img),
-                                          height: hsize*0.2,
+                                          child: buildImg(hsize, wsize, provider.subcategory[index].img),
+                                          height: hsize * 0.2,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: Text(
                                             provider.subcategory[index].title,
-                                            style: GoogleFonts.mulish(
-                                                fontSize: hsize*0.02,
-                                                color: Colors.black),
+                                            style: GoogleFonts.mulish(fontSize: hsize * 0.02, color: Colors.black),
                                           ),
                                         )
                                       ],
@@ -367,94 +339,90 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                   ),
                   child: provider.isselected
                       ? InkWell(
-                    hoverColor: Colors.black12,
-                    onTap: () async {
-                      await provider.changeselect();
-                      await provider.removeToFavourite(
-                          cartprovider.email, widget.item);
-                    },
-                    child: const Icon(
-                      CupertinoIcons.heart_fill,
-                      size: 45,
-                      color: Colors.red,
-                    ),
-                  )
+                          hoverColor: Colors.black12,
+                          onTap: () async {
+                            await provider.changeselect();
+                            await provider.removeToFavourite(cartprovider.email, widget.item);
+                          },
+                          child: const Icon(
+                            CupertinoIcons.heart_fill,
+                            size: 45,
+                            color: Colors.red,
+                          ),
+                        )
                       : InkWell(
-                    hoverColor: Colors.black12,
-                    onTap: () async {
-                      print('fav');
-                      await provider.changeselect();
-                      await provider.addToFavourite(cartprovider.email,
-                          widget.item, widget.catname);
-                    },
-                    child: const Icon(
-                      CupertinoIcons.heart,
-                      size: 45,
-                      color: Colors.red,
-                    ),
-                  ),
+                          hoverColor: Colors.black12,
+                          onTap: () async {
+                            print('fav');
+                            await provider.changeselect();
+                            await provider.addToFavourite(cartprovider.email, widget.item, widget.catname);
+                          },
+                          child: const Icon(
+                            CupertinoIcons.heart,
+                            size: 45,
+                            color: Colors.red,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(width: 20),
               Expanded(
                 child: provider.quantity == 0
                     ? InkWell(
-                  onTap: () {
-                    showErrorToast(
-                        context: context, message: "please select item");
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      '+ Add to Cart',
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                )
-                    : InkWell(
-                  onTap: () {
-                    print('cart clicked');
-                    cartprovider.addToCart(widget.item, provider.quantity,
-                        widget.catname, context);
-                    print('cart done');
-                  },
-                  child: cartprovider.cartloading == true
-                      ? Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: AppConfig.primaryColor,
-                          strokeWidth: 3.0,
+                        onTap: () {
+                          showErrorToast(context: context, message: "please select item");
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Text(
+                            '+ Add to Cart',
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
-                      ))
-                      : Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      '+ Add to Cart',
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                      )
+                    : InkWell(
+                        onTap: () {
+                          print('cart clicked');
+                          cartprovider.addToCart(widget.item, provider.quantity, widget.catname, context);
+                          print('cart done');
+                        },
+                        child: cartprovider.cartloading == true
+                            ? Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppConfig.primaryColor,
+                                    strokeWidth: 3.0,
+                                  ),
+                                ))
+                            : Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Text(
+                                  '+ Add to Cart',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                       ),
-                    ),
-                  ),
-                ),
               ),
             ],
           ),

@@ -7,7 +7,7 @@ packages:
       name: _flutterfire_internals
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.11"
+    version: "1.0.12"
   archive:
     dependency: transitive
     description:
@@ -43,13 +43,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
-  avatar_glow:
-    dependency: "direct main"
-    description:
-      name: avatar_glow
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
   awesome_notifications:
     dependency: transitive
     description:
@@ -266,7 +259,7 @@ packages:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.0"
+    version: "2.4.1"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -280,7 +273,28 @@ packages:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.1.0"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "14.2.1"
+  firebase_messaging_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_messaging_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.10"
+  firebase_messaging_web:
+    dependency: transitive
+    description:
+      name: firebase_messaging_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.11"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -314,13 +328,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.0"
-  flutter_braintree:
-    dependency: "direct main"
-    description:
-      name: flutter_braintree
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.1"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -347,13 +354,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.8"
-  flutter_paypal_native:
-    dependency: "direct main"
-    description:
-      name: flutter_paypal_native
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.6"
   flutter_riverpod:
     dependency: "direct main"
     description:
@@ -568,7 +568,7 @@ packages:
     source: hosted
     version: "1.0.2"
   path:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path
       url: "https://pub.dartlang.org"
@@ -769,7 +769,7 @@ packages:
     source: hosted
     version: "1.9.0"
   sqflite:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sqflite
       url: "https://pub.dartlang.org"
