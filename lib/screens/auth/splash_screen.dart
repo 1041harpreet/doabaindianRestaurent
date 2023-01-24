@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 
 import '../../services/notification_service/notification.dart';
-import '../navBar/profille_page/profile_page.dart';
+import '../navBar/profille_page/main_Profile_screen.dart';
 import 'loader_screen.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 

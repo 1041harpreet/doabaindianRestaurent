@@ -16,4 +16,6 @@ class Const {
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
   }
+  static String adminMail='';
+  static String adminPhone='';
 }

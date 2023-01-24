@@ -111,7 +111,6 @@ class NotificationController extends ChangeNotifier {
   String token = '';
   Future<String> requestFirebaseToken() async {
     if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
-      print('fcm available');
       try {
         await AwesomeNotificationsFcm().subscribeToTopic('all');
         token = await AwesomeNotificationsFcm().requestFirebaseAppToken();

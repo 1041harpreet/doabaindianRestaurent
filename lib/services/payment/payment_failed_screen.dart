@@ -25,6 +25,14 @@ class PaymentFailedScreen extends StatelessWidget {
         // return shouldPop!;
       },
       child: Scaffold(
+        appBar: AppBar(leading: IconButton(onPressed: (){
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const NavBar(),
+              ),
+                  (route) => false);
+        },
+            icon: Icon(Icons.arrow_back)),),
           backgroundColor: AppConfig.secmainColor,
           body:SingleChildScrollView(
             child: Center(

@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
+import 'package:restaurent.app/provider/notification_provider.dart';
 import 'package:restaurent.app/screens/navBar/home_page/categories/builder.dart';
 import 'package:restaurent.app/screens/navBar/home_page/notification/main_notiification_page.dart';
 import 'package:restaurent.app/widgets/buffet.dart';

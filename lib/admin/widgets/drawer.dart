@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurent.app/screens/navBar/profille_page/profile_page.dart';
+import 'package:restaurent.app/screens/navBar/profille_page/main_Profile_screen.dart';
 
 import '../../config/config.dart';
 import '../completed_order_screen.dart';

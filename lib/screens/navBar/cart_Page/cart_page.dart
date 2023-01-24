@@ -34,6 +34,7 @@ class _AddToCartState extends ConsumerState<AddToCart> {
   void initState() {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // ref.watch(cartProvider).changecheckload(true);
       ref.watch(cartProvider).getorderItem();
       ref.watch(cartProvider).getTotal();
     });
@@ -44,6 +45,7 @@ class _AddToCartState extends ConsumerState<AddToCart> {
 
   @override
   Widget build(BuildContext context) {
+
     final cartprovider = ref.watch(cartProvider);
     final authprovider = ref.watch(authProvider);
     final navprovider = ref.watch(NavBarProvider);

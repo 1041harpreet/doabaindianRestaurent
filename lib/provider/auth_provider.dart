@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/provider/nav_bar_provider.dart';
@@ -14,11 +17,11 @@ import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting_provider.dart';
 import 'package:restaurent.app/services/notification_service/notification.dart';
-
 import '../admin/admin_home_page.dart';
+import '../config/const.dart';
 import '../services/auth.dart';
 import '../widgets/toast_service.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
 class AuthService extends ChangeNotifier {
   bool signupload = false;
   bool signinload = false;
@@ -47,12 +50,29 @@ class AuthService extends ChangeNotifier {
         // value: '123456',
         validators: [
           Validators.required,
+          Validators.number,
+          Validators.maxLength(12),
+          Validators.minLength(10),
         ]),
     'username': FormControl(
         // value: '123456',
         validators: [
           Validators.required,
         ]),
+    'img': FormControl(),
+  });
+  FormGroup myProfile = FormGroup({
+    "email": FormControl(
+        validators: [Validators.required, Validators.email]),
+    'phone': FormControl(
+        validators: [
+          Validators.required,
+        ]),
+    'username': FormControl(
+        validators: [
+          Validators.required,
+        ]),
+    'img': FormControl(),
   });
   FormGroup resetPasswordForm = FormGroup({
     "email": FormControl(validators: [Validators.required, Validators.email]),
@@ -73,7 +93,7 @@ class AuthService extends ChangeNotifier {
       Validators.required,
     ]),
     "phone": FormControl(
-        validators: [Validators.required, Validators.minLength(10)]),
+        validators: [Validators.required, Validators.minLength(10),Validators.number,Validators.maxLength(12)]),
     'password': FormControl(validators: [
       Validators.required,
     ]),
@@ -137,7 +157,7 @@ class AuthService extends ChangeNotifier {
       )
           .then((value) async {
         await adduser(email, username, phone, '');
-        await getUserInfo(_auth.currentUser?.email);
+        await getUserInfo(_auth.currentUser?.email,true);
         await setInitialTotal(email);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
@@ -201,7 +221,7 @@ class AuthService extends ChangeNotifier {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
-        await getUserInfo(email);
+        await getUserInfo(email,true);
         if (role == 'admin') {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
@@ -402,8 +422,9 @@ class AuthService extends ChangeNotifier {
   String phone = '';
   String username = '';
   String role = 'user';
+  String img = '';
 
-  getUserInfo(email) async {
+  getUserInfo(email,needed) async {
     try {
       await FirebaseFirestore.instance
           .collection('users')
@@ -412,17 +433,104 @@ class AuthService extends ChangeNotifier {
           .then((value) async {
         phone = value.get('phone');
         username = value.get('username');
+        img = value.get('img');
         role = value.get('role');
-        await storeToken(email);
+        needed ? await storeToken(email) :'';
+        needed ? adminDetail() : '';
         print('my role is $role');
-        print(phone);
-        print(username);
       });
     } catch (e) {
       role = 'user';
       print("error $e");
     }
   }
+  adminDetail()async{
+    try{
+      await _firestore.collection('admin').doc('admin').get().then((value) {
+        Const.adminMail=value.get('mail');
+        Const.adminPhone=value.get('phone');
+        print(Const.adminPhone);
+      });
+    }catch(e){
+      print(e);
+    }
+    notifyListeners();
+  }
+
+
+//update profile
+  updateProfileDetails(context,email,username,phone,img)async{
+    await _firestore.collection('users').doc(email).update({
+      "username":username,
+      "phone":phone,
+      "img":img
+    }).then((value) {
+      showSuccessToast(context: context,message: "Profile updated successfully");
+      getUserInfo(email,false);
+      // notifyListeners();
+    });
+  }
+
+  File? imageFile;
+  //uplaod image
+  uploadimage( email, context,image) async {
+    var imageUrl='';
+    try{
+      Reference reference = await FirebaseStorage.instance.ref('users').child(email);
+      UploadTask uploadTask = reference.putFile(File(image));
+      TaskSnapshot snapshot = await uploadTask;
+      if (snapshot.state == TaskState.success) {
+        // print("success");
+        Navigator.pop(context);
+        showSuccessToast(
+            message: "Nice! Your Image has been Selected Successfully",
+            context: context);
+      }
+       imageUrl = await snapshot.ref.getDownloadURL();
+      print(imageUrl);
+    }catch(e){
+      imageUrl='';
+      print(e);
+    }
+    return imageUrl;
+  }
+ bool imageLoading=false;
+  changeImageLoading(value){
+    imageLoading=value;
+    notifyListeners();
+  }
+
+//pick image
+  getImage(context,source) async {
+    var uplaodedImage='';
+    try{
+      XFile? pickedFile = await ImagePicker().pickImage(
+        source: source,
+        maxWidth: 1800,
+        maxHeight: 1800,
+
+      );
+      if (pickedFile != null) {
+        changeImageLoading(true);
+        print('img picked');
+         uplaodedImage = (pickedFile.path);
+        print(uplaodedImage);
+        // uplaodedImage=await uploadimage(_auth.currentUser?.email, context, i);
+      }
+      else
+      {
+        uplaodedImage='';
+        showErrorToast(message: "Failed to pick image",context: context);
+      }
+    }catch(e){
+      uplaodedImage='';
+      print(e);
+    }finally{
+      changeImageLoading(false);
+    }
+    return uplaodedImage;
+  }
+
 
 
 }

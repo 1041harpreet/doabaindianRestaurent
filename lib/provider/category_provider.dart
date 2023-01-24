@@ -35,7 +35,7 @@ class CategoryService extends ChangeNotifier {
     'Tandoor Clay Oven'
   ];
 
-  int quantity = 0;
+  int quantity = 1;
   double total = 0;
   bool loading = false;
   bool subloading = false;
@@ -63,9 +63,9 @@ class CategoryService extends ChangeNotifier {
   }
 
   remquantity(price) {
-    if (quantity <= 0) {
-      quantity = 0;
-      total = 0;
+    if (quantity <= 1) {
+      quantity = 1;
+      total = price;
     } else {
       quantity--;
       total -= price;
@@ -73,9 +73,9 @@ class CategoryService extends ChangeNotifier {
     notifyListeners();
   }
 
-  initquanity() {
-    quantity = 0;
-    total = 0;
+  initquanity(price) {
+    quantity = 1;
+    total = price;
     notifyListeners();
   }
 
@@ -104,7 +104,6 @@ class CategoryService extends ChangeNotifier {
 //used to get subcategory items
   getsubcategory(item) async {
     changesubloading(true);
-
     try {
       var ref = await _firestore
           .collection('category')
@@ -116,6 +115,29 @@ class CategoryService extends ChangeNotifier {
       print(subcategory);
     } catch (e) {
       subcategory=[];
+      print('get sub failed');
+      print(e);
+    } finally {
+      changesubloading(false);
+      // notifyListeners();
+    }
+  }
+
+  List dropDownItemList=[];
+  getDropDownItems(item) async {
+    // _firestore.collection('category').doc(item.toString()).collection(item.toString()).
+    changesubloading(true);
+    try {
+      var ref = await _firestore
+          .collection('category')
+          .doc(item.toString())
+          .collection(item.toString())
+          .get();
+      subcategory =
+          ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
+      print(subcategory);
+    } catch (e) {
+      dropDownItemList=[];
       print('get sub failed');
       print(e);
     } finally {

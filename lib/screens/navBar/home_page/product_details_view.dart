@@ -28,7 +28,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.watch(categoryProvider).initquanity();
+      ref.watch(categoryProvider).initquanity( widget.item.price);
       ref.watch(categoryProvider).initialfavButton();
     });
     super.initState();

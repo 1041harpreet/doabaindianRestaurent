@@ -7,6 +7,7 @@ import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 
 import '../../admin/admin_home_page.dart';
 import '../../provider/auth_provider.dart';
+import '../../provider/nav_bar_provider.dart';
 import '../../services/connection_service.dart';
 import '../../services/notification_service/notification.dart';
 class LoaderScreen extends ConsumerStatefulWidget {
@@ -25,7 +26,8 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
      print('working loader screen');
      if (ref.watch(authProvider).user != null) {
-       await ref.watch(authProvider).getUserInfo(ref.watch(authProvider).user.email);
+
+       await ref.watch(authProvider).getUserInfo(ref.watch(authProvider).user.email,true);
        if (ref.watch(authProvider).role == 'admin') {
          print('admin');
          Navigator.of(context).pushAndRemoveUntil(
@@ -35,9 +37,10 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
                  (route) => false);
        }
        if (ref.watch(authProvider).role == 'user') {
+         // await ref.watch(NavBarProvider).changeindex(0);
          Navigator.of(context).pushAndRemoveUntil(
              MaterialPageRoute(
-               builder: (context) => const NavBar(),
+               builder: (context) =>  NavBar(),
              ),
                  (route) => false);
        }

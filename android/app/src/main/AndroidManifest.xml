@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
-
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
 
         tools:replace="android:label"
@@ -44,41 +44,7 @@
             </intent-filter>
 
         </activity>
-        <activity
-            android:name="com.paypal.openid.RedirectUriReceiverActivity"
-            android:excludeFromRecents="true"
-            android:theme="@style/PYPLAppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="paypalpay"
-                    android:scheme="com.example.restaurent.app://paypalpay" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.paypal.pyplcheckout.home.view.activities.PYPLInitiateCheckoutActivity"
-            android:theme="@style/AppFullScreenTheme">
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="paypalxo"
-                    android:scheme="com.example.restaurent.app://paypalpay" />
-            </intent-filter>
-        </activity>
-        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="com.example.restaurent.app.braintree" />
-            </intent-filter>
-        </activity>
+
 
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

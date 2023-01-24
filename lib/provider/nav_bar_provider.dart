@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../screens/navBar/cart_Page/cart_page.dart';
 import '../screens/navBar/favouriteScreen/favourite_screen.dart';
 import '../screens/navBar/home_page/home_page.dart';
-import '../screens/navBar/profille_page/profile_page.dart';
+import '../screens/navBar/profille_page/main_Profile_screen.dart';
 
 
 class NavServices extends ChangeNotifier{
@@ -27,12 +27,12 @@ class NavServices extends ChangeNotifier{
   int selectedindex=0;
   changeindex(int index){
     selectedindex=index;
+    print("index is"+selectedindex.toString());
     notifyListeners();
   }
 
 }
 final NavBarProvider=ChangeNotifierProvider((ref) {
-  return NavServices(
-  );
+  return NavServices();
 
 },);

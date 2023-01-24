@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 
+import '../config/const.dart';
+
 class MailService{
   userMail(email,name,date,total,orderid) async {
     print('sending');
@@ -70,7 +72,7 @@ src="https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.c
     //     username: username, password: password, port: 587);
     final message = Message()
       ..from = Address(username)
-      ..recipients.add('doabarestaurent@gmail.com')
+      ..recipients.add(Const.adminMail)
 
       ..subject = 'New Order from : $name'
       ..text = 'DOABA INDIAN RESTAURANT.'

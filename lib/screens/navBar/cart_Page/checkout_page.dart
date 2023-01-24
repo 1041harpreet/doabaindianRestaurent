@@ -224,7 +224,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      "\$${cartprovider.orderItem[index].total}",
+                                      "\$${cartprovider.orderItem[index].total.toStringAsFixed(2)}",
                                       style: AppConfig.blackTitle,
                                     ),
                                   )

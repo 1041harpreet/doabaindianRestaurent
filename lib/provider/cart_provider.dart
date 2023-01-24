@@ -43,14 +43,13 @@ class CartService extends ChangeNotifier {
         .collection(email)
         .get()
         .then((value) {
-      print('value is');
       if (value.docs.isEmpty) {
         changeBadge(0);
         print('empty');
       } else {
         changeBadge(value.docs.length);
-        print(value.docs.length);
-        print('value exist');
+
+        print('value exist'+value.docs.length.toString());
       }
     });
 
@@ -210,7 +209,6 @@ class CartService extends ChangeNotifier {
         }
       });
       print('subtotal is $subtotal');
-      notifyListeners();
     } catch (e) {
       subtotal=0.0;
       total=0.0;
