@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurent.app/config/const.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/main_Profile_screen.dart';
 
 import '../../config/config.dart';
@@ -12,7 +13,7 @@ Widget drawer(context, authprovider, orderprovider) {
       UserAccountsDrawerHeader(
         // <-- SEE HERE
         decoration: BoxDecoration(color: AppConfig.primaryColor),
-        accountName: Text(authprovider.username, style: AppConfig.blacktext),
+        accountName: Text(Const.username, style: AppConfig.blacktext),
 
         accountEmail: Text(
           authprovider.user.email,
