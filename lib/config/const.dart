@@ -20,4 +20,9 @@ class Const {
 
   static String adminMail = '';
   static String adminPhone = '';
+  static String phone = '';
+  static String username = '';
+  static String role = 'user';
+  static String img = '';
+  static String email = '';
 }

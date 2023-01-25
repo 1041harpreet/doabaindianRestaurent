@@ -7,13 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
 
+import '../config/const.dart';
 import '../model/notification_model.dart';
 
 class NotificationService extends ChangeNotifier {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String email;
+  // String email;
 
-  NotificationService(this.email);
+  NotificationService();
 
   bool loading = false;
 
@@ -24,9 +25,9 @@ class NotificationService extends ChangeNotifier {
 
   //add to user notification page
   addToNotification(
-      String orderid, String email, bool status, tax, total, date) {
+      String orderid, String email, bool status, tax, total, date)async {
     try {
-      var ref = _firestore
+      var ref = await _firestore
           .collection('notifications')
           .doc(email)
           .collection(email)
@@ -54,8 +55,8 @@ class NotificationService extends ChangeNotifier {
     try {
       var ref = await _firestore
           .collection('notifications')
-          .doc(email)
-          .collection(email)
+          .doc(Const.email)
+          .collection(Const.email)
           .orderBy('date', descending: true)
           .limit(12)
           .get();
@@ -72,8 +73,8 @@ class NotificationService extends ChangeNotifier {
     try {
       var ref = await _firestore
           .collection('notifications')
-          .doc(email)
-          .collection(email)
+          .doc(Const.email)
+          .collection(Const.email)
           .orderBy('date', descending: true)
           .startAt(notificationList[notificationList.length - 1])
           .limit(10)
@@ -90,7 +91,7 @@ class NotificationService extends ChangeNotifier {
 
   deleteToken() async {
     try {
-      await _firestore.collection('token').doc(email).delete();
+      await _firestore.collection('token').doc(Const.email).delete();
     } catch (e) {
       print(e);
     }
@@ -98,6 +99,6 @@ class NotificationService extends ChangeNotifier {
 }
 
 final notificationProvider = ChangeNotifierProvider((ref) {
-  final authprovider = ref.watch(authProvider);
-  return NotificationService(authprovider.user.email);
+  // final authprovider = ref.watch(authProvider);
+  return NotificationService();
 });

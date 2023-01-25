@@ -220,7 +220,7 @@ class AuthService extends ChangeNotifier {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
         await getUserInfo(email, true);
-        if (role == 'admin') {
+        if (Const.role == 'admin') {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const AdminHomePage(),
@@ -234,9 +234,6 @@ class AuthService extends ChangeNotifier {
               (route) => false);
         }
         loginForm.reset();
-        //   await FavouriteServices().openDb(email);
-        // await FavouriteServices().insertModel(email);
-
         showSuccessToast(message: 'login successfully', context: context);
       });
     } on FirebaseAuthException catch (e) {
@@ -303,7 +300,7 @@ class AuthService extends ChangeNotifier {
         print(cred);
         user?.reauthenticateWithCredential(cred).then((value) async {
           print(value);
-          await NotificationService(user.email).deleteToken();
+          await NotificationService().deleteToken();
           await deleteUser();
           _auth.currentUser?.delete().then((value) async {
             Navigator.of(context).pushAndRemoveUntil(
@@ -416,10 +413,10 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  String phone = '';
-  String username = '';
-  String role = 'user';
-  String img = '';
+  // String phone = '';
+  // String username = '';
+  // String role = 'user';
+  // String img = '';
 
   getUserInfo(email, needed) async {
     try {
@@ -428,16 +425,17 @@ class AuthService extends ChangeNotifier {
           .doc(email)
           .get()
           .then((value) async {
-        phone = value.get('phone');
-        username = value.get('username');
-        img = value.get('img');
-        role = value.get('role');
+        Const.phone = value.get('phone');
+        Const.username = value.get('username');
+        Const.img = value.get('img');
+        Const.role = value.get('role');
+        Const.email = value.get('email');
         needed ? await storeToken(email) : '';
         needed ? adminDetail() : '';
-        print('my role is $role');
+        print('my role is $Const.role');
       });
     } catch (e) {
-      role = 'user';
+      Const.role = 'user';
       print("error $e");
     }
   }
@@ -497,7 +495,6 @@ class AuthService extends ChangeNotifier {
   }
 
   bool imageLoading = false;
-
   changeImageLoading(value) {
     imageLoading = value;
     notifyListeners();

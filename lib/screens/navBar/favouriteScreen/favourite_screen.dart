@@ -24,7 +24,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref
           .watch(categoryProvider)
-          .getFavouriteItem(ref.watch(cartProvider).email);
+          .getFavouriteItem();
     });
     super.initState();
   }

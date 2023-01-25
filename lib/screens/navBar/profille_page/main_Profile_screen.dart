@@ -9,6 +9,7 @@ import 'package:restaurent.app/screens/navBar/profille_page/buffet_page.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/gallery.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/main_setting_page.dart';
 
+import '../../../config/const.dart';
 import '../../../provider/nav_bar_provider.dart';
 import 'aboutus_page.dart';
 import 'my_Profile_screen.dart';
@@ -51,12 +52,11 @@ Widget optionListView(authprovider, context, homeprovider) {
       children: [
         _listItem(
             onClick: () {
-              print(authprovider.phone);
               authprovider.myProfile.patchValue({
-                "username": authprovider.username,
-                "email": authprovider.user.email,
-                "phone": authprovider.phone,
-                "img": authprovider.img
+                "username": Const.username,
+                "email":Const.email,
+                "phone": Const.phone,
+                "img": Const.img
               });
               Navigator.push(
                   context,

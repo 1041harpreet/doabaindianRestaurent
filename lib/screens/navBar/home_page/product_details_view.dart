@@ -415,7 +415,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           onTap: () async {
                             await provider.changeselect();
                             await provider.removeToFavourite(
-                                cartprovider.email, widget.item);
+                                 widget.item);
                           },
                           child: const Icon(
                             CupertinoIcons.heart_fill,
@@ -428,7 +428,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           onTap: () async {
                             print('fav');
                             await provider.changeselect();
-                            await provider.addToFavourite(cartprovider.email,
+                            await provider.addToFavourite(
                                 widget.item, widget.catname);
                           },
                           child: const Icon(

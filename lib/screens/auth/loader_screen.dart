@@ -6,6 +6,7 @@ import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/widgets/shimmer.dart';
 
 import '../../admin/admin_home_page.dart';
+import '../../config/const.dart';
 import '../../provider/auth_provider.dart';
 import '../../services/connection_service.dart';
 
@@ -28,7 +29,7 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
         await ref
             .watch(authProvider)
             .getUserInfo(ref.watch(authProvider).user.email, true);
-        if (ref.watch(authProvider).role == 'admin') {
+        if (Const.role == 'admin') {
           print('admin');
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
@@ -36,7 +37,7 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
               ),
               (route) => false);
         }
-        if (ref.watch(authProvider).role == 'user') {
+        if (Const.role == 'user') {
           // await ref.watch(NavBarProvider).changeindex(0);
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(

@@ -6,11 +6,13 @@ import 'package:restaurent.app/model/order_item_model.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
 
+import '../config/const.dart';
+
 // import 'package:mailer/mailer.dart';
 // import 'package:mailer/smtp_server.dart';
 class CartService extends ChangeNotifier {
-  String email;
-  CartService(this.email);
+  // String email;
+  CartService();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -34,8 +36,8 @@ class CartService extends ChangeNotifier {
   getBadge() async {
     await _firestore
         .collection('cart')
-        .doc(email)
-        .collection(email)
+        .doc(Const.email)
+        .collection(Const.email)
         .get()
         .then((value) {
       if (value.docs.isEmpty) {
@@ -67,8 +69,8 @@ class CartService extends ChangeNotifier {
       if (exist == true) {
         await _firestore
             .collection('cart')
-            .doc(email)
-            .collection(email)
+            .doc(Const.email)
+            .collection(Const.email)
             .doc(item.title + subitem)
             .update({
           'total': itemTotal + item.price * count,
@@ -80,8 +82,8 @@ class CartService extends ChangeNotifier {
         print('item total is $total');
         await _firestore
             .collection('cart')
-            .doc(email)
-            .collection(email)
+            .doc(Const.email)
+            .collection(Const.email)
             .doc(item.title + subitem)
             .set({
           "count": count,
@@ -111,7 +113,7 @@ class CartService extends ChangeNotifier {
     subtotal = subtotal + itemtotal;
     await _firestore
         .collection('cart')
-        .doc(email)
+        .doc(Const.email)
         .update({"subtotal": subtotal, 'total': subtotal + tax});
     await getTotal();
     // notifyListeners();
@@ -122,8 +124,8 @@ class CartService extends ChangeNotifier {
   checkFromCart(item, subitem) async {
     await _firestore
         .collection('cart')
-        .doc(email)
-        .collection(email)
+        .doc(Const.email)
+        .collection(Const.email)
         .doc(item.title + subitem)
         .get()
         .then((value) async {
@@ -146,8 +148,8 @@ class CartService extends ChangeNotifier {
       await removeToTotal(item, item.count);
       await _firestore
           .collection('cart')
-          .doc(email)
-          .collection(email)
+          .doc(Const.email)
+          .collection(Const.email)
           .doc(item.title)
           .delete();
       showSuccessToast(message: "item removed from cart", context: context);
@@ -176,7 +178,7 @@ class CartService extends ChangeNotifier {
       print('before subtotal $subtotal');
       await _firestore
           .collection('cart')
-          .doc(email)
+          .doc(Const.email)
           .update({"subtotal": subtotal, 'total': subtotal + tax});
       await getTotal();
       // notifyListeners();
@@ -188,7 +190,7 @@ class CartService extends ChangeNotifier {
   //get total bill :
   getTotal() async {
     try {
-      await _firestore.collection('cart').doc(email).get().then((value) {
+      await _firestore.collection('cart').doc(Const.email).get().then((value) {
         if (value.exists == true) {
           var x = value.get('subtotal');
           subtotal = x.toDouble();
@@ -215,8 +217,8 @@ class CartService extends ChangeNotifier {
     try {
       var ref = await _firestore
           .collection('cart')
-          .doc(email)
-          .collection(email)
+          .doc(Const.email)
+          .collection(Const.email)
           .get();
       orderItem = ref.docs.map((e) => OrderItem.fromJson(e.data())).toList();
     } catch (e) {
@@ -229,8 +231,7 @@ class CartService extends ChangeNotifier {
   }
 }
 final cartProvider = ChangeNotifierProvider((ref) {
-  final authprovider = ref.watch(authProvider);
-  var state = CartService(authprovider.user.email);
+  var state = CartService();
   state.getTotal();
   state.getBadge();
   return state;
