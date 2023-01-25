@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/widgets/shimmer.dart';
@@ -29,6 +30,8 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
         await ref
             .watch(authProvider)
             .getUserInfo(ref.watch(authProvider).user.email, true);
+        await ref.watch(cartProvider).getBadge();
+        await ref.watch(cartProvider).getTotal();
         if (Const.role == 'admin') {
           print('admin');
           Navigator.of(context).pushAndRemoveUntil(

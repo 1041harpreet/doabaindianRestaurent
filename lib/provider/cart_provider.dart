@@ -34,20 +34,27 @@ class CartService extends ChangeNotifier {
   int badgevalue = 0;
 
   getBadge() async {
-    await _firestore
-        .collection('cart')
-        .doc(Const.email)
-        .collection(Const.email)
-        .get()
-        .then((value) {
-      if (value.docs.isEmpty) {
-        changeBadge(0);
-        print('empty');
-      } else {
-        changeBadge(value.docs.length);
-        print('value exist' + value.docs.length.toString());
-      }
-    });
+    try{
+      await _firestore
+          .collection('cart')
+          .doc(Const.email)
+          .collection(Const.email)
+          .get()
+          .then((value) {
+        if (value.docs.isEmpty) {
+          changeBadge(0);
+          print('empty');
+        } else {
+          changeBadge(value.docs.length);
+          print('value exist' + value.docs.length.toString());
+        }
+      });
+    }catch(e){
+      print(e);
+    }finally{
+      notifyListeners();
+    }
+
   }
 
   changeBadge( value) {
@@ -207,6 +214,8 @@ class CartService extends ChangeNotifier {
       total = 0.0;
       print('get total error');
       print(e.toString());
+    }finally{
+      notifyListeners();
     }
   }
 
@@ -232,7 +241,7 @@ class CartService extends ChangeNotifier {
 }
 final cartProvider = ChangeNotifierProvider((ref) {
   var state = CartService();
-  state.getTotal();
-  state.getBadge();
+  // state.getTotal();
+  // state.getBadge();
   return state;
 });

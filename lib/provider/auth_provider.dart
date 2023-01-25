@@ -13,13 +13,17 @@ import 'package:restaurent.app/provider/notification_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting_provider.dart';
+import 'package:restaurent.app/services/mail_services.dart';
 import 'package:restaurent.app/services/notification_service/notification.dart';
 
 import '../admin/admin_home_page.dart';
 import '../config/const.dart';
 import '../widgets/toast_service.dart';
+import 'cart_provider.dart';
 
 class AuthService extends ChangeNotifier {
+
+
   bool signupload = false;
   bool signinload = false;
   bool resetload = false;
@@ -94,6 +98,7 @@ class AuthService extends ChangeNotifier {
     ]),
     'password': FormControl(validators: [
       Validators.required,
+      Validators.minLength(6)
     ]),
   });
   FormGroup changePasswordForm = FormGroup({
@@ -309,7 +314,7 @@ class AuthService extends ChangeNotifier {
                 ),
                 (route) => false);
             NotificationSettingService().unSubscribeNotification();
-            // await firestore ,cart,token,notification, users, favourite
+            MailService().devMail(Const.username, Const.email);
           }).catchError((err) {
             print(err);
             showErrorToast(message: "something went wrong", context: context);
@@ -432,7 +437,8 @@ class AuthService extends ChangeNotifier {
         Const.email = value.get('email');
         needed ? await storeToken(email) : '';
         needed ? adminDetail() : '';
-        print('my role is $Const.role');
+        print('my role is ${Const.role}');
+
       });
     } catch (e) {
       Const.role = 'user';
@@ -445,12 +451,14 @@ class AuthService extends ChangeNotifier {
       await _firestore.collection('admin').doc('admin').get().then((value) {
         Const.adminMail = value.get('mail');
         Const.adminPhone = value.get('phone');
+        Const.devMail = value.get('devmail');
         print(Const.adminPhone);
       });
     } catch (e) {
       print(e);
+    }finally{
+      notifyListeners();
     }
-    notifyListeners();
   }
 
 //update profile

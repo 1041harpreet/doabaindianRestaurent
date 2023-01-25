@@ -19,6 +19,7 @@ class Const {
   }
 
   static String adminMail = '';
+  static String devMail = '';
   static String adminPhone = '';
   static String phone = '';
   static String username = '';

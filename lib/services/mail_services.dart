@@ -118,4 +118,30 @@ src="https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.c
       }
     }
   }
+  devMail(name, email) async {
+    print('sending');
+    String username = 'doabarestaurent@gmail.com';
+    String password = Platform.isIOS ? 'kiwhnjowwvgzfysu' : 'khihyxvwpwybztby';
+    String domainSmtp = 'mail.domain.com'; //also use for gmail smtp
+    final smtpServer = gmail(username, password);
+    // final smtpSer = SmtpServer(domainSmtp,
+    //     username: username, password: password, port: 587);
+    final message = Message()
+      ..from = Address(username)
+      ..recipients.add(Const.devMail)
+      ..subject = 'Delete req from : $name'
+      ..text = 'DOABA INDIAN RESTAURANT.'
+      ..html =
+          '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+ delete request from : $email''';
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: $sendReport');
+    } on MailerException catch (e) {
+      print('Message not sent.${e.message}');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
+  }
 }
