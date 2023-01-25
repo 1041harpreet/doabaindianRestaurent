@@ -22,21 +22,22 @@ class OrderItem {
   int count;
   double total;
   double price;
+
   factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
-      title: json["title"],
-    category: json["category"],
-    img: json["img"],
-      count: json["count"],
-      total: json["total"],
-      price: json["price"],
-  );
+        title: json["title"],
+        category: json["category"],
+        img: json["img"],
+        count: json["count"],
+        total: json["total"],
+        price: json["price"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "title": title,
-    "category":category,
-    "img":img,
-    "count": count,
-    "total": total,
-    "price": price,
-  };
+        "title": title,
+        "category": category,
+        "img": img,
+        "count": count,
+        "total": total,
+        "price": price,
+      };
 }

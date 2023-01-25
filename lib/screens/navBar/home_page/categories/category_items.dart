@@ -1,34 +1,31 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/category_provider.dart';
 
-import '../../../../widgets/category_item.dart';
-import '../../../../widgets/shimmer.dart';
-import '../product_details_view.dart';
 import 'builder.dart';
+
 class CategoryItems extends ConsumerStatefulWidget {
   String name;
   int index;
-   CategoryItems({Key? key,required this.name,required this.index}) : super(key: key);
+
+  CategoryItems({Key? key, required this.name, required this.index})
+      : super(key: key);
 
   @override
   ConsumerState<CategoryItems> createState() => _CategoryItemsState();
 }
 
 class _CategoryItemsState extends ConsumerState<CategoryItems> {
-
-
-@override
+  @override
   void initState() {
-  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    ref.watch(categoryProvider).getsubcategory(widget.name);
-  });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.watch(categoryProvider).getsubcategory(widget.name);
+    });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final cprovider = ref.watch(categoryProvider);
@@ -75,33 +72,29 @@ class _CategoryItemsState extends ConsumerState<CategoryItems> {
             child: Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 5.0, // soften the shadow
-                        spreadRadius: -1.0, //extend the shadow
-                        offset: Offset(
-                          -2.0, // Move to right 10  horizontally
-                          2.0, // Move to bottom 5 Vertically
-                        ),
-                      )
-                    ],
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25.0),
-                      topRight: Radius.circular(25.0),
-                    ),
+                height: double.infinity,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 5.0, // soften the shadow
+                      spreadRadius: -1.0, //extend the shadow
+                      offset: Offset(
+                        -2.0, // Move to right 10  horizontally
+                        2.0, // Move to bottom 5 Vertically
+                      ),
+                    )
+                  ],
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25.0),
+                    topRight: Radius.circular(25.0),
                   ),
-                  child:
-                    listBuilder(
-
-                        wsize,
-                        hsize,
-                        cprovider,widget.name,context),
-                  ),
+                ),
+                child:
+                    listBuilder(wsize, hsize, cprovider, widget.name, context),
+              ),
             ),
           ),
         ]),

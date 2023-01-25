@@ -4,14 +4,14 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
-import 'package:restaurent.app/screens/navBar/cart_Page/cart_page.dart';
+import 'package:restaurent.app/provider/home_provider.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/buffet_page.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/gallery.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/main_setting_page.dart';
 
 import '../../../provider/nav_bar_provider.dart';
 import 'aboutus_page.dart';
-import 'my_profile.dart';
+import 'my_Profile_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -20,6 +20,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authprovider = ref.watch(authProvider);
     final navprovider = ref.watch(NavBarProvider);
+    final homeprovider = ref.watch(homeProvider);
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     return SafeArea(
@@ -33,7 +34,7 @@ class ProfileScreen extends ConsumerWidget {
         body: SingleChildScrollView(
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             orderHeader(wsize, hsize),
-            optionListView(authprovider, context)
+            optionListView(authprovider, context, homeprovider)
           ]),
         ),
       ),
@@ -41,7 +42,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-Widget optionListView(authprovider, context) {
+Widget optionListView(authprovider, context, homeprovider) {
   return Container(
     child: ListView(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
@@ -51,15 +52,16 @@ Widget optionListView(authprovider, context) {
         _listItem(
             onClick: () {
               print(authprovider.phone);
-              authprovider.updateProfile.patchValue({
+              authprovider.myProfile.patchValue({
                 "username": authprovider.username,
                 "email": authprovider.user.email,
                 "phone": authprovider.phone,
+                "img": authprovider.img
               });
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MyProfile(),
+                    builder: (context) => MyProfile(),
                   ));
             },
             text: 'My Profile',
@@ -68,7 +70,11 @@ Widget optionListView(authprovider, context) {
         _separator(),
         _listItem(
             onClick: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AboutUsPage(),));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AboutUsPage(),
+                  ));
             },
             text: "About Us",
             icon: const Icon(
@@ -76,28 +82,46 @@ Widget optionListView(authprovider, context) {
               color: Colors.black,
             )),
         _separator(),
-        _listItem(onClick: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => BuffetPage(),));
-        },
+        _listItem(
+            onClick: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BuffetPage(),
+                  ));
+            },
             text: 'Buffet',
-            icon: const Icon(Icons.food_bank, ),
+            icon: const Icon(
+              Icons.food_bank,
+            ),
             showArrow: true),
         _separator(),
-        _listItem(onClick: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => GalleryPage(),));
-
-        },
-            text: 'Gallery', icon: const Iconify(Bx.image), showArrow: true),
+        _listItem(
+            onClick: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GalleryPage(),
+                  ));
+            },
+            text: 'Gallery',
+            icon: const Iconify(Bx.image),
+            showArrow: true),
         _separator(),
         _listItem(
             onClick: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage(),));
-
-            }, text: 'Settings', icon: const Icon(Icons.settings)),
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingPage(),
+                  ));
+            },
+            text: 'Settings',
+            icon: const Icon(Icons.settings)),
         _separator(),
         _listItem(
             onClick: () {
-
+              homeprovider.terms(context);
             },
             text: 'Terms & Conditions',
             icon: const Icon(Icons.assignment)),
@@ -161,7 +185,6 @@ Widget orderHeader(wsize, hsize) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-
         SizedBox(
           height: hsize * 0.01,
         ),
@@ -169,7 +192,7 @@ Widget orderHeader(wsize, hsize) {
           padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
           child: Row(
             children: [
-               Icon(
+              Icon(
                 Icons.email,
                 color: AppConfig.primaryColor,
               ),
@@ -184,7 +207,7 @@ Widget orderHeader(wsize, hsize) {
           padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
           child: Row(
             children: [
-               Icon(
+              Icon(
                 Icons.phone,
                 color: AppConfig.primaryColor,
               ),

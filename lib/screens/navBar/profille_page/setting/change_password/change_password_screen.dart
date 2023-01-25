@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent.app/provider/nav_bar_provider.dart';
 
 import '../../../../../config/config.dart';
 import '../../../../../provider/auth_provider.dart';
 import '../../../../../widgets/toast_service.dart';
 import '../../../../auth/sign_up_screen.dart';
-
 
 class ChangePasswordScreen extends ConsumerWidget {
   const ChangePasswordScreen({Key? key}) : super(key: key);
@@ -16,6 +15,7 @@ class ChangePasswordScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authprovider = ref.watch(authProvider);
+    final navprovider = ref.watch(NavBarProvider);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -53,7 +53,7 @@ class ChangePasswordScreen extends ConsumerWidget {
             //page content here
             Expanded(
               flex: 9,
-              child: buildCard(size, authprovider, context),
+              child: buildCard(size, authprovider, context, navprovider),
             ),
           ],
         ),
@@ -61,7 +61,7 @@ class ChangePasswordScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildCard(Size size, authprovider, context) {
+  Widget buildCard(Size size, authprovider, context, navprovider) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -97,54 +97,68 @@ class ChangePasswordScreen extends ConsumerWidget {
                 height: size.height * 0.05,
               ),
               // //email & password section
-              textfieldbtn(size, 'Current Password', 'current', {
-                ValidationMessage.required: (error) =>
-                "Current password must not be empty",
-              }),
+              textfieldbtn(
+                  size,
+                  'Current Password',
+                  'current',
+                  {
+                    ValidationMessage.required: (error) =>
+                        "Current password must not be empty",
+                  },
+                  false),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              textfieldbtn(size, 'New Password', 'new', {
-                ValidationMessage.required: (error) =>
-                "New password must not be empty",
-                ValidationMessage.minLength: (error) =>
-                "Password length must be greater than 6.",
-
-              }),
+              passwordField(
+                  size,
+                  'New Password',
+                  'new',
+                  {
+                    ValidationMessage.required: (error) =>
+                        "New password must not be empty",
+                    ValidationMessage.minLength: (error) =>
+                        "Password length must be greater than 6.",
+                  },
+                  navprovider),
+              // textfieldbtn(
+              //     size,
+              //     'New Password',
+              //     'new',
+              //     {
+              //       ValidationMessage.required: (error) =>
+              //           "New password must not be empty",
+              //       ValidationMessage.minLength: (error) =>
+              //           "Password length must be greater than 6.",
+              //     },
+              //     true),
               SizedBox(
                 height: size.height * 0.02,
               ),
               authprovider.changePasswordLoading == true
                   ? loadingButton(size)
-                  : Button(
-                  size, "Change Password", Colors.white, AppConfig.primaryColor,
-                      () async {
-                    if (authprovider.changePasswordForm.valid) {
-                     await authprovider.changePassword(
-                          authprovider.changePasswordForm.control('current').value,
-                          authprovider.changePasswordForm.control('new').value,
-                          context);
-
-                    } else {
-                      print('invalid');
-                      authprovider.changePasswordForm.markAllAsTouched();
-                      showErrorToast(
-                          message: 'fill the details first', context: context);
-                    }
-                  }),
-
-
-
-
+                  : Button(size, "Change Password", Colors.white,
+                      AppConfig.primaryColor, () async {
+                      if (authprovider.changePasswordForm.valid) {
+                        await authprovider.changePassword(
+                            authprovider.changePasswordForm
+                                .control('current')
+                                .value,
+                            authprovider.changePasswordForm
+                                .control('new')
+                                .value,
+                            context);
+                      } else {
+                        print('invalid');
+                        authprovider.changePasswordForm.markAllAsTouched();
+                        showErrorToast(
+                            message: 'fill the details first',
+                            context: context);
+                      }
+                    }),
             ],
           ),
         ),
       ),
     );
   }
-
-
-
 }
-
-

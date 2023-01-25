@@ -1,12 +1,11 @@
-import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/config/config.dart';
-import 'package:restaurent.app/widgets/category_item.dart';
 import 'package:restaurent.app/screens/navBar/home_page/product_details_view.dart';
+import 'package:restaurent.app/widgets/category_item.dart';
 
 import '../../../../widgets/cart_item.dart';
 import '../../../../widgets/home_item.dart';
@@ -14,8 +13,8 @@ import '../../../../widgets/shimmer.dart';
 import '../../cart_Page/checkout_page.dart';
 import 'category_items.dart';
 
-Widget cartlistBuilder(
-    wsize, hsize, cartprovider, context, checkoutprovider, authprovider) {
+Widget cartlistBuilder(wsize, hsize, cartprovider, context, checkoutprovider,
+    authprovider, categoryprovider) {
   return Padding(
     padding: EdgeInsets.all(wsize * .03),
     child: SizedBox(
@@ -30,9 +29,7 @@ Widget cartlistBuilder(
               },
             )
           : cartprovider.orderItem.isEmpty
-              ? Center(
-                  child: Text("No item here", style: AppConfig.blackTitle),
-                )
+              ? noItemWidget()
               : Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Column(
@@ -45,7 +42,10 @@ Widget cartlistBuilder(
                           itemBuilder: (context, index) {
                             var item = cartprovider.orderItem[index];
                             return GestureDetector(
-                                onTap: () {
+                                onTap: () async {
+                                  categoryprovider.changeCurrent('');
+                                  await categoryprovider.getDropDownItems(
+                                      item.category, item);
                                   Navigator.push(
                                     context,
                                     CupertinoPageRoute(
@@ -328,7 +328,7 @@ Widget largeItem(wsize, hsize, item) {
             ),
             Text(
               item.title,
-              style: TextStyle(
+              style: GoogleFonts.mulish(
                   color: Colors.black,
                   fontSize: wsize * 0.045,
                   fontWeight: FontWeight.bold),

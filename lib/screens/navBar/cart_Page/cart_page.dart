@@ -1,25 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/ant_design.dart';
 import 'package:iconify_flutter/icons/bx.dart';
-import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
-import 'package:restaurent.app/screens/navBar/cart_Page/checkout_page.dart';
+import 'package:restaurent.app/provider/category_provider.dart';
+
 import '../../../provider/check_out_provider.dart';
 import '../../../provider/nav_bar_provider.dart';
-import '../../../services/notification_service/notification.dart';
-import '../../../widgets/cart_item.dart';
-import '../../../widgets/category_item.dart';
-import '../../../widgets/shimmer.dart';
 import '../home_page/categories/builder.dart';
 
 class AddToCart extends ConsumerStatefulWidget {
@@ -32,7 +23,6 @@ class AddToCart extends ConsumerStatefulWidget {
 class _AddToCartState extends ConsumerState<AddToCart> {
   @override
   void initState() {
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.watch(cartProvider).getorderItem();
       ref.watch(cartProvider).getTotal();
@@ -48,6 +38,7 @@ class _AddToCartState extends ConsumerState<AddToCart> {
     final authprovider = ref.watch(authProvider);
     final navprovider = ref.watch(NavBarProvider);
     final checkoutprovider = ref.watch(checkOutProvider);
+    final categoryprovider = ref.watch(categoryProvider);
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     return SafeArea(
@@ -87,8 +78,14 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                   ),
                   child: Column(children: [
                     Expanded(
-                        child: cartlistBuilder(wsize, hsize, cartprovider,
-                            context, checkoutprovider, authprovider)),
+                        child: cartlistBuilder(
+                            wsize,
+                            hsize,
+                            cartprovider,
+                            context,
+                            checkoutprovider,
+                            authprovider,
+                            categoryprovider)),
                   ]),
                 ),
               ),
@@ -112,18 +109,3 @@ Widget header(wsize) {
     )
   ]);
 }
-
-showLoadingDialog() => Get.dialog(
-  barrierDismissible: false,
-  barrierColor: Colors.transparent,
-
-  CupertinoAlertDialog(
-    title: SizedBox(
-      width: 20.0,
-      height: 20.0,
-      child: CircularProgressIndicator(color: AppConfig.primaryColor,
-
-      ),
-    ),
-  ),
-);

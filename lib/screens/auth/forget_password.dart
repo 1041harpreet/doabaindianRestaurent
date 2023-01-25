@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'sign_up_screen.dart';
+
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
 import '../../widgets/toast_service.dart';
+import 'sign_up_screen.dart';
 
 class ForgetPasswordScreen extends ConsumerWidget {
   const ForgetPasswordScreen({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class ForgetPasswordScreen extends ConsumerWidget {
         child: Column(
           children: [
             //to give space from top
-             Expanded(
+            Expanded(
               flex: 1,
               child: Row(children: [
                 Padding(
@@ -105,43 +105,42 @@ class ForgetPasswordScreen extends ConsumerWidget {
                 height: size.height * 0.05,
               ),
               // //email & password section
-              textfieldbtn(size, 'Enter your gmail', 'email', {
-                ValidationMessage.required: (error) =>
-                "The email must not be empty",
-              }),
+              textfieldbtn(
+                  size,
+                  'Enter your gmail',
+                  'email',
+                  {
+                    ValidationMessage.required: (error) =>
+                        "The email must not be empty",
+                  },
+                  false),
               SizedBox(
                 height: size.height * 0.02,
               ),
 
               authprovider.resetload == true
                   ? loadingButton(size)
-                  : Button(
-                  size, "Send", Colors.white, AppConfig.primaryColor,
+                  : Button(size, "Send", Colors.white, AppConfig.primaryColor,
                       () async {
-
-                    if (authprovider.resetPasswordForm.valid) {
-                     await authprovider.resetPassword(authprovider.resetPasswordForm.control('email').value,context);
-
-                    } else {
-                      print('invalid');
-                      authprovider.resetPasswordForm.markAllAsTouched();
-                      showErrorToast(
-                          message: 'fill the email first', context: context);
-                    }
-                  }),
-
-
-
-
+                      if (authprovider.resetPasswordForm.valid) {
+                        await authprovider.resetPassword(
+                            authprovider.resetPasswordForm
+                                .control('email')
+                                .value,
+                            context);
+                      } else {
+                        print('invalid');
+                        authprovider.resetPasswordForm.markAllAsTouched();
+                        showErrorToast(
+                            message: 'fill the email first', context: context);
+                      }
+                    }),
             ],
           ),
         ),
       ),
     );
   }
-
-
-
 }
 
 // Widget richText(
@@ -203,4 +202,3 @@ class ForgetPasswordScreen extends ConsumerWidget {
 //     ),
 //   );
 // }
-

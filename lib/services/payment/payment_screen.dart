@@ -1,14 +1,9 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:restaurent.app/config/const.dart';
-import 'package:restaurent.app/screens/navBar/nav_bar.dart';
-import 'package:restaurent.app/screens/navBar/profille_page/profile_page.dart';
 import 'package:restaurent.app/services/payment/payment_failed_screen.dart';
 import 'package:restaurent.app/services/payment/payment_success_screen.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
@@ -24,10 +19,12 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
   print(subtotal);
   print(total);
   return UsePaypal(
-      sandboxMode: true, //set mode to false
-      clientId: Const().clientID, //change from paypal
-      secretKey: Const().secret, //change from paypal and set return url in paypal
-      returnURL: Platform.isAndroid ?  "com.example.restaurent.app://paypalpay":"com.xstudioz.doaba://paypalpay",
+      sandboxMode: false,
+      clientId: Const().clientID,
+      secretKey: Const().secret,
+      returnURL: Platform.isAndroid
+          ? "com.example.restaurent.app://paypalpay"
+          : "com.xstudioz.doaba://paypalpay",
       cancelURL: "https://samplesite.com/cancel",
       transactions: [
         {
@@ -97,7 +94,6 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
                   'Hey ! Order From ${fullname}',
                   "New order on ${email} of total ${cartprovider.total} is Placed.",
                   checkoutprovider.adminToken);
-
 
               //add on to notification
               notificationprovider.addToNotification(params['paymentId'], email,

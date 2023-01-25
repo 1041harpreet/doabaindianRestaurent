@@ -27,9 +27,11 @@ class OrderService extends ChangeNotifier {
     isPfetching = value;
     notifyListeners();
   }
+
   DocumentSnapshot? lastdocPending;
   bool noPmore = false;
   bool isPfetching = false;
+
   getFirstPendingOrders() async {
     changeloading(true);
 
@@ -41,9 +43,9 @@ class OrderService extends ChangeNotifier {
           .get();
       pendingOrderList =
           ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
-      if(ref.docs.isEmpty){
+      if (ref.docs.isEmpty) {
         print('emtpy');
-      }else {
+      } else {
         lastdocPending = ref.docs.last;
       }
     } catch (e) {
@@ -60,7 +62,7 @@ class OrderService extends ChangeNotifier {
       var ref = await _firestore
           .collection('orders')
           .where('status', isEqualTo: false)
-      // .orderBy('date', descending: true)
+          // .orderBy('date', descending: true)
           .startAfterDocument(lastdoc!)
           .limit(limit)
           .get();
@@ -68,11 +70,12 @@ class OrderService extends ChangeNotifier {
       if (ref.docs.length < limit) {
         changePmore(true);
       }
-      var l = await ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
+      var l =
+          await ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
       pendingOrderList.addAll(l);
       print(pendingOrderList.length);
 
-      lastdocPending= ref.docs.last;
+      lastdocPending = ref.docs.last;
     } catch (e) {
       print(e);
     } finally {
@@ -92,16 +95,17 @@ class OrderService extends ChangeNotifier {
       var ref = await _firestore
           .collection('orders')
           .where('status', isEqualTo: true)
-      // .orderBy('date', descending: true)
+          .orderBy('date', descending: true)
           .limit(limit)
           .get();
       compOrderList =
           ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
-      if(ref.docs.isEmpty){
+      if (ref.docs.isEmpty) {
         print('emtpy');
-      }else {
+      } else {
         lastdoc = ref.docs.last;
-      }    } catch (e) {
+      }
+    } catch (e) {
       print(e.toString());
     } finally {
       changefirstloading(false);
@@ -131,7 +135,7 @@ class OrderService extends ChangeNotifier {
       var ref = await _firestore
           .collection('orders')
           .where('status', isEqualTo: true)
-          // .orderBy('date', descending: true)
+          .orderBy('date', descending: true)
           .startAfterDocument(lastdoc!)
           .limit(limit)
           .get();
@@ -139,9 +143,10 @@ class OrderService extends ChangeNotifier {
       if (ref.docs.length < limit) {
         changemore(true);
       }
-        var l = await ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
-        compOrderList.addAll(l);
-        print(compOrderList.length);
+      var l =
+          await ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
+      compOrderList.addAll(l);
+      print(compOrderList.length);
 
       lastdoc = ref.docs.last;
     } catch (e) {

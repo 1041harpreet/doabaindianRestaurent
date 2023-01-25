@@ -40,7 +40,7 @@ class MyShimmerEffectUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Shimmer.fromColors(
-        baseColor:Colors.grey[300]!,
+        baseColor: Colors.grey[300]!,
         highlightColor: Colors.grey[100]!,
         period: const Duration(seconds: 3),
         child: Container(
@@ -58,9 +58,11 @@ Widget homePageShimmer(context, wsize, hsize) => Column(
       children: [
         Container(
           margin: const EdgeInsets.all(6),
-          width:hsize/6,
+          width: hsize / 6,
           height: hsize / 6,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),border: Border.all(color: Colors.black12)),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              border: Border.all(color: Colors.black12)),
           child: MyShimmerEffectUI.rectangular(height: 50.0, circular: 20.0),
         ),
         SizedBox(
@@ -87,9 +89,7 @@ Widget ImageShimmer(context, wsize, hsize) => Column(
 Widget categoryShimmer(wsize, hsize, context) {
   return Container(
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
-    child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
         padding: const EdgeInsets.all(12.0),
         child: MyShimmerEffectUI.rectangular(
@@ -100,32 +100,30 @@ Widget categoryShimmer(wsize, hsize, context) {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
-            padding:  EdgeInsets.only(left:wsize*0.02,top: wsize*0.05),
+            padding: EdgeInsets.only(left: wsize * 0.02, top: wsize * 0.05),
             child: MyShimmerEffectUI.rectangular(
                 height: wsize * 0.048, width: wsize * 0.4, circular: 0.0),
           ),
           Padding(
-            padding:  EdgeInsets.only(left:wsize*0.02,top: wsize*0.015),
+            padding: EdgeInsets.only(left: wsize * 0.02, top: wsize * 0.015),
             child: MyShimmerEffectUI.rectangular(
                 height: wsize * 0.045, width: wsize * 0.35, circular: 0.0),
           ),
-
         ],
       ),
-          Padding(
-            padding:  EdgeInsets.only(left:wsize*0.05,top: wsize*0.1),
-            child: MyShimmerEffectUI.rectangular(
-                height: wsize * 0.1, width: wsize * 0.1, circular: 5.0),
-          )
+      Padding(
+        padding: EdgeInsets.only(left: wsize * 0.05, top: wsize * 0.1),
+        child: MyShimmerEffectUI.rectangular(
+            height: wsize * 0.1, width: wsize * 0.1, circular: 5.0),
+      )
     ]),
   );
-
 }
-Widget checkoutshimmer(context,wsize)
-{
+
+Widget checkoutshimmer(context, wsize) {
   return ListTile(
-    leading:
-    MyShimmerEffectUI.rectangular(height: 150, width:wsize, circular: 10.0),
+    leading: MyShimmerEffectUI.rectangular(
+        height: 150, width: wsize, circular: 10.0),
     title: Align(
       alignment: Alignment.centerLeft,
       child: MyShimmerEffectUI.rectangular(
@@ -140,10 +138,12 @@ Widget checkoutshimmer(context,wsize)
   );
 }
 
-Widget carsoulShimmer(context,wsize)
-{
-  return MyShimmerEffectUI.rectangular(height: 200, width:wsize*0.9, circular: 10.0);
+Widget carsoulShimmer(context, wsize) {
+  return MyShimmerEffectUI.rectangular(
+      height: 200, width: wsize * 0.9, circular: 10.0);
 }
-Widget tabShimmer(){
-  return MyShimmerEffectUI.rectangular(height: 10.0,width: 20.0, circular: 2.0);
+
+Widget tabShimmer() {
+  return MyShimmerEffectUI.rectangular(
+      height: 30.0, width: 50.0, circular: 2.0);
 }

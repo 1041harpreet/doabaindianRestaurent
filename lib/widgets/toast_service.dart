@@ -17,7 +17,7 @@ showErrorToast({message,context}) {
   );
 }
 
-showSuccessToast({message,context}) {
+showSuccessToast({message, context}) {
   showToast(
     message,
     context: context,

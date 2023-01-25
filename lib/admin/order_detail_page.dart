@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent.app/admin/provider/order_provider.dart';
 import 'package:restaurent.app/config/config.dart';
-import 'package:restaurent.app/provider/category_provider.dart';
 import 'package:restaurent.app/screens/auth/sign_up_screen.dart';
 
 class OrderDetail extends ConsumerStatefulWidget {
@@ -93,24 +92,23 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
               row("Total : ", '\$${widget.orderList[widget.index].total}'),
               row("Status : ", '${widget.orderList[widget.index].status}'),
               row("Note : ", '${widget.orderList[widget.index].note}'),
-
               const Divider(),
               if (widget.orderList[widget.index].status == false)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: 
-                  orderprovider.markloading ==true ? loadingButton(MediaQuery.of(context).size):
-                  Button(MediaQuery.of(context).size, "Mark as Complete",
-                      Colors.black, AppConfig.primaryColor, () async {
-                    await orderprovider.markAsComplete(
-                        widget.orderList[widget.index].date +
-                            widget.orderList[widget.index].email,
-                        context);
-                    Navigator.pop(context);
-                   await orderprovider.getFirstPendingOrders();
-                    await orderprovider.changePmore(false);
-                    print('mark as complete');
-                  }),
+                  child: orderprovider.markloading == true
+                      ? loadingButton(MediaQuery.of(context).size)
+                      : Button(MediaQuery.of(context).size, "Mark as Complete",
+                          Colors.black, AppConfig.primaryColor, () async {
+                          await orderprovider.markAsComplete(
+                              widget.orderList[widget.index].date +
+                                  widget.orderList[widget.index].email,
+                              context);
+                          Navigator.pop(context);
+                          await orderprovider.getFirstPendingOrders();
+                          await orderprovider.changePmore(false);
+                          print('mark as complete');
+                        }),
                 ),
               const SizedBox(
                 height: 10.0,
@@ -118,17 +116,17 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
               if (widget.orderList[widget.index].status == true)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:
-                  orderprovider.deleteloading ==true ? loadingButton(MediaQuery.of(context).size):
-                  Button(MediaQuery.of(context).size, "Delete",
-                      Colors.black, AppConfig.primaryColor, () async {
-                    await orderprovider.deleteOrder(
-                        widget.orderList[widget.index].date +
-                            widget.orderList[widget.index].email,
-                        context);
-                    Navigator.pop(context);
-                    orderprovider.getFirstCompOrders();
-                  }),
+                  child: orderprovider.deleteloading == true
+                      ? loadingButton(MediaQuery.of(context).size)
+                      : Button(MediaQuery.of(context).size, "Delete",
+                          Colors.black, AppConfig.primaryColor, () async {
+                          await orderprovider.deleteOrder(
+                              widget.orderList[widget.index].date +
+                                  widget.orderList[widget.index].email,
+                              context);
+                          Navigator.pop(context);
+                          orderprovider.getFirstCompOrders();
+                        }),
                 )
             ]),
       ),

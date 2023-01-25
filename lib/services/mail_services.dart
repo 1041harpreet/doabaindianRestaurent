@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 
-class MailService{
-  userMail(email,name,date,total,orderid) async {
+import '../config/const.dart';
+
+class MailService {
+  userMail(email, name, date, total, orderid) async {
     print('sending');
     String username = 'doabarestaurent@gmail.com';
-    String password =  Platform.isIOS ? 'kiwhnjowwvgzfysu' : 'khihyxvwpwybztby';
+    String password = Platform.isIOS ? 'kiwhnjowwvgzfysu' : 'khihyxvwpwybztby';
     String domainSmtp = 'mail.domain.com'; //also use for gmail smtp
     final smtpServer = gmail(username, password);
     // final smtpSer = SmtpServer(domainSmtp,
@@ -18,7 +20,7 @@ class MailService{
       ..subject = 'Order placed'
       ..text = 'DOABA INDIAN RESTAURANT.'
       ..html =
-      '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
  <h1>Hi $name,</h1>
 <p>Thanks for using DOABA INDIAN RESTAURANT. Your order of Total $total on $date of OrderID $orderid</p>
@@ -60,7 +62,8 @@ src="https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.c
       }
     }
   }
-  adminMail(name,date,total,orderid) async {
+
+  adminMail(name, date, total, orderid) async {
     print('sending');
     String username = 'doabarestaurent@gmail.com';
     String password = Platform.isIOS ? 'kiwhnjowwvgzfysu' : 'khihyxvwpwybztby';
@@ -70,11 +73,11 @@ src="https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.c
     //     username: username, password: password, port: 587);
     final message = Message()
       ..from = Address(username)
-      ..recipients.add('doabarestaurent@gmail.com')
-
+      ..recipients.add(Const.adminMail)
       ..subject = 'New Order from : $name'
       ..text = 'DOABA INDIAN RESTAURANT.'
-      ..html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+      ..html =
+          '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
  <h1>Hi </h1>
 <p>New Order for DOABA INDIAN RESTAURANT. Your order of Total $total on $date of OrderID $orderid</p>
@@ -115,5 +118,4 @@ src="https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.c
       }
     }
   }
-
 }

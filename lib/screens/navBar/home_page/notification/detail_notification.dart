@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
 
 import '../../../../config/config.dart';
-import '../../../auth/sign_up_screen.dart';
 
-Widget notificationItem(context,notificationprovider,index){
+Widget notificationItem(context, notificationprovider, index) {
   return Material(
     color: AppConfig.secmainColor,
     child: InkWell(
       onTap: () {
-        detail(context,notificationprovider,index);
+        detail(context, notificationprovider, index);
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -23,9 +21,11 @@ Widget notificationItem(context,notificationprovider,index){
             CircleAvatar(
               backgroundColor: AppConfig.primaryColor,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.check,color: AppConfig.secmainColor,)
-              ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.check,
+                    color: AppConfig.secmainColor,
+                  )),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -33,9 +33,9 @@ Widget notificationItem(context,notificationprovider,index){
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
-                children:  [
+                children: [
                   Text(
-                    "Your Order is ${notificationprovider.notificationList[index].status ? "Confirmed" : "Canceled"}" ,
+                    "Your Order is ${notificationprovider.notificationList[index].status ? "Confirmed" : "Canceled"}",
                     style: TextStyle(
                       color: Color(0xffa58038),
                       fontWeight: FontWeight.bold,
@@ -56,7 +56,7 @@ Widget notificationItem(context,notificationprovider,index){
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color:AppConfig.primaryColor,
+                color: AppConfig.primaryColor,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.chevron_right, color: Colors.white),
@@ -67,11 +67,12 @@ Widget notificationItem(context,notificationprovider,index){
     ),
   );
 }
-Future detail(context,np,index){
-  bool status=true;
-  final size=MediaQuery.of(context).size;
+
+Future detail(context, np, index) {
+  bool status = true;
+  final size = MediaQuery.of(context).size;
   return showModalBottomSheet(
-    backgroundColor: AppConfig.secmainColor,
+      backgroundColor: AppConfig.secmainColor,
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -87,23 +88,28 @@ Future detail(context,np,index){
               child: Text(
                 'Details',
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black
-                ),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
               ),
             ),
-           status==false ?
-            Column(children: [
-            row("CANCEL ID","2345678934"),
-            row("STATUS","FAILED"),],)
-               : Column(children: [
-              row("ORDER ID"," ${np.notificationList[index].orderID}"),
-              row("EMAIL ID"," ${np.notificationList[index].email}"),
-              row("DATE"," ${np.notificationList[index].date}"),
-              row("Tax"," \$${np.notificationList[index].tax}"),
-              row("TOTAL"," \$${np.notificationList[index].total}"),
-              row("STATUS","CONFIRMED"),],),
+            status == false
+                ? Column(
+                    children: [
+                      row("CANCEL ID", "2345678934"),
+                      row("STATUS", "FAILED"),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      row("ORDER ID", " ${np.notificationList[index].orderID}"),
+                      row("EMAIL ID", " ${np.notificationList[index].email}"),
+                      row("DATE", " ${np.notificationList[index].date}"),
+                      row("Tax", " \$${np.notificationList[index].tax}"),
+                      row("TOTAL", " \$${np.notificationList[index].total}"),
+                      row("STATUS", "CONFIRMED"),
+                    ],
+                  ),
 
             // Padding(
             //   padding: const EdgeInsets.all(8.0),
@@ -114,13 +120,21 @@ Future detail(context,np,index){
       });
 }
 
-Widget row(key,value){
+Widget row(key, value) {
   return Padding(
-    padding: const EdgeInsets.only(top: 8.0,left: 16.0),
-    child: Row(children: [
-      Text("${key} :",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 17.0),),
-      Text("${value} ",style: AppConfig.greytext,),
-
-    ],),
+    padding: const EdgeInsets.only(top: 8.0, left: 16.0),
+    child: Row(
+      children: [
+        Text(
+          "${key} :",
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17.0),
+        ),
+        Text(
+          "${value} ",
+          style: AppConfig.greytext,
+        ),
+      ],
+    ),
   );
 }

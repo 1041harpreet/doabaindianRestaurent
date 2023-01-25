@@ -1,19 +1,14 @@
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/config/const.dart';
-import 'package:restaurent.app/widgets/toast_service.dart';
-import '../../main.dart';
-import '../../screens/navBar/home_page/notification/main_notiification_page.dart';
 
 class NotificationController extends ChangeNotifier {
-
   static final NotificationController _instance =
-  NotificationController._internal();
+      NotificationController._internal();
+
   factory NotificationController() {
     print('notification working');
     print(AwesomeNotifications().getGlobalBadgeCounter());
@@ -21,15 +16,17 @@ class NotificationController extends ChangeNotifier {
   }
 
   NotificationController._internal();
-  final String _firebaseToken = '';
-  String get firebaseToken => _firebaseToken;
 
+  final String _firebaseToken = '';
+
+  String get firebaseToken => _firebaseToken;
 
   ReceivedAction? initialAction;
 
   //  INITIALIZATION METHODS
   static Future<void> initializeLocalNotifications(
       {required bool debug}) async {
+    // AwesomeNotifications().requestPermissionToSendNotifications()
     await AwesomeNotifications().initialize(
         'resource://drawable/res_app_icon',
         [
@@ -69,24 +66,22 @@ class NotificationController extends ChangeNotifier {
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
     print('on action received ');
-
   }
 
-
   //    REQUEST NOTIFICATION PERMISSIONS
-    displayNotificationRationale(context) async {
+  displayNotificationRationale(context) async {
     return showDialog(
         context: context,
         builder: (BuildContext ctx) {
-          return AlertDialog(backgroundColor: AppConfig.secmainColor,
-            title: Text('Get Notified!',
-                style: AppConfig.blacktext),
+          return AlertDialog(
+            backgroundColor: AppConfig.secmainColor,
+            title: Text('Get Notified!', style: AppConfig.blacktext),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children:  [
+              children: [
                 SizedBox(height: 20),
-                Text(
-                    'Allow Doaba Indian Restaurant to send you notifications!',style: AppConfig.blacktext),
+                Text('Allow Doaba Indian Restaurant to send you notifications!',
+                    style: AppConfig.blacktext),
               ],
             ),
             actions: [
@@ -103,7 +98,8 @@ class NotificationController extends ChangeNotifier {
                   )),
               TextButton(
                   onPressed: () async {
-                    await AwesomeNotifications().requestPermissionToSendNotifications();
+                    await AwesomeNotifications()
+                        .requestPermissionToSendNotifications();
                     Navigator.of(ctx).pop();
                   },
                   child: Text(
@@ -120,22 +116,20 @@ class NotificationController extends ChangeNotifier {
 
   // LOCAL NOTIFICATION CREATION METHODS
 
-
   static Future<void> resetBadge() async {
     await AwesomeNotifications().resetGlobalBadge();
   }
 
   //  REMOTE TOKEN REQUESTS
-  String token='';
-   Future<String> requestFirebaseToken() async {
+  String token = '';
+
+  Future<String> requestFirebaseToken() async {
     if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
-      print('fcm available');
       try {
         await AwesomeNotificationsFcm().subscribeToTopic('all');
-        token=await AwesomeNotificationsFcm().requestFirebaseAppToken();
-        print('token is '+token);
+        token = await AwesomeNotificationsFcm().requestFirebaseAppToken();
+        print('token is ' + token);
         return token;
-
       } catch (exception) {
         debugPrint('$exception');
       }
@@ -144,34 +138,30 @@ class NotificationController extends ChangeNotifier {
     }
     return '';
   }
+
   var postUrl = "https://fcm.googleapis.com/fcm/send";
-  Future<void> createNewNotification(title,body,String token) async {
 
-
-    final data ={
-      "to" : token,
+  Future<void> createNewNotification(title, body, String token) async {
+    final data = {
+      "to": token,
       "mutable_content": true,
       "priority": "high",
-      "notification": {
-        "badge": 50,
-        "title": title,
-        "body": body
-      },
-      "data" : {
+      "notification": {"badge": 50, "title": title, "body": body},
+      "data": {
         "content": {
           "id": uniqueId(),
           "badge": 50,
           "channelKey": "doaba channel",
           "displayOnForeground": true,
           "notificationLayout": "BigPicture",
-          "largeIcon": "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
-          "bigPicture": "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
+          "largeIcon":
+              "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
+          "bigPicture":
+              "https://firebasestorage.googleapis.com/v0/b/doabaindianrestaurent.appspot.com/o/logo%2Flogo-web.png?alt=media&token=32047992-37d9-40e7-8100-b25b02790d69",
           "showWhen": true,
           "autoDismissible": true,
           "privacy": "Private",
-          "payload": {
-            "secret": "Awesome Notifications Rocks!"
-          }
+          "payload": {"secret": "Awesome Notifications Rocks!"}
         },
         "actionButtons": [
           {
@@ -207,8 +197,8 @@ class NotificationController extends ChangeNotifier {
       print('exception $e');
     }
   }
-
 }
+
 int uniqueId() {
   return DateTime.now().millisecondsSinceEpoch.remainder(100000);
 }

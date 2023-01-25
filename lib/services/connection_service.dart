@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -8,28 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-import '../widgets/toast_service.dart';
-
-class NetworkService extends ChangeNotifier{
+class NetworkService extends ChangeNotifier {
   late StreamSubscription subscription;
   bool deviceConnected = false;
   bool isAlertSet = false;
-checkconnection()async{
-  var result =await Connectivity().checkConnectivity();
-  if(result ==ConnectivityResult.none){
-    deviceConnected=false;
-    print('no internet');
-    showDialogBox();
-    notifyListeners();
-  }else{
-    deviceConnected=true;
-    notifyListeners();
-    return;
 
-
+  checkconnection() async {
+    var result = await Connectivity().checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      deviceConnected = false;
+      print('no internet');
+      showDialogBox();
+      notifyListeners();
+    } else {
+      deviceConnected = true;
+      notifyListeners();
+      return;
+    }
+    print(deviceConnected);
   }
-  print(deviceConnected);
-}
+
   stream(context) {
     subscription = Connectivity().onConnectivityChanged.listen(
       (ConnectivityResult result) async {
@@ -39,23 +36,24 @@ checkconnection()async{
     );
   }
 
-  showDialogBox() => Get.dialog(barrierDismissible: false,
-    CupertinoAlertDialog(
-      title: const Text('No Connection'),
-      content: const Text('Please check your internet connectivity'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () async {
-            Get.back();
-            checkconnection();
-          },
-          child: const Text('Retry'),
+  showDialogBox() => Get.dialog(
+        barrierDismissible: false,
+        CupertinoAlertDialog(
+          title: const Text('No Connection'),
+          content: const Text('Please check your internet connectivity'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Get.back();
+                checkconnection();
+              },
+              child: const Text('Retry'),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }
 
-final networkProvider=ChangeNotifierProvider((ref) {
+final networkProvider = ChangeNotifierProvider((ref) {
   return NetworkService();
 });

@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 List<AdminOrderItem> adminOrderDataFromJson(String str) =>
-    List<AdminOrderItem>.from(json.decode(str).map((x) => AdminOrderItem.fromJson(x)));
+    List<AdminOrderItem>.from(
+        json.decode(str).map((x) => AdminOrderItem.fromJson(x)));
 
 String adminOrderDataToJson(List<AdminOrderItem> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -41,20 +42,21 @@ class AdminOrderItem {
       tax: json["tax"]);
 
   Map<String, dynamic> toJson() => {
-    "email": email,
-    "total": total,
-    "date": date,
-    "name": name,
-    "orderID": orderID,
-    "note": note,
-    "tax": tax,
-    "status": status,
-    "phone": phone,
-  };
+        "email": email,
+        "total": total,
+        "date": date,
+        "name": name,
+        "orderID": orderID,
+        "note": note,
+        "tax": tax,
+        "status": status,
+        "phone": phone,
+      };
 }
 
 List<AdminOrderItemDetails> adminOrderDetailDataFromJson(String str) =>
-    List<AdminOrderItemDetails>.from(json.decode(str).map((x) => AdminOrderItemDetails.fromJson(x)));
+    List<AdminOrderItemDetails>.from(
+        json.decode(str).map((x) => AdminOrderItemDetails.fromJson(x)));
 
 String adminOrderDetailDataToJson(List<AdminOrderItemDetails> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -70,17 +72,16 @@ class AdminOrderItemDetails {
   var total;
   int count;
 
-
-  factory AdminOrderItemDetails.fromJson(Map<String, dynamic> json) => AdminOrderItemDetails(
-      title: json["title"],
-      total: json["total"],
-      count: json["count"],
+  factory AdminOrderItemDetails.fromJson(Map<String, dynamic> json) =>
+      AdminOrderItemDetails(
+        title: json["title"],
+        total: json["total"],
+        count: json["count"],
       );
 
   Map<String, dynamic> toJson() => {
-    "title": title,
-    "total": total,
-    "count": count,
-
-  };
+        "title": title,
+        "total": total,
+        "count": count,
+      };
 }

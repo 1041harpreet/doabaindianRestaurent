@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,17 +5,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
-import 'package:restaurent.app/services/payment/payment_failed_screen.dart';
 
 import '../../../provider/check_out_provider.dart';
 import '../../../provider/notification_provider.dart';
-import '../../../services/mail_services.dart';
-import '../../../services/notification_service/notification.dart';
 import '../../../services/payment/payment_screen.dart';
-import '../../../services/payment/payment_success_screen.dart';
 import '../../../services/round_off.dart';
 import '../../../widgets/toast_service.dart';
-import '../../auth/splash_screen.dart';
 
 class CheckoutPage extends ConsumerStatefulWidget {
   const CheckoutPage({Key? key}) : super(key: key);
@@ -27,6 +21,7 @@ class CheckoutPage extends ConsumerStatefulWidget {
 
 class _CheckoutPageState extends ConsumerState<CheckoutPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -44,17 +39,18 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     final size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
-          appBar: AppBar(backgroundColor: AppConfig.primaryColor,
-          title: Text(
-            'Checkout',
-            style: GoogleFonts.inter(
-              fontSize: 24.0,
-              color: const Color(0xFF15224F),
-              fontWeight: FontWeight.w600,
+            appBar: AppBar(
+              backgroundColor: AppConfig.primaryColor,
+              title: Text(
+                'Checkout',
+                style: GoogleFonts.inter(
+                  fontSize: 24.0,
+                  color: const Color(0xFF15224F),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
-          ),
-          ),
-          key: _scaffoldKey,
+            key: _scaffoldKey,
             backgroundColor: AppConfig.secmainColor,
             body: ReactiveForm(
               formGroup: checkoutprovider.checkoutForm,
@@ -121,7 +117,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
+                            padding: const EdgeInsets.only(left: 8.0, top: 4.0),
                             child: Text(
                               'United States (US)',
                               style: GoogleFonts.inter(
@@ -240,7 +236,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text("\$${cartprovider.orderItem[index].total}",
+                                    child: Text(
+                                      "\$${cartprovider.orderItem[index].total.toStringAsFixed(2)}",
                                       style: AppConfig.blackTitle,
                                     ),
                                   )
@@ -313,31 +310,38 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                         print('checkout start ');
 
                         if (checkoutprovider.checkoutForm.valid) {
+                          //Navigator.push(context, MaterialPageRoute(builder: (context) => BraintreePayment(),));
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => makePayment(cartprovider,checkoutprovider,parentContext,
-                                    roundDouble(cartprovider.total, 2), cartprovider.tax, {
-                                      "items": [
-                                        for (var i = 0;
-                                        i < cartprovider.orderItem.length;
-                                        i++)
-                                          {
-                                            "name":
-                                            cartprovider.orderItem[i].title,
-                                            "quantity":
-                                            cartprovider.orderItem[i].count,
-                                            "price": roundDouble(
-                                                cartprovider.orderItem[i].price,
-                                                2),
-                                            "currency": "USD"
-                                          }
-                                      ],
-                                    },notificationprovider, _scaffoldKey.currentContext),
-                              ),);
-                        }
-                        else {
-
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => makePayment(
+                                  cartprovider,
+                                  checkoutprovider,
+                                  parentContext,
+                                  roundDouble(cartprovider.total, 2),
+                                  cartprovider.tax,
+                                  {
+                                    "items": [
+                                      for (var i = 0;
+                                          i < cartprovider.orderItem.length;
+                                          i++)
+                                        {
+                                          "name":
+                                              cartprovider.orderItem[i].title,
+                                          "quantity":
+                                              cartprovider.orderItem[i].count,
+                                          "price": roundDouble(
+                                              cartprovider.orderItem[i].price,
+                                              2),
+                                          "currency": "USD"
+                                        }
+                                    ],
+                                  },
+                                  notificationprovider,
+                                  _scaffoldKey.currentContext),
+                            ),
+                          );
+                        } else {
                           showErrorToast(
                               message: 'fill the detail first',
                               context: context);
