@@ -327,19 +327,19 @@ class AuthService extends ChangeNotifier {
           print(value);
         });
       }
+      changeDeleteLoad(false);
     }
     catch (e) {
       print(e);
+      changeDeleteLoad(false);
       showErrorToast(context: context, message: "Something went wrong");
     } finally {
-      changeDeleteLoad(false);
       notifyListeners();
     }
   }
 
 //change password
   bool changePasswordLoading = false;
-
   changePLoading(value) {
     changePasswordLoading = value;
     notifyListeners();
@@ -347,7 +347,6 @@ class AuthService extends ChangeNotifier {
 
   changePassword(String currentPassword, String newPassword, context) async {
     changePLoading(true);
-    print("loading " + changePasswordLoading.toString());
     final user = FirebaseAuth.instance.currentUser;
     try {
       if (user == null) {
@@ -372,9 +371,10 @@ class AuthService extends ChangeNotifier {
           showErrorToast(message: "something went wrong", context: context);
         });
       }
+      changePLoading(false);
+
     } catch (e) {
       print(e.toString());
-    } finally {
       changePLoading(false);
     }
   }
@@ -460,15 +460,20 @@ class AuthService extends ChangeNotifier {
 
 //update profile
   updateProfileDetails(context,email,username,phone,img)async{
-    await _firestore.collection('users').doc(email).update({
-      "username":username,
-      "phone":phone,
-      "img":img
-    }).then((value) {
-      showSuccessToast(context: context,message: "Profile updated successfully");
-      getUserInfo(email,false);
-      // notifyListeners();
-    });
+    try{
+      await _firestore.collection('users').doc(email).update({
+        "username":username,
+        "phone":phone,
+        "img":img
+      }).then((value) {
+        showSuccessToast(context: context,message: "Profile updated successfully");
+        getUserInfo(email,false);
+        // notifyListeners();
+      });
+    }catch(e){
+      print(e);
+    }
+
   }
 
   File? imageFile;
@@ -537,6 +542,5 @@ class AuthService extends ChangeNotifier {
 
 final authProvider = ChangeNotifierProvider((ref) {
   var state = AuthService();
-  print("user is ${state.user}");
   return state;
 });

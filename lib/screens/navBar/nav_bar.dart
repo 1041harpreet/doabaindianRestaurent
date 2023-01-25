@@ -12,25 +12,24 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import '../../services/notification_service/notification.dart';
 
 class NavBar extends ConsumerStatefulWidget {
-
-   const NavBar({Key? key}) : super(key: key);
+  const NavBar({Key? key}) : super(key: key);
 
   @override
   ConsumerState<NavBar> createState() => _NavBarState();
 }
 
 class _NavBarState extends ConsumerState<NavBar> {
-
-@override
+  @override
   void initState() {
-  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    if (!isAllowed) {
-      print('not allowed');
-      NotificationController().displayNotificationRationale(context);
-    }
-  });
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        print('not allowed');
+        NotificationController().displayNotificationRationale(context);
+      }
+    });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final navbarprovider = ref.watch(NavBarProvider);
@@ -51,15 +50,25 @@ class _NavBarState extends ConsumerState<NavBar> {
         },
         items: [
           const BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined,size: 30.0), label: "Home",tooltip: "Home Page"),
+              icon: Icon(Icons.home_outlined, size: 30.0),
+              label: "Home",
+              tooltip: "Home Page"),
           BottomNavigationBarItem(
-            icon: Iconify(Carbon.favorite_filled,color:navbarprovider.selectedindex==1 ? AppConfig.primaryColor :Colors.grey,size: 30.0),label: "Favourite"),
-           BottomNavigationBarItem(
-              icon:Badge(
+              icon: Iconify(Carbon.favorite_filled,
+                  color: navbarprovider.selectedindex == 1
+                      ? AppConfig.primaryColor
+                      : Colors.grey,
+                  size: 30.0),
+              label: "Favourite"),
+          BottomNavigationBarItem(
+              icon: Badge(
                   badgeContent: Text(cartprovider.badgevalue.toString()),
-                  child: const Icon(Icons.shopping_cart,size: 30.0)),
+                  child: const Icon(Icons.shopping_cart, size: 30.0)),
               label: "Cart"),
-          const BottomNavigationBarItem(icon: Icon(Icons.person,size: 30.0), label: "Profile",)
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.person, size: 30.0),
+            label: "Profile",
+          )
         ],
       ),
     );

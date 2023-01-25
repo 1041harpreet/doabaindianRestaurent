@@ -4,6 +4,7 @@ import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
+import 'package:restaurent.app/widgets/shimmer.dart';
 
 import '../../admin/admin_home_page.dart';
 import '../../provider/auth_provider.dart';
@@ -26,7 +27,6 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
      print('working loader screen');
      if (ref.watch(authProvider).user != null) {
-
        await ref.watch(authProvider).getUserInfo(ref.watch(authProvider).user.email,true);
        if (ref.watch(authProvider).role == 'admin') {
          print('admin');
@@ -58,28 +58,58 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
 
   @override
   Scaffold build(BuildContext context) {
-
+   final wsize=MediaQuery.of(context).size.width;
+   final hsize=MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child:
-       Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: AppConfig.primaryColor,
-                  )),
-              const SizedBox(height: 16),
-              Text("Loading...",
-                  style: TextStyle(color: AppConfig.primaryColor)),
-            ],
-          ),
-        ),
+       SingleChildScrollView(
+         scrollDirection: Axis.vertical,
+         child: Column(
+           // mainAxisSize: MainAxisSize.min,
+           mainAxisAlignment: MainAxisAlignment.start,
+           children: [
+             Padding(
+               padding: const EdgeInsets.all(8.0),
+               child: Center(child: carsoulShimmer(context, wsize)),
+             ),
+             SizedBox(
+               height: hsize / 4,
+               child: Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: ListView.builder(
+                   shrinkWrap: true,
+                   itemCount: 4,
+                   scrollDirection: Axis.horizontal,
+                   itemBuilder: (context, index) {
+                   return homePageShimmer(context,wsize, hsize);
+                 },),
+               ),
+             ),
+             Padding(
+               padding: const EdgeInsets.all(8.0),
+               child: Center(child: carsoulShimmer(context, wsize)),
+             ),
+             Row(
+               mainAxisAlignment: MainAxisAlignment.center,
+               children: [
+               Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: Text("Wait we are fetching information",style: TextStyle(color: Colors.grey),),
+               ),
+               SizedBox(
+                   width: 24,
+                   height: 24,
+                   child: CircularProgressIndicator(
+                     strokeWidth: 2,
+                     color: AppConfig.primaryColor,
+                   )),
+
+             ],)
+           ],
+         ),
+       ),
       ),
     );
   }

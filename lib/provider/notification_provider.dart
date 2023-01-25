@@ -53,14 +53,12 @@ class NotificationService extends ChangeNotifier{
     }
   }
   fetchNextNotifications(context) async {
-    var ref=await _firestore.collection('notifications').doc(email).collection(email).orderBy('date',descending: true).startAt(notificationList[notificationList.length - 1])
-        .limit(10)
-        .get();
-    notificationList=ref.docs.map((e) => NotificationItem.fromJson(e.data())).toList();
 
-    // notificationList.addAll(newDocumentList);
     try {
-
+      var ref=await _firestore.collection('notifications').doc(email).collection(email).orderBy('date',descending: true).startAt(notificationList[notificationList.length - 1])
+          .limit(10)
+          .get();
+      notificationList=ref.docs.map((e) => NotificationItem.fromJson(e.data())).toList();
     } on SocketException {
       showErrorToast(message: "No Internet Connection",context: context);
     } catch (e) {

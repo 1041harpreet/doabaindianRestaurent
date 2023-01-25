@@ -68,16 +68,16 @@ class CartService extends ChangeNotifier {
   double itemTotal = 0.0;
 
 // add an item to cart
-  addToCart(item, count, category, context) async {
+  addToCart(item, subitem,count, category, context) async {
     changeloading(true);
     try {
-      await checkFromCart(item);
+      await checkFromCart(item,subitem);
       if (exist == true) {
         await _firestore
             .collection('cart')
             .doc(email)
             .collection(email)
-            .doc(item.title)
+            .doc(item.title+subitem)
             .update({
           'total': itemTotal + item.price * count,
           "count": count + availableCount,
@@ -90,12 +90,12 @@ class CartService extends ChangeNotifier {
             .collection('cart')
             .doc(email)
             .collection(email)
-            .doc(item.title)
+            .doc(item.title+subitem)
             .set({
           "count": count,
           "img": item.img,
           "price": item.price,
-          "title": item.title,
+          "title": item.title +subitem,
           "category": category,
           "total": total
         });
@@ -105,8 +105,7 @@ class CartService extends ChangeNotifier {
       print('total calculated$subtotal');
     } catch (e) {
       showErrorToast(message: "Failed", context: context);
-
-      print(e.toString());
+      print(e);
     } finally {
       await getBadge();
       changeloading(false);
@@ -128,12 +127,12 @@ class CartService extends ChangeNotifier {
 
   bool exist = false;
   //check specific item available in cart or not
-  checkFromCart(item) async {
+  checkFromCart(item,subitem) async {
     await _firestore
         .collection('cart')
         .doc(email)
         .collection(email)
-        .doc(item.title)
+        .doc(item.title+subitem)
         .get()
         .then((value) async {
       print("value exist ${value.exists}");

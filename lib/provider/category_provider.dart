@@ -122,27 +122,40 @@ class CategoryService extends ChangeNotifier {
       // notifyListeners();
     }
   }
+  bool dropLoading=false;
+  change(value){
+    dropLoading=value;
+    print('drop loading value'+dropLoading.toString());
+    notifyListeners();
+  }
+
+  String? current;
+  changeCurrent(value){
+    current=value ?? '';
+    print(current);
+    notifyListeners();
+  }
 
   List dropDownItemList=[];
-  getDropDownItems(item) async {
-    // _firestore.collection('category').doc(item.toString()).collection(item.toString()).
-    changesubloading(true);
-    try {
-      var ref = await _firestore
-          .collection('category')
-          .doc(item.toString())
-          .collection(item.toString())
-          .get();
-      subcategory =
-          ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
-      print(subcategory);
-    } catch (e) {
+  getDropDownItems(item,subitem) async {
+    change(true);
+    try{
+      _firestore.collection('category').doc(item.toString()).collection(item.toString()).doc(subitem).collection(subitem).get().then((value) {
+        if(value.docs.isNotEmpty){
+            dropDownItemList =
+                value.docs.map((e) => DropDownItem.fromJson(e.data())).toList();
+            current=dropDownItemList[0].title ?? '';
+            print(dropDownItemList);
+        }else{
+          dropDownItemList=[];
+        }
+        change(false);
+      });
+    }catch(e){
       dropDownItemList=[];
-      print('get sub failed');
-      print(e);
-    } finally {
-      changesubloading(false);
-      // notifyListeners();
+      change(false);
+    }finally{
+      notifyListeners();
     }
   }
 

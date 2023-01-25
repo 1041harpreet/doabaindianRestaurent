@@ -13,6 +13,7 @@ import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
+import 'package:restaurent.app/provider/category_provider.dart';
 import 'package:restaurent.app/screens/navBar/cart_Page/checkout_page.dart';
 import '../../../provider/check_out_provider.dart';
 import '../../../provider/nav_bar_provider.dart';
@@ -32,9 +33,7 @@ class AddToCart extends ConsumerStatefulWidget {
 class _AddToCartState extends ConsumerState<AddToCart> {
   @override
   void initState() {
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // ref.watch(cartProvider).changecheckload(true);
       ref.watch(cartProvider).getorderItem();
       ref.watch(cartProvider).getTotal();
     });
@@ -45,11 +44,11 @@ class _AddToCartState extends ConsumerState<AddToCart> {
 
   @override
   Widget build(BuildContext context) {
-
     final cartprovider = ref.watch(cartProvider);
     final authprovider = ref.watch(authProvider);
     final navprovider = ref.watch(NavBarProvider);
     final checkoutprovider = ref.watch(checkOutProvider);
+    final categoryprovider = ref.watch(categoryProvider);
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     return SafeArea(
@@ -90,7 +89,7 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                   child: Column(children: [
                     Expanded(
                         child: cartlistBuilder(wsize, hsize, cartprovider,
-                            context, checkoutprovider, authprovider)),
+                            context, checkoutprovider, authprovider,categoryprovider)),
                   ]),
                 ),
               ),
@@ -115,17 +114,3 @@ Widget header(wsize) {
   ]);
 }
 
-showLoadingDialog() => Get.dialog(
-  barrierDismissible: false,
-  barrierColor: Colors.transparent,
-
-  CupertinoAlertDialog(
-    title: SizedBox(
-      width: 20.0,
-      height: 20.0,
-      child: CircularProgressIndicator(color: AppConfig.primaryColor,
-
-      ),
-    ),
-  ),
-);

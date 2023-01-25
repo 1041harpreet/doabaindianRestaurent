@@ -33,7 +33,7 @@ class CheckOutService extends ChangeNotifier{
         ]),
   });
  var date='';
-getdate(){
+   getdate(){
   var now=DateTime.now();
   date= DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
 }

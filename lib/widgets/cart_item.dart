@@ -52,7 +52,7 @@ Widget CartItem(wsize, hsize, context, item, cartprovider) {
                           left: wsize * 0.04, top: wsize * 0.035),
                       child: AutoSizeText(
                           item.title.toString().length > 25
-                              ? '${item.title.toString().substring(0, 25)}...'
+                              ? '${item.title.toString().substring(0, 20)}...'
                               : item.title.toString(),
                           maxLines: 1,
                           style: GoogleFonts.mulish(

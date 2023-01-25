@@ -12,6 +12,7 @@ import 'package:restaurent.app/widgets/toast_service.dart';
 import '../../../config/config.dart';
 import '../../../provider/category_provider.dart';
 import '../../../widgets/category_item.dart';
+import '../../../widgets/shimmer.dart';
 
 class ProductDetailsView extends ConsumerStatefulWidget {
   var item;
@@ -27,7 +28,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
   bool isselected = false;
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp)async {
+     await ref.watch(categoryProvider).getDropDownItems(widget.catname, widget.item.title);
       ref.watch(categoryProvider).initquanity( widget.item.price);
       ref.watch(categoryProvider).initialfavButton();
     });
@@ -135,13 +137,47 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            widget.item.title,
-                            style: GoogleFonts.poppins(
-                              fontSize: wsize * 0.05,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                              Text(
+                                widget.item.title.toString().length> 22 ? '${widget.item.title.toString().substring(0,22)}...' :widget.item.title,
+                                style: GoogleFonts.poppins(
+                                  fontSize: wsize * 0.05,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            provider.dropLoading ? tabShimmer() :
+                            provider.dropDownItemList.isNotEmpty ?
+                            SizedBox(
+                                // width: 100.0,
+                                height: 50.0,
+                                child: DropdownButton<String>(
+                                  dropdownColor: Colors.white,
+                                  style: TextStyle(color: Colors.black),
+                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                  elevation: 5,
+                                  value: provider.current,
+                                  hint: Text('Select Item',
+                                      style: TextStyle(color: Colors.grey)),
+                                  icon: const Icon(Icons.keyboard_arrow_down,color: Colors.black),
+                                  items: provider.dropDownItemList
+                                      .map(( items) {
+                                    return DropdownMenuItem<String>(
+                                      value: items.title,
+                                      child: Text(items.title),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    provider.changeCurrent(newValue);
+
+
+                                  },
+                                ),
+                              ) : Container(),
+                            ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,7 +221,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                             shape: BoxShape.circle,
                                             border: Border.all(
                                               width: 0.1,
-                                            )),
+                                            ),),
                                         child: Padding(
                                           padding: EdgeInsets.all(wsize * 0.03),
                                           child: Text("-", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
@@ -390,8 +426,10 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                       )
                     : InkWell(
                         onTap: () {
+                          var current= provider.current.toString().isEmpty ? provider.current : '-'+provider.current.toString() ;
                           print('cart clicked');
-                          cartprovider.addToCart(widget.item, provider.quantity, widget.catname, context);
+                          cartprovider.addToCart(widget.item,
+                              current, provider.quantity, widget.catname, context);
                           print('cart done');
                         },
                         child: cartprovider.cartloading == true

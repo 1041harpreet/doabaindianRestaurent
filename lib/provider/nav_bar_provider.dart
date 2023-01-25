@@ -27,7 +27,6 @@ class NavServices extends ChangeNotifier{
   int selectedindex=0;
   changeindex(int index){
     selectedindex=index;
-    print("index is"+selectedindex.toString());
     notifyListeners();
   }
 
