@@ -43,33 +43,44 @@ Widget aboutus() {
           height: 5.0,
         ),
         Container(
-          color:  Colors.red.shade400,
+          color: Colors.red.shade400,
           padding: const EdgeInsets.all(4.0),
-          child: Column(children: [Text(
-          'We believe that nothing brings people together better than good food – and no matter who are sharing our meal with at that moment, we are all family. This philosophy permeates how we treat you, our customer the second you walk in through the door, you are part of our family.',
-          style: AppConfig.whitetext,
-        ),
-          Text(
-              'We use the finest, freshest ingredients to make the most authentic Indian cuisine for our family.',
-              style: AppConfig.whitetext),
-          Text(
-            'We strive to create food that you will like and will do everything to make it right. Try any of our food, ranging from our Tandoor items to delicious Entree & Biryanis  you will want more.',
-            style: AppConfig.whitetext,
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              "Note : ",
-              style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
+          child: Column(children: [
+            Text(
+              'We believe that nothing brings people together better than good food – and no matter who are sharing our meal with at that moment, we are all family. This philosophy permeates how we treat you, our customer the second you walk in through the door, you are part of our family.',
+              style: AppConfig.whitetext,
             ),
-          ),
-          Text('That all our foods are made fresh to-order and take time to crate-',style: AppConfig.whitetext,),
-          Text('please allow some time minutes after placing your order either online for carry out or dine-in!',style: AppConfig.whitetext,),
-          Text('We make the Naan bread from Eggless Dough',style:AppConfig.whitetext,)]),)
-
+            Text(
+                'We use the finest, freshest ingredients to make the most authentic Indian cuisine for our family.',
+                style: AppConfig.whitetext),
+            Text(
+              'We strive to create food that you will like and will do everything to make it right. Try any of our food, ranging from our Tandoor items to delicious Entree & Biryanis  you will want more.',
+              style: AppConfig.whitetext,
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                "Note : ",
+                style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Text(
+              'That all our foods are made fresh to-order and take time to crate-',
+              style: AppConfig.whitetext,
+            ),
+            Text(
+              'please allow some time minutes after placing your order either online for carry out or dine-in!',
+              style: AppConfig.whitetext,
+            ),
+            Text(
+              'We make the Naan bread from Eggless Dough',
+              style: AppConfig.whitetext,
+            )
+          ]),
+        )
       ],
     ),
   );

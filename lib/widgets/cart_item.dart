@@ -1,12 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/ant_design.dart';
-import 'package:iconify_flutter/icons/bx.dart';
-import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent.app/config/config.dart';
-import 'package:restaurent.app/screens/navBar/home_page/home_page.dart';
 
 import 'category_item.dart';
 
@@ -134,10 +129,9 @@ Widget CartItem(wsize, hsize, context, item, cartprovider) {
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: wsize * 0.07),
-                          child:  InkWell(
-                            onTap: () async{
-                              await cartprovider.removeFromCart(
-                                  item, context);
+                          child: InkWell(
+                            onTap: () async {
+                              await cartprovider.removeFromCart(item, context);
                             },
                             child: Container(
                                 padding: const EdgeInsets.all(4.0),

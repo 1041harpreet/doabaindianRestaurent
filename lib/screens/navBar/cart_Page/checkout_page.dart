@@ -21,6 +21,7 @@ class CheckoutPage extends ConsumerStatefulWidget {
 
 class _CheckoutPageState extends ConsumerState<CheckoutPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -81,20 +82,24 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                           ),
                           //email & password section
                           textfieldbtn(size, 'Full name', 'fullname', {
-                            ValidationMessage.required: (error) => "The name must not be empty",
+                            ValidationMessage.required: (error) =>
+                                "The name must not be empty",
                           }),
                           SizedBox(
                             height: size.height * 0.02,
                           ),
                           textfieldbtn(size, 'Email', 'email', {
-                            ValidationMessage.required: (error) => "The email must not be empty",
-                            ValidationMessage.email: (error) => 'Please enter a valid email',
+                            ValidationMessage.required: (error) =>
+                                "The email must not be empty",
+                            ValidationMessage.email: (error) =>
+                                'Please enter a valid email',
                           }),
                           SizedBox(
                             height: size.height * 0.02,
                           ),
                           textfieldbtn(size, 'Phone', 'phone', {
-                            ValidationMessage.required: (error) => "The phone no must not be empty",
+                            ValidationMessage.required: (error) =>
+                                "The phone no must not be empty",
                           }),
                           SizedBox(
                             height: size.height * 0.02,
@@ -126,20 +131,24 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                           SizedBox(
                             height: size.height * 0.02,
                           ),
-                          textfieldbtn(size, 'Company name(optional)', 'company', {
-                            ValidationMessage.required: (error) => "The Town must not be empty",
+                          textfieldbtn(
+                              size, 'Company name(optional)', 'company', {
+                            ValidationMessage.required: (error) =>
+                                "The Town must not be empty",
                           }),
                           SizedBox(
                             height: size.height * 0.02,
                           ),
                           textfieldbtn(size, 'Street Address', 'address', {
-                            ValidationMessage.required: (error) => "The Adress must not be empty",
+                            ValidationMessage.required: (error) =>
+                                "The Adress must not be empty",
                           }),
                           SizedBox(
                             height: size.height * 0.02,
                           ),
                           textfieldbtn(size, 'Town/City', 'town', {
-                            ValidationMessage.required: (error) => "The Town must not be empty",
+                            ValidationMessage.required: (error) =>
+                                "The Town must not be empty",
                           }),
                           SizedBox(
                             height: size.height * 0.02,
@@ -164,7 +173,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                           //   height: size.height * 0.02,
                           // ),
                           textfieldbtn(size, 'Zip Code', 'zipcode', {
-                            ValidationMessage.required: (error) => "The ZipCode must not be empty",
+                            ValidationMessage.required: (error) =>
+                                "The ZipCode must not be empty",
                           }),
                           SizedBox(
                             height: size.height * 0.02,
@@ -182,8 +192,10 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             ),
                           ),
 
-                          textfieldbtn(size, 'Notes about your Order', 'additional', {
-                            ValidationMessage.required: (error) => "The phone no must not be empty",
+                          textfieldbtn(
+                              size, 'Notes about your Order', 'additional', {
+                            ValidationMessage.required: (error) =>
+                                "The phone no must not be empty",
                           }),
                           SizedBox(
                             height: size.height * 0.02,
@@ -205,7 +217,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             itemCount: cartprovider.orderItem.length,
                             itemBuilder: (context, index) {
                               return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -233,7 +246,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             },
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -257,7 +271,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -307,11 +322,17 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   cartprovider.tax,
                                   {
                                     "items": [
-                                      for (var i = 0; i < cartprovider.orderItem.length; i++)
+                                      for (var i = 0;
+                                          i < cartprovider.orderItem.length;
+                                          i++)
                                         {
-                                          "name": cartprovider.orderItem[i].title,
-                                          "quantity": cartprovider.orderItem[i].count,
-                                          "price": roundDouble(cartprovider.orderItem[i].price, 2),
+                                          "name":
+                                              cartprovider.orderItem[i].title,
+                                          "quantity":
+                                              cartprovider.orderItem[i].count,
+                                          "price": roundDouble(
+                                              cartprovider.orderItem[i].price,
+                                              2),
                                           "currency": "USD"
                                         }
                                     ],
@@ -321,7 +342,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             ),
                           );
                         } else {
-                          showErrorToast(message: 'fill the detail first', context: context);
+                          showErrorToast(
+                              message: 'fill the detail first',
+                              context: context);
                         }
                       },
                       Text(

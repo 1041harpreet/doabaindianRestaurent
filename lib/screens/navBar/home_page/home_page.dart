@@ -1,33 +1,23 @@
-import 'package:auto_animated/auto_animated.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
-import 'package:restaurent.app/provider/notification_provider.dart';
 import 'package:restaurent.app/screens/navBar/home_page/categories/builder.dart';
 import 'package:restaurent.app/screens/navBar/home_page/notification/main_notiification_page.dart';
 import 'package:restaurent.app/widgets/buffet.dart';
-import 'package:restaurent.app/widgets/home_item.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../provider/category_provider.dart';
 import '../../../provider/home_provider.dart';
-import '../../../services/mail_services.dart';
-import '../../../services/notification_service/notification.dart';
 import '../../../widgets/about_us.dart';
 import '../../../widgets/shimmer.dart';
 import 'carsoul_full_screen.dart';
-import 'categories/category_items.dart';
 import 'categories/all_category.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -83,40 +73,38 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: SafeArea(
           child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+            automaticallyImplyLeading: false,
             backgroundColor: AppConfig.secmainColor,
             title: header(wsize, hsize, homeprovider, categoryprovider,
                 authprovider, context),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(right: 5.0),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.notifications_on_sharp,
-                    color: AppConfig.primaryColor,
-                    size: wsize * 0.09,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secondaryAnimation) {
-                          return const NotificationPage();
-                        },
-                      ),
-                    );
-                  },
-                )
-              )
+                  padding: const EdgeInsets.only(right: 5.0),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.notifications_on_sharp,
+                      color: AppConfig.primaryColor,
+                      size: wsize * 0.09,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (BuildContext context,
+                              Animation<double> animation,
+                              Animation<double> secondaryAnimation) {
+                            return const NotificationPage();
+                          },
+                        ),
+                      );
+                    },
+                  ))
             ]),
         backgroundColor: AppConfig.secmainColor,
         floatingActionButton: FloatingActionButton(
           elevation: 5.0,
           backgroundColor: Colors.transparent,
           onPressed: () async {
-
             homeprovider.openwhatsapp(context);
           },
           child: Image.asset('assets/images/whats.png', fit: BoxFit.fill),
@@ -258,7 +246,7 @@ Widget header(
     wsize, hsize, homeprovider, categoryprovider, authprovider, context) {
   return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
     Padding(
-      padding: EdgeInsets.only(top:wsize * 0.02),
+      padding: EdgeInsets.only(top: wsize * 0.02),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

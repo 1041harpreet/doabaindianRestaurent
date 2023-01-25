@@ -1,22 +1,20 @@
-import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/config/config.dart';
-import 'package:restaurent.app/widgets/category_item.dart';
 import 'package:restaurent.app/screens/navBar/home_page/product_details_view.dart';
-import '../../../../services/notification_service/notification.dart';
+import 'package:restaurent.app/widgets/category_item.dart';
+
 import '../../../../widgets/cart_item.dart';
 import '../../../../widgets/home_item.dart';
 import '../../../../widgets/shimmer.dart';
 import '../../cart_Page/checkout_page.dart';
 import 'category_items.dart';
 
-Widget cartlistBuilder(
-    wsize, hsize, cartprovider, context, checkoutprovider, authprovider,categoryprovider) {
+Widget cartlistBuilder(wsize, hsize, cartprovider, context, checkoutprovider,
+    authprovider, categoryprovider) {
   return Padding(
     padding: EdgeInsets.all(wsize * .03),
     child: SizedBox(
@@ -44,9 +42,10 @@ Widget cartlistBuilder(
                           itemBuilder: (context, index) {
                             var item = cartprovider.orderItem[index];
                             return GestureDetector(
-                                onTap: ()async {
+                                onTap: () async {
                                   categoryprovider.changeCurrent('');
-                                 await categoryprovider.getDropDownItems(item.category,item);
+                                  await categoryprovider.getDropDownItems(
+                                      item.category, item);
                                   Navigator.push(
                                     context,
                                     CupertinoPageRoute(

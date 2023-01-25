@@ -6,32 +6,31 @@ import '../screens/navBar/favouriteScreen/favourite_screen.dart';
 import '../screens/navBar/home_page/home_page.dart';
 import '../screens/navBar/profille_page/main_Profile_screen.dart';
 
-
-class NavServices extends ChangeNotifier{
-
-  List screens = const[
+class NavServices extends ChangeNotifier {
+  List screens = const [
     HomePage(),
     FavouriteScreen(),
     AddToCart(),
     ProfileScreen(),
   ];
-  bool isObsecure=true;
+  bool isObsecure = true;
 
-  changeSecure(value){
-    isObsecure=value;
+  changeSecure(value) {
+    isObsecure = value;
     print(isObsecure);
     notifyListeners();
   }
 
+  int selectedindex = 0;
 
-  int selectedindex=0;
-  changeindex(int index){
-    selectedindex=index;
+  changeindex(int index) {
+    selectedindex = index;
     notifyListeners();
   }
-
 }
-final NavBarProvider=ChangeNotifierProvider((ref) {
-  return NavServices();
 
-},);
+final NavBarProvider = ChangeNotifierProvider(
+  (ref) {
+    return NavServices();
+  },
+);

@@ -7,7 +7,6 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/screens/auth/splash_screen.dart';
 import 'package:restaurent.app/services/notification_service/notification.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

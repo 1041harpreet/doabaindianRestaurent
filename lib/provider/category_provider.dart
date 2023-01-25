@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -93,7 +91,7 @@ class CategoryService extends ChangeNotifier {
       var ref = await _firestore.collection('category').get();
       category = ref.docs.map((e) => CategoryItem.fromJson(e.data())).toList();
     } catch (e) {
-      category=[];
+      category = [];
       print(e.toString());
     } finally {
       // changeloading(false);
@@ -114,7 +112,7 @@ class CategoryService extends ChangeNotifier {
           ref.docs.map((e) => SubCategoryItem.fromJson(e.data())).toList();
       print(subcategory);
     } catch (e) {
-      subcategory=[];
+      subcategory = [];
       print('get sub failed');
       print(e);
     } finally {
@@ -122,39 +120,50 @@ class CategoryService extends ChangeNotifier {
       // notifyListeners();
     }
   }
-  bool dropLoading=false;
-  change(value){
-    dropLoading=value;
-    print('drop loading value'+dropLoading.toString());
+
+  bool dropLoading = false;
+
+  change(value) {
+    dropLoading = value;
+    print('drop loading value' + dropLoading.toString());
     notifyListeners();
   }
 
   String? current;
-  changeCurrent(value){
-    current=value ?? '';
+
+  changeCurrent(value) {
+    current = value ?? '';
     print(current);
     notifyListeners();
   }
 
-  List dropDownItemList=[];
-  getDropDownItems(item,subitem) async {
+  List dropDownItemList = [];
+
+  getDropDownItems(item, subitem) async {
     change(true);
-    try{
-      _firestore.collection('category').doc(item.toString()).collection(item.toString()).doc(subitem).collection(subitem).get().then((value) {
-        if(value.docs.isNotEmpty){
-            dropDownItemList =
-                value.docs.map((e) => DropDownItem.fromJson(e.data())).toList();
-            current=dropDownItemList[0].title ?? '';
-            print(dropDownItemList);
-        }else{
-          dropDownItemList=[];
+    try {
+      _firestore
+          .collection('category')
+          .doc(item.toString())
+          .collection(item.toString())
+          .doc(subitem)
+          .collection(subitem)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          dropDownItemList =
+              value.docs.map((e) => DropDownItem.fromJson(e.data())).toList();
+          current = dropDownItemList[0].title ?? '';
+          print(dropDownItemList);
+        } else {
+          dropDownItemList = [];
         }
         change(false);
       });
-    }catch(e){
-      dropDownItemList=[];
+    } catch (e) {
+      dropDownItemList = [];
       change(false);
-    }finally{
+    } finally {
       notifyListeners();
     }
   }
@@ -162,43 +171,44 @@ class CategoryService extends ChangeNotifier {
   //get carsoul item
   bool carload = false;
 
-  changecarload(value,item) {
-     item= value;
+  changecarload(value, item) {
+    item = value;
     notifyListeners();
   }
-  List madefulist=[];
-  bool mfuload=false;
+
+  List madefulist = [];
+  bool mfuload = false;
 
   //special item list
-getmadeforu()async{
-  changecarload(true, mfuload);
-  try{
-      var ref=await _firestore.collection('madeforu').get();
-      madefulist = ref.docs.map((e) => MadeForUItem.fromJson(e.data())).toList();
-
-  }catch(e){
-    madefulist=[];
-     print(e);
-    }finally{
+  getmadeforu() async {
+    changecarload(true, mfuload);
+    try {
+      var ref = await _firestore.collection('madeforu').get();
+      madefulist =
+          ref.docs.map((e) => MadeForUItem.fromJson(e.data())).toList();
+    } catch (e) {
+      madefulist = [];
+      print(e);
+    } finally {
       changecarload(false, mfuload);
       notifyListeners();
     }
-}
+  }
+
 //used to get list of banners in carsoul list
   List carsoulList = [];
+
   getcarsoulItem() async {
-    changecarload(true,carload);
+    changecarload(true, carload);
     try {
       // var item=category[index].title;
       var ref = await _firestore.collection('carsoul_slider').get();
       carsoulList = ref.docs.map((e) => SliderItem.fromJson(e.data())).toList();
       print(carsoulList);
     } catch (e) {
-      carsoulList=[];
-      print('get car is running');
-      print(e.toString());
+      carsoulList = [];
     } finally {
-      changecarload(false,carload);
+      changecarload(false, carload);
     }
   }
 
@@ -224,10 +234,7 @@ getmadeforu()async{
         "category": category,
         "img": item.img
       });
-    } catch (e) {
-      print('add fav error');
-      print(e.toString());
-    }
+    } catch (e) {}
   }
 
   getFavouriteItem(email) async {
@@ -240,9 +247,9 @@ getmadeforu()async{
           .get();
       favList = ref.docs.map((e) => FavItem.fromJson(e.data())).toList();
     } catch (e) {
-      favList=[];
+      favList = [];
       print(e.toString());
-    }finally{
+    } finally {
       changefavloading(false);
     }
   }
@@ -256,7 +263,6 @@ getmadeforu()async{
           .doc(item.title)
           .delete();
     } catch (e) {
-      print('remove fav error');
       print(e.toString());
     }
   }

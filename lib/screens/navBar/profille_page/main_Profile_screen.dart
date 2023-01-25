@@ -5,7 +5,6 @@ import 'package:iconify_flutter/icons/bx.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/home_provider.dart';
-import 'package:restaurent.app/screens/navBar/cart_Page/cart_page.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/buffet_page.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/gallery.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/main_setting_page.dart';
@@ -35,7 +34,7 @@ class ProfileScreen extends ConsumerWidget {
         body: SingleChildScrollView(
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             orderHeader(wsize, hsize),
-            optionListView(authprovider, context,homeprovider)
+            optionListView(authprovider, context, homeprovider)
           ]),
         ),
       ),
@@ -43,7 +42,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-Widget optionListView(authprovider, context,homeprovider) {
+Widget optionListView(authprovider, context, homeprovider) {
   return Container(
     child: ListView(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
@@ -57,12 +56,12 @@ Widget optionListView(authprovider, context,homeprovider) {
                 "username": authprovider.username,
                 "email": authprovider.user.email,
                 "phone": authprovider.phone,
-                "img":authprovider.img
+                "img": authprovider.img
               });
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>  MyProfile(),
+                    builder: (context) => MyProfile(),
                   ));
             },
             text: 'My Profile',
@@ -71,7 +70,11 @@ Widget optionListView(authprovider, context,homeprovider) {
         _separator(),
         _listItem(
             onClick: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AboutUsPage(),));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AboutUsPage(),
+                  ));
             },
             text: "About Us",
             icon: const Icon(
@@ -79,24 +82,42 @@ Widget optionListView(authprovider, context,homeprovider) {
               color: Colors.black,
             )),
         _separator(),
-        _listItem(onClick: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => BuffetPage(),));
-        },
+        _listItem(
+            onClick: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BuffetPage(),
+                  ));
+            },
             text: 'Buffet',
-            icon: const Icon(Icons.food_bank, ),
+            icon: const Icon(
+              Icons.food_bank,
+            ),
             showArrow: true),
-        _separator(),
-        _listItem(onClick: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => GalleryPage(),));
-
-        },
-            text: 'Gallery', icon: const Iconify(Bx.image), showArrow: true),
         _separator(),
         _listItem(
             onClick: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage(),));
-
-            }, text: 'Settings', icon: const Icon(Icons.settings)),
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GalleryPage(),
+                  ));
+            },
+            text: 'Gallery',
+            icon: const Iconify(Bx.image),
+            showArrow: true),
+        _separator(),
+        _listItem(
+            onClick: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingPage(),
+                  ));
+            },
+            text: 'Settings',
+            icon: const Icon(Icons.settings)),
         _separator(),
         _listItem(
             onClick: () {
@@ -164,7 +185,6 @@ Widget orderHeader(wsize, hsize) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-
         SizedBox(
           height: hsize * 0.01,
         ),
@@ -172,7 +192,7 @@ Widget orderHeader(wsize, hsize) {
           padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
           child: Row(
             children: [
-               Icon(
+              Icon(
                 Icons.email,
                 color: AppConfig.primaryColor,
               ),
@@ -187,7 +207,7 @@ Widget orderHeader(wsize, hsize) {
           padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
           child: Row(
             children: [
-               Icon(
+              Icon(
                 Icons.phone,
                 color: AppConfig.primaryColor,
               ),

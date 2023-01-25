@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/provider/nav_bar_provider.dart';
@@ -34,7 +32,7 @@ class SignUpScreen extends ConsumerWidget {
             //page content here
             Expanded(
               flex: 9,
-              child: buildCard(size, authprovider, context,navprovider),
+              child: buildCard(size, authprovider, context, navprovider),
             ),
           ],
         ),
@@ -42,7 +40,7 @@ class SignUpScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildCard(Size size, authprovider, context,navprovider) {
+  Widget buildCard(Size size, authprovider, context, navprovider) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -89,40 +87,60 @@ class SignUpScreen extends ConsumerWidget {
                 height: size.height * 0.05,
               ),
               //email & password section
-              textfieldbtn(size, 'Full name', 'name', {
-                ValidationMessage.required: (error) =>
-                    "The name must not be empty",
-              },false),
+              textfieldbtn(
+                  size,
+                  'Full name',
+                  'name',
+                  {
+                    ValidationMessage.required: (error) =>
+                        "The name must not be empty",
+                  },
+                  false),
               SizedBox(
                 height: size.height * 0.02,
               ),
               // email & password section
-              textfieldbtn(size, 'Phone no', 'phone', {
-                ValidationMessage.minLength: (error) =>
-                "The phone no is not valid",
-                ValidationMessage.maxLength: (error) =>
-                "The phone no is not valid",
-                ValidationMessage.number: (error) =>
-                "The phone no is not valid",
-                ValidationMessage.required: (error) =>
-                "The phone no must not be empty",
-              },false),
+              textfieldbtn(
+                  size,
+                  'Phone no',
+                  'phone',
+                  {
+                    ValidationMessage.minLength: (error) =>
+                        "The phone no is not valid",
+                    ValidationMessage.maxLength: (error) =>
+                        "The phone no is not valid",
+                    ValidationMessage.number: (error) =>
+                        "The phone no is not valid",
+                    ValidationMessage.required: (error) =>
+                        "The phone no must not be empty",
+                  },
+                  false),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              textfieldbtn(size, 'Email', 'email', {
-                ValidationMessage.required: (error) =>
-                    "The email must not be empty",
-                ValidationMessage.email: (error) =>
-                    'Please enter a valid email',
-              },false),
+              textfieldbtn(
+                  size,
+                  'Email',
+                  'email',
+                  {
+                    ValidationMessage.required: (error) =>
+                        "The email must not be empty",
+                    ValidationMessage.email: (error) =>
+                        'Please enter a valid email',
+                  },
+                  false),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              passwordField(size, 'Password', 'password', {
-                ValidationMessage.required: (error) =>
-                "The password must not be empty",
-              },navprovider),
+              passwordField(
+                  size,
+                  'Password',
+                  'password',
+                  {
+                    ValidationMessage.required: (error) =>
+                        "The password must not be empty",
+                  },
+                  navprovider),
               // textfieldbtn(size, 'Password', 'password', {
               //   ValidationMessage.required: (error) =>
               //       "The password must not be empty",
@@ -176,11 +194,8 @@ class SignUpScreen extends ConsumerWidget {
       ),
     );
   }
-
-
-
-
 }
+
 Widget Button(Size size, title, titlecolor, buttoncolor, ontap) {
   return GestureDetector(
     onTap: ontap,
@@ -240,6 +255,7 @@ Widget footerText() {
     ),
   );
 }
+
 Widget loadingButton(Size size) {
   return Container(
       alignment: Alignment.center,
@@ -260,7 +276,8 @@ Widget loadingButton(Size size) {
         color: Colors.white,
       )));
 }
-Widget textfieldbtn(Size size, lable, controlname, validation,obsecure) {
+
+Widget textfieldbtn(Size size, lable, controlname, validation, obsecure) {
   return Container(
     alignment: Alignment.center,
     height: size.height * 0.07,
@@ -274,7 +291,7 @@ Widget textfieldbtn(Size size, lable, controlname, validation,obsecure) {
     ),
     child: ReactiveTextField(
       obscureText: obsecure,
-       // keyboardType: TextInputType.phone,
+      // keyboardType: TextInputType.phone,
       formControlName: controlname,
       style: GoogleFonts.inter(
         fontSize: 16.0,
@@ -293,7 +310,10 @@ Widget textfieldbtn(Size size, lable, controlname, validation,obsecure) {
     ),
   );
 }
-Widget richText(double fontSize,) {
+
+Widget richText(
+  double fontSize,
+) {
   return Text.rich(
     TextSpan(
       style: GoogleFonts.inter(
@@ -319,7 +339,8 @@ Widget richText(double fontSize,) {
     ),
   );
 }
-Widget passwordField(Size size, lable, controlname, validation,authprovider) {
+
+Widget passwordField(Size size, lable, controlname, validation, authprovider) {
   return Container(
     alignment: Alignment.center,
     height: size.height * 0.07,
@@ -348,21 +369,26 @@ Widget passwordField(Size size, lable, controlname, validation,authprovider) {
             color: const Color(0xFF969AA8),
           ),
           border: InputBorder.none,
-          suffixIcon: !authprovider.isObsecure ? GestureDetector(
-              onTap: () {
-                authprovider.changeSecure(true);
+          suffixIcon: !authprovider.isObsecure
+              ? GestureDetector(
+                  onTap: () {
+                    authprovider.changeSecure(true);
 
-                print('off');
-              },
-              child: Icon(Icons.visibility_off,color: AppConfig.primaryColor,)) :
-          GestureDetector(
-              onTap: () {
-                authprovider.changeSecure(false);
-                print('show');
-              },
-              child: Icon(Icons.visibility,color: AppConfig.primaryColor,))
-      ),
-
+                    print('off');
+                  },
+                  child: Icon(
+                    Icons.visibility_off,
+                    color: AppConfig.primaryColor,
+                  ))
+              : GestureDetector(
+                  onTap: () {
+                    authprovider.changeSecure(false);
+                    print('show');
+                  },
+                  child: Icon(
+                    Icons.visibility,
+                    color: AppConfig.primaryColor,
+                  ))),
     ),
   );
 }

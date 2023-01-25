@@ -3,25 +3,22 @@ import 'dart:io';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent.app/provider/cart_provider.dart';
-import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/provider/notification_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
-import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting_provider.dart';
 import 'package:restaurent.app/services/notification_service/notification.dart';
+
 import '../admin/admin_home_page.dart';
 import '../config/const.dart';
-import '../services/auth.dart';
 import '../widgets/toast_service.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 class AuthService extends ChangeNotifier {
   bool signupload = false;
   bool signinload = false;
@@ -62,16 +59,13 @@ class AuthService extends ChangeNotifier {
     'img': FormControl(),
   });
   FormGroup myProfile = FormGroup({
-    "email": FormControl(
-        validators: [Validators.required, Validators.email]),
-    'phone': FormControl(
-        validators: [
-          Validators.required,
-        ]),
-    'username': FormControl(
-        validators: [
-          Validators.required,
-        ]),
+    "email": FormControl(validators: [Validators.required, Validators.email]),
+    'phone': FormControl(validators: [
+      Validators.required,
+    ]),
+    'username': FormControl(validators: [
+      Validators.required,
+    ]),
     'img': FormControl(),
   });
   FormGroup resetPasswordForm = FormGroup({
@@ -92,8 +86,12 @@ class AuthService extends ChangeNotifier {
     "name": FormControl(validators: [
       Validators.required,
     ]),
-    "phone": FormControl(
-        validators: [Validators.required, Validators.minLength(10),Validators.number,Validators.maxLength(12)]),
+    "phone": FormControl(validators: [
+      Validators.required,
+      Validators.minLength(10),
+      Validators.number,
+      Validators.maxLength(12)
+    ]),
     'password': FormControl(validators: [
       Validators.required,
     ]),
@@ -157,7 +155,7 @@ class AuthService extends ChangeNotifier {
       )
           .then((value) async {
         await adduser(email, username, phone, '');
-        await getUserInfo(_auth.currentUser?.email,true);
+        await getUserInfo(_auth.currentUser?.email, true);
         await setInitialTotal(email);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
@@ -221,15 +219,14 @@ class AuthService extends ChangeNotifier {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
-        await getUserInfo(email,true);
+        await getUserInfo(email, true);
         if (role == 'admin') {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const AdminHomePage(),
               ),
               (route) => false);
-        }
-        else {
+        } else {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const NavBar(),
@@ -237,8 +234,8 @@ class AuthService extends ChangeNotifier {
               (route) => false);
         }
         loginForm.reset();
-      //   await FavouriteServices().openDb(email);
-      // await FavouriteServices().insertModel(email);
+        //   await FavouriteServices().openDb(email);
+        // await FavouriteServices().insertModel(email);
 
         showSuccessToast(message: 'login successfully', context: context);
       });
@@ -321,15 +318,15 @@ class AuthService extends ChangeNotifier {
             showErrorToast(message: "something went wrong", context: context);
           });
         }).catchError((value) {
-            showErrorToast(message: "Something went wrong,check your Password",context: context);
-
+          showErrorToast(
+              message: "Something went wrong,check your Password",
+              context: context);
 
           print(value);
         });
       }
       changeDeleteLoad(false);
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
       changeDeleteLoad(false);
       showErrorToast(context: context, message: "Something went wrong");
@@ -340,6 +337,7 @@ class AuthService extends ChangeNotifier {
 
 //change password
   bool changePasswordLoading = false;
+
   changePLoading(value) {
     changePasswordLoading = value;
     notifyListeners();
@@ -372,7 +370,6 @@ class AuthService extends ChangeNotifier {
         });
       }
       changePLoading(false);
-
     } catch (e) {
       print(e.toString());
       changePLoading(false);
@@ -424,7 +421,7 @@ class AuthService extends ChangeNotifier {
   String role = 'user';
   String img = '';
 
-  getUserInfo(email,needed) async {
+  getUserInfo(email, needed) async {
     try {
       await FirebaseFirestore.instance
           .collection('users')
@@ -435,7 +432,7 @@ class AuthService extends ChangeNotifier {
         username = value.get('username');
         img = value.get('img');
         role = value.get('role');
-        needed ? await storeToken(email) :'';
+        needed ? await storeToken(email) : '';
         needed ? adminDetail() : '';
         print('my role is $role');
       });
@@ -444,44 +441,43 @@ class AuthService extends ChangeNotifier {
       print("error $e");
     }
   }
-  adminDetail()async{
-    try{
+
+  adminDetail() async {
+    try {
       await _firestore.collection('admin').doc('admin').get().then((value) {
-        Const.adminMail=value.get('mail');
-        Const.adminPhone=value.get('phone');
+        Const.adminMail = value.get('mail');
+        Const.adminPhone = value.get('phone');
         print(Const.adminPhone);
       });
-    }catch(e){
+    } catch (e) {
       print(e);
     }
     notifyListeners();
   }
 
-
 //update profile
-  updateProfileDetails(context,email,username,phone,img)async{
-    try{
-      await _firestore.collection('users').doc(email).update({
-        "username":username,
-        "phone":phone,
-        "img":img
-      }).then((value) {
-        showSuccessToast(context: context,message: "Profile updated successfully");
-        getUserInfo(email,false);
+  updateProfileDetails(context, email, username, phone, img) async {
+    try {
+      await _firestore.collection('users').doc(email).update(
+          {"username": username, "phone": phone, "img": img}).then((value) {
+        showSuccessToast(
+            context: context, message: "Profile updated successfully");
+        getUserInfo(email, false);
         // notifyListeners();
       });
-    }catch(e){
+    } catch (e) {
       print(e);
     }
-
   }
 
   File? imageFile;
+
   //uplaod image
-  uploadimage( email, context,image) async {
-    var imageUrl='';
-    try{
-      Reference reference = await FirebaseStorage.instance.ref('users').child(email);
+  uploadimage(email, context, image) async {
+    var imageUrl = '';
+    try {
+      Reference reference =
+          await FirebaseStorage.instance.ref('users').child(email);
       UploadTask uploadTask = reference.putFile(File(image));
       TaskSnapshot snapshot = await uploadTask;
       if (snapshot.state == TaskState.success) {
@@ -491,53 +487,49 @@ class AuthService extends ChangeNotifier {
             message: "Nice! Your Image has been Selected Successfully",
             context: context);
       }
-       imageUrl = await snapshot.ref.getDownloadURL();
+      imageUrl = await snapshot.ref.getDownloadURL();
       print(imageUrl);
-    }catch(e){
-      imageUrl='';
+    } catch (e) {
+      imageUrl = '';
       print(e);
     }
     return imageUrl;
   }
- bool imageLoading=false;
-  changeImageLoading(value){
-    imageLoading=value;
+
+  bool imageLoading = false;
+
+  changeImageLoading(value) {
+    imageLoading = value;
     notifyListeners();
   }
 
 //pick image
-  getImage(context,source) async {
-    var uplaodedImage='';
-    try{
+  getImage(context, source) async {
+    var uplaodedImage = '';
+    try {
       XFile? pickedFile = await ImagePicker().pickImage(
         source: source,
         maxWidth: 1800,
         maxHeight: 1800,
-
       );
       if (pickedFile != null) {
         changeImageLoading(true);
         print('img picked');
-         uplaodedImage = (pickedFile.path);
+        uplaodedImage = (pickedFile.path);
         print(uplaodedImage);
         // uplaodedImage=await uploadimage(_auth.currentUser?.email, context, i);
+      } else {
+        uplaodedImage = '';
+        showErrorToast(message: "Failed to pick image", context: context);
       }
-      else
-      {
-        uplaodedImage='';
-        showErrorToast(message: "Failed to pick image",context: context);
-      }
-    }catch(e){
-      uplaodedImage='';
+    } catch (e) {
+      uplaodedImage = '';
       print(e);
-    }finally{
+    } finally {
       changeImageLoading(false);
     }
     return uplaodedImage;
   }
-
-
-
 }
 
 final authProvider = ChangeNotifierProvider((ref) {

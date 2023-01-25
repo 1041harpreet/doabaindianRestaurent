@@ -1,34 +1,34 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:maps_launcher/maps_launcher.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/config/const.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../services/connection_service.dart';
 import '../widgets/toast_service.dart';
 
 class HomeService extends ChangeNotifier {
   bool show = true;
+
   changeshow(value) {
     show = value;
     notifyListeners();
   }
-final url='https://doabaindianrestaurantohio.com/terms-conditions/';
-  terms(context)async{
-    try {
-      await launchUrl(Uri.parse(url),);
 
+  final url = 'https://doabaindianrestaurantohio.com/terms-conditions/';
+
+  terms(context) async {
+    try {
+      await launchUrl(
+        Uri.parse(url),
+      );
     } catch (e) {
-      showErrorToast(context: context, message: "Failed to launch terms and condition");
+      showErrorToast(
+          context: context, message: "Failed to launch terms and condition");
       print('failed' + e.toString());
     }
   }
-
 
   openMap() async {
     double lat = 40.158867;
@@ -42,8 +42,10 @@ final url='https://doabaindianrestaurantohio.com/terms-conditions/';
 
   openwhatsapp(context) async {
     var contact = "+16142822341";
-    var androidUrl = "whatsapp://send?phone=${Const.adminPhone}&text=Hi, I need some help";
-    var iosUrl = "https://wa.me/${Const.adminPhone}?text=${Uri.parse('Hi, I need some help')}";
+    var androidUrl =
+        "whatsapp://send?phone=${Const.adminPhone}&text=Hi, I need some help";
+    var iosUrl =
+        "https://wa.me/${Const.adminPhone}?text=${Uri.parse('Hi, I need some help')}";
 
     try {
       if (Platform.isIOS) {

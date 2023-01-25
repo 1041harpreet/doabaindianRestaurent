@@ -48,13 +48,14 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
           backgroundColor: AppConfig.primaryColor,
           title: Text("Notifications"),
           actions: [
-           Tooltip(child: Padding(
-             padding: const EdgeInsets.all(8.0),
-             child: Icon(Icons.info),
-           ),
-           message: "You can only view latest 10 Notifications",
-             triggerMode: TooltipTriggerMode.tap,
-           )
+            Tooltip(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.info),
+              ),
+              message: "You can only view latest 10 Notifications",
+              triggerMode: TooltipTriggerMode.tap,
+            )
           ],
         ),
         backgroundColor: AppConfig.secmainColor,

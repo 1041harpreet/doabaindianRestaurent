@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,10 +6,8 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
-import 'package:restaurent.app/screens/navBar/profille_page/main_Profile_screen.dart';
 
 import '../../provider/nav_bar_provider.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import '../../services/notification_service/notification.dart';
 
 class NavBar extends ConsumerStatefulWidget {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/config/config.dart';
-import 'package:restaurent.app/provider/notification_provider.dart';
 
 import 'notification_setting_provider.dart';
 
@@ -23,27 +22,27 @@ class NotificationSetting extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(children: [
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Text("Updates from DOABA INDIAN RESTAURANT",style: AppConfig.blacktext),
-                ReactiveSwitch(
-                  activeColor:
-                  MaterialStateColor.resolveWith((states) => Colors.green),
-                  formControlName: 'updates',
-                  inactiveThumbColor:
-                  MaterialStateColor.resolveWith((states) => Colors.black26),
-                  inactiveTrackColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.grey.shade500),
-                  onChanged: (control) {
-                    print(control);
-                  },
-                )
-              ],),
+                  Text("Updates from DOABA INDIAN RESTAURANT",
+                      style: AppConfig.blacktext),
+                  ReactiveSwitch(
+                    activeColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.green),
+                    formControlName: 'updates',
+                    inactiveThumbColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.black26),
+                    inactiveTrackColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.grey.shade500),
+                    onChanged: (control) {
+                      print(control);
+                    },
+                  )
+                ],
+              ),
             ]),
           ),
-        )
-    );
+        ));
   }
 }

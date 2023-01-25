@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/screens/auth/forget_password.dart';
 import 'package:restaurent.app/screens/auth/sign_up_screen.dart';
-import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
 
 import '../../config/config.dart';
@@ -35,7 +33,7 @@ class LoginScreen extends ConsumerWidget {
             //page content here
             Expanded(
               flex: 9,
-              child: buildCard(size, authprovider, context,navprovider),
+              child: buildCard(size, authprovider, context, navprovider),
             ),
           ],
         ),
@@ -43,7 +41,7 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildCard(Size size, authprovider, context,navprovider) {
+  Widget buildCard(Size size, authprovider, context, navprovider) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -91,19 +89,29 @@ class LoginScreen extends ConsumerWidget {
               ),
 
               //email & password section
-              textfieldbtn(size, 'Email', 'email', {
-                ValidationMessage.required: (error) =>
-                    "The email must not be empty",
-                ValidationMessage.email: (error) =>
-                    'Please enter a valid email',
-              },false),
+              textfieldbtn(
+                  size,
+                  'Email',
+                  'email',
+                  {
+                    ValidationMessage.required: (error) =>
+                        "The email must not be empty",
+                    ValidationMessage.email: (error) =>
+                        'Please enter a valid email',
+                  },
+                  false),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              passwordField(size, 'Password', 'password', {
-                ValidationMessage.required: (error) =>
-                    "The password must not be empty",
-              },navprovider),
+              passwordField(
+                  size,
+                  'Password',
+                  'password',
+                  {
+                    ValidationMessage.required: (error) =>
+                        "The password must not be empty",
+                  },
+                  navprovider),
               SizedBox(
                 height: size.height * 0.01,
               ),
@@ -221,7 +229,6 @@ class LoginScreen extends ConsumerWidget {
       ),
     );
   }
-
 
   // Widget loadingButton(Size size) {
   //   return Container(

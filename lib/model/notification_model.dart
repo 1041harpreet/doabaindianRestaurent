@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
-
 List<NotificationItem> subcategoryDataFromJson(String str) =>
     List<NotificationItem>.from(
         json.decode(str).map((x) => NotificationItem.fromJson(x)));
@@ -28,21 +26,20 @@ class NotificationItem {
 
   factory NotificationItem.fromJson(Map<String, dynamic> json) =>
       NotificationItem(
-          date: json["date"],
-          email: json["email"],
-          orderID: json["orderID"],
-          status: json["status"],
-          tax: json["tax"],
-          total: json["total"],
-
+        date: json["date"],
+        email: json["email"],
+        orderID: json["orderID"],
+        status: json["status"],
+        tax: json["tax"],
+        total: json["total"],
       );
 
   Map<String, dynamic> toJson() => {
-    "date": date,
-    "email": email,
-    "orderID": orderID,
-    "status": status,
-    "tax": tax,
-    "total": total,
-  };
+        "date": date,
+        "email": email,
+        "orderID": orderID,
+        "status": status,
+        "tax": tax,
+        "total": total,
+      };
 }

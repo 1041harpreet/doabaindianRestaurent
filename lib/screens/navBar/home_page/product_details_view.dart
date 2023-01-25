@@ -18,7 +18,8 @@ class ProductDetailsView extends ConsumerStatefulWidget {
   var item;
   String catname;
 
-  ProductDetailsView({Key? key, required this.item, required this.catname}) : super(key: key);
+  ProductDetailsView({Key? key, required this.item, required this.catname})
+      : super(key: key);
 
   @override
   ConsumerState<ProductDetailsView> createState() => _ProductDetailsViewState();
@@ -26,11 +27,14 @@ class ProductDetailsView extends ConsumerStatefulWidget {
 
 class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
   bool isselected = false;
+
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp)async {
-     await ref.watch(categoryProvider).getDropDownItems(widget.catname, widget.item.title);
-      ref.watch(categoryProvider).initquanity( widget.item.price);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await ref
+          .watch(categoryProvider)
+          .getDropDownItems(widget.catname, widget.item.title);
+      ref.watch(categoryProvider).initquanity(widget.item.price);
       ref.watch(categoryProvider).initialfavButton();
     });
     super.initState();
@@ -61,7 +65,9 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                       },
                       child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.white, border: Border.all(color: Colors.black12), borderRadius: BorderRadius.circular(10.0)),
+                              color: Colors.white,
+                              border: Border.all(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10.0)),
                           width: 40.0,
                           height: 40.0,
                           child: const Icon(
@@ -81,12 +87,15 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                         );
                       },
                       child: Container(
-                        decoration:
-                            BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black12), borderRadius: BorderRadius.circular(10.0)),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(10.0)),
                         width: 40.0,
                         height: 40.0,
                         child: Badge(
-                          badgeContent: Text(cartprovider.badgevalue.toString()),
+                          badgeContent:
+                              Text(cartprovider.badgevalue.toString()),
                           child: const Icon(
                             Icons.shopping_cart,
                             color: Colors.grey,
@@ -113,9 +122,13 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                   child: CachedNetworkImage(
                     imageUrl: widget.item.img,
                     fit: BoxFit.cover,
-                    progressIndicatorBuilder: (context, url, downloadProgress) =>
-                        CircularProgressIndicator(value: downloadProgress.progress, color: AppConfig.primaryColor),
-                    errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.black),
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress,
+                                color: AppConfig.primaryColor),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error, color: Colors.black),
                   ),
                 ),
                 // Image.network(, fit: BoxFit.cover)),
@@ -125,7 +138,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
               child: Stack(
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(top: 20, right: 14, left: 14),
+                    padding:
+                        const EdgeInsets.only(top: 20, right: 14, left: 14),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -140,50 +154,57 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-
                               Text(
-                                widget.item.title.toString().length> 22 ? '${widget.item.title.toString().substring(0,22)}...' :widget.item.title,
+                                widget.item.title.toString().length > 22
+                                    ? '${widget.item.title.toString().substring(0, 22)}...'
+                                    : widget.item.title,
                                 style: GoogleFonts.poppins(
                                   fontSize: wsize * 0.05,
                                   color: Colors.black87,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            provider.dropLoading ? tabShimmer() :
-                            provider.dropDownItemList.isNotEmpty ?
-                            SizedBox(
-                                // width: 100.0,
-                                height: 50.0,
-                                child: DropdownButton<String>(
-                                  dropdownColor: Colors.white,
-                                  style: TextStyle(color: Colors.black),
-                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                  elevation: 5,
-                                  value: provider.current,
-                                  hint: Text('Select Item',
-                                      style: TextStyle(color: Colors.grey)),
-                                  icon: const Icon(Icons.keyboard_arrow_down,color: Colors.black),
-                                  items: provider.dropDownItemList
-                                      .map(( items) {
-                                    return DropdownMenuItem<String>(
-                                      value: items.title,
-                                      child: Text(items.title),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
-                                    provider.changeCurrent(newValue);
-
-
-                                  },
-                                ),
-                              ) : Container(),
+                              provider.dropLoading
+                                  ? tabShimmer()
+                                  : provider.dropDownItemList.isNotEmpty
+                                      ? SizedBox(
+                                          // width: 100.0,
+                                          height: 50.0,
+                                          child: DropdownButton<String>(
+                                            dropdownColor: Colors.white,
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0)),
+                                            elevation: 5,
+                                            value: provider.current,
+                                            hint: Text('Select Item',
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                            icon: const Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: Colors.black),
+                                            items: provider.dropDownItemList
+                                                .map((items) {
+                                              return DropdownMenuItem<String>(
+                                                value: items.title,
+                                                child: Text(items.title),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String? newValue) {
+                                              provider.changeCurrent(newValue);
+                                            },
+                                          ),
+                                        )
+                                      : Container(),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               widget.catname.length > 30
-                                  ? Text(widget.catname.substring(0, 30) + '...',
+                                  ? Text(
+                                      widget.catname.substring(0, 30) + '...',
                                       style: GoogleFonts.poppins(
                                         fontSize: wsize * 0.045,
                                         color: Colors.black,
@@ -218,13 +239,17 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              width: 0.1,
-                                            ),),
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            width: 0.1,
+                                          ),
+                                        ),
                                         child: Padding(
                                           padding: EdgeInsets.all(wsize * 0.03),
-                                          child: Text("-", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                          child: Text("-",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                       ),
                                     ),
@@ -237,7 +262,9 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                         )),
                                     child: Padding(
                                       padding: EdgeInsets.all(8.0),
-                                      child: Text(provider.quantity.toString(), style: TextStyle(color: Colors.black)),
+                                      child: Text(provider.quantity.toString(),
+                                          style:
+                                              TextStyle(color: Colors.black)),
                                     ),
                                   ),
                                   Padding(
@@ -254,7 +281,10 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                             )),
                                         child: Padding(
                                           padding: EdgeInsets.all(wsize * 0.03),
-                                          child: Text("+", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                                          child: Text("+",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold)),
                                         ),
                                       ),
                                     ),
@@ -300,8 +330,10 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                   Navigator.push(
                                       context,
                                       CupertinoPageRoute(
-                                          builder: (context) => ProductDetailsView(
-                                                item: provider.subcategory[index],
+                                          builder: (context) =>
+                                              ProductDetailsView(
+                                                item:
+                                                    provider.subcategory[index],
                                                 catname: widget.catname,
                                               )));
                                 },
@@ -314,17 +346,21 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                       // borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          child: buildImg(hsize, wsize, provider.subcategory[index].img),
+                                          child: buildImg(hsize, wsize,
+                                              provider.subcategory[index].img),
                                           height: hsize * 0.2,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: Text(
                                             provider.subcategory[index].title,
-                                            style: GoogleFonts.mulish(fontSize: hsize * 0.02, color: Colors.black),
+                                            style: GoogleFonts.mulish(
+                                                fontSize: hsize * 0.02,
+                                                color: Colors.black),
                                           ),
                                         )
                                       ],
@@ -378,7 +414,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           hoverColor: Colors.black12,
                           onTap: () async {
                             await provider.changeselect();
-                            await provider.removeToFavourite(cartprovider.email, widget.item);
+                            await provider.removeToFavourite(
+                                cartprovider.email, widget.item);
                           },
                           child: const Icon(
                             CupertinoIcons.heart_fill,
@@ -391,7 +428,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           onTap: () async {
                             print('fav');
                             await provider.changeselect();
-                            await provider.addToFavourite(cartprovider.email, widget.item, widget.catname);
+                            await provider.addToFavourite(cartprovider.email,
+                                widget.item, widget.catname);
                           },
                           child: const Icon(
                             CupertinoIcons.heart,
@@ -406,7 +444,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                 child: provider.quantity == 0
                     ? InkWell(
                         onTap: () {
-                          showErrorToast(context: context, message: "please select item");
+                          showErrorToast(
+                              context: context, message: "please select item");
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -426,10 +465,12 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                       )
                     : InkWell(
                         onTap: () {
-                          var current= provider.current.toString().isEmpty ? provider.current : '-'+provider.current.toString() ;
+                          var current = provider.current.toString().isEmpty
+                              ? provider.current
+                              : '-' + provider.current.toString();
                           print('cart clicked');
-                          cartprovider.addToCart(widget.item,
-                              current, provider.quantity, widget.catname, context);
+                          cartprovider.addToCart(widget.item, current,
+                              provider.quantity, widget.catname, context);
                           print('cart done');
                         },
                         child: cartprovider.cartloading == true

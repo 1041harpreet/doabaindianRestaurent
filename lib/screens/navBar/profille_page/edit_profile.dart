@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent.app/config/config.dart';
-import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/arcticons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/auth_provider.dart';
 
 import 'my_Profile_screen.dart';
 
 class EditProfile extends ConsumerWidget {
   EditProfile({Key? key}) : super(key: key);
-
 
   showLoaderDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
@@ -33,9 +32,7 @@ class EditProfile extends ConsumerWidget {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return WillPopScope(
-            onWillPop: () async => false,
-            child: alert);
+        return WillPopScope(onWillPop: () async => false, child: alert);
       },
     );
   }
@@ -52,9 +49,9 @@ class EditProfile extends ConsumerWidget {
             title: Text("Edit Profile"),
             actions: [
               IconButton(
-                  onPressed: ()async {
+                  onPressed: () async {
                     print(authprovider.updateProfile.value);
-                   await authprovider.updateProfileDetails(
+                    await authprovider.updateProfileDetails(
                       context,
                       authprovider.updateProfile.control('email').value,
                       authprovider.updateProfile.control('username').value,
@@ -63,7 +60,7 @@ class EditProfile extends ConsumerWidget {
                     );
                     // Navigator.pop(context);
                   },
-                  icon: Icon(Icons.check))
+                  icon: Text("Save"))
             ]),
         body: ReactiveForm(
             formGroup: authprovider.updateProfile,
@@ -110,17 +107,39 @@ class EditProfile extends ConsumerWidget {
                                       ),
                                       onTap: () async {
                                         // showLoaderDialog(context);
-                                        var i=await authprovider.getImage(context, ImageSource.gallery);
+                                        var i = await authprovider.getImage(
+                                            context, ImageSource.gallery);
                                         showLoaderDialog(context);
-                                        i.toString().isEmpty? '': authprovider.updateProfile.control('img').value=  await authprovider.uploadimage(authprovider.updateProfile.control('email').value, context, i);
+                                        i.toString().isEmpty
+                                            ? ''
+                                            : authprovider.updateProfile
+                                                    .control('img')
+                                                    .value =
+                                                await authprovider.uploadimage(
+                                                    authprovider.updateProfile
+                                                        .control('email')
+                                                        .value,
+                                                    context,
+                                                    i);
                                         Navigator.pop(context);
                                       },
                                     ),
                                     GestureDetector(
                                       onTap: () async {
-                                        var i=await authprovider.getImage(context, ImageSource.camera);
+                                        var i = await authprovider.getImage(
+                                            context, ImageSource.camera);
                                         showLoaderDialog(context);
-                                      i.toString().isEmpty? '':  authprovider.updateProfile.control('img').value=  await authprovider.uploadimage(authprovider.updateProfile.control('email').value, context, i);
+                                        i.toString().isEmpty
+                                            ? ''
+                                            : authprovider.updateProfile
+                                                    .control('img')
+                                                    .value =
+                                                await authprovider.uploadimage(
+                                                    authprovider.updateProfile
+                                                        .control('email')
+                                                        .value,
+                                                    context,
+                                                    i);
                                         Navigator.pop(context);
                                       },
                                       child: Card(
@@ -141,8 +160,9 @@ class EditProfile extends ConsumerWidget {
                           },
                           child: Stack(
                             children: [
-                          authprovider.img.isEmpty ?
-                              buildImage(image) : buildNetoworkImage(authprovider.img),
+                              authprovider.img.isEmpty
+                                  ? buildImage(image)
+                                  : buildNetoworkImage(authprovider.img),
                               // isEdit ?
                               Positioned(
                                 bottom: 0,

@@ -11,8 +11,6 @@ import 'edit_profile.dart';
 class MyProfile extends ConsumerWidget {
   MyProfile({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authprovider = ref.watch(authProvider);
@@ -119,38 +117,41 @@ Widget buildImage(img) {
     ),
   );
 }
+
 Widget buildNetoworkImage(img) {
   return ClipOval(
     child: Material(
         color: Colors.transparent,
-        child: CachedNetworkImage(imageUrl: img,
+        child: CachedNetworkImage(
+          imageUrl: img,
           fit: BoxFit.cover,
           width: 148,
           height: 148,
           placeholder: (context, url) {
-            return Center(child: CircularProgressIndicator(),);
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           },
           errorWidget: (context, url, error) {
             return Image.asset('assets/images/avatar.png');
           },
-        )
-    ),
+        )),
   );
 }
 
 Widget buildEditIcon(Color color) => buildCircle(
-  color: Colors.white,
-  all: 3,
-  child: buildCircle(
-    color: color,
-    all: 8,
-    child: const Icon(
-      Icons.add_a_photo,
       color: Colors.white,
-      size: 20,
-    ),
-  ),
-);
+      all: 3,
+      child: buildCircle(
+        color: color,
+        all: 8,
+        child: const Icon(
+          Icons.add_a_photo,
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+    );
 
 Widget buildCircle({
   required Widget child,
