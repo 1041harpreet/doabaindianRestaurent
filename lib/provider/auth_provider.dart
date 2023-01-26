@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/provider/notification_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';

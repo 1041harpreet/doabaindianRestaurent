@@ -5,7 +5,7 @@ import 'package:restaurent.app/screens/navBar/profille_page/main_Profile_screen.
 import '../../config/config.dart';
 import '../completed_order_screen.dart';
 
-Widget drawer(context, authprovider, orderprovider) {
+Widget drawer(context, authprovider, orderprovider,navprovider) {
   return ListView(
     // Important: Remove any padding from the ListView.
     padding: EdgeInsets.zero,
@@ -52,7 +52,7 @@ Widget drawer(context, authprovider, orderprovider) {
         ),
         title: Text('Log Out', style: AppConfig.blacktext),
         onTap: () async {
-          logoutdialogBox(context, authprovider);
+          logoutdialogBox(context, authprovider,navprovider);
           // await authprovider.signOut(context);
         },
       ),

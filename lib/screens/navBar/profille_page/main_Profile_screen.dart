@@ -35,7 +35,7 @@ class ProfileScreen extends ConsumerWidget {
         body: SingleChildScrollView(
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             orderHeader(wsize, hsize),
-            optionListView(authprovider, context, homeprovider)
+            optionListView(authprovider, context, homeprovider, navprovider)
           ]),
         ),
       ),
@@ -43,7 +43,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-Widget optionListView(authprovider, context, homeprovider) {
+Widget optionListView(authprovider, context, homeprovider, navprovider) {
   return Container(
     child: ListView(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
@@ -54,7 +54,7 @@ Widget optionListView(authprovider, context, homeprovider) {
             onClick: () {
               authprovider.myProfile.patchValue({
                 "username": Const.username,
-                "email":Const.email,
+                "email": Const.email,
                 "phone": Const.phone,
                 "img": Const.img
               });
@@ -126,7 +126,7 @@ Widget optionListView(authprovider, context, homeprovider) {
             text: 'Terms & Conditions',
             icon: const Icon(Icons.assignment)),
         _separator(),
-        logoutbutton(authprovider, context),
+        logoutbutton(authprovider, context, navprovider),
         _separator(),
       ],
     ),
@@ -159,7 +159,7 @@ Widget _listItem({icon, text, onClick, showArrow = true}) {
   );
 }
 
-Widget logoutbutton(authprovider, context) {
+Widget logoutbutton(authprovider, context, navprovider) {
   return ListTile(
     leading: const Icon(Icons.logout),
     iconColor: AppConfig.blackColor,
@@ -173,57 +173,59 @@ Widget logoutbutton(authprovider, context) {
       size: 15.0,
     ),
     onTap: () async {
-      logoutdialogBox(context, authprovider);
+      logoutdialogBox(context, authprovider, navprovider);
     },
   );
 }
 
 Widget orderHeader(wsize, hsize) {
   return Padding(
-    padding: EdgeInsets.all(wsize * 0.02),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    padding:
+        EdgeInsets.symmetric(vertical: hsize * 0.02, horizontal: wsize * 0.04),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: hsize * 0.01,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.email,
+                  color: AppConfig.primaryColor,
+                ),
+                Text(
+                  " doabaindianrestaurant@gmail.com",
+                  style: AppConfig.blackTitle,
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.phone,
+                  color: AppConfig.primaryColor,
+                ),
+                Text(
+                  " ${Const.adminPhone}",
+                  style: AppConfig.blackTitle,
+                )
+              ],
+            )
+          ],
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
-          child: Row(
-            children: [
-              Icon(
-                Icons.email,
-                color: AppConfig.primaryColor,
-              ),
-              Text(
-                " doabaindianrestaurant@gmail.com",
-                style: AppConfig.blackTitle,
-              )
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
-          child: Row(
-            children: [
-              Icon(
-                Icons.phone,
-                color: AppConfig.primaryColor,
-              ),
-              Text(
-                " +16143760951",
-                style: AppConfig.blackTitle,
-              )
-            ],
-          ),
+        Image.asset(
+          'assets/images/logo-web.jpg',
+          width: wsize * 0.2,
         )
       ],
     ),
   );
 }
 
-logoutdialogBox(context, authprovider) {
+logoutdialogBox(context, authprovider, navprovider) {
   return showDialog(
     context: context,
     builder: (context) => Theme(
@@ -238,6 +240,7 @@ logoutdialogBox(context, authprovider) {
           ),
           TextButton(
             onPressed: () async {
+              navprovider.changeindex(0);
               await authprovider.signOut(context);
               print('log');
             },

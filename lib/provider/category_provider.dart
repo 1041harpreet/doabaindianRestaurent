@@ -87,16 +87,12 @@ class CategoryService extends ChangeNotifier {
 
   //used to get category items
   getCategory() async {
-    // changeloading(true);
     try {
       var ref = await _firestore.collection('category').get();
       category = ref.docs.map((e) => CategoryItem.fromJson(e.data())).toList();
     } catch (e) {
       category = [];
       print(e.toString());
-    } finally {
-      // changeloading(false);
-      notifyListeners();
     }
   }
 
@@ -118,7 +114,6 @@ class CategoryService extends ChangeNotifier {
       print(e);
     } finally {
       changesubloading(false);
-      // notifyListeners();
     }
   }
 
