@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -124,7 +126,7 @@ class CategoryService extends ChangeNotifier {
     notifyListeners();
   }
 
-  String? current;
+  String current='';
 
   changeCurrent(value) {
     current = value ?? '';
@@ -150,11 +152,13 @@ class CategoryService extends ChangeNotifier {
           current = dropDownItemList[0].title ?? '';
           print(dropDownItemList);
         } else {
+          current='';
           dropDownItemList = [];
         }
         change(false);
       });
     } catch (e) {
+      current='';
       dropDownItemList = [];
       change(false);
     } finally {

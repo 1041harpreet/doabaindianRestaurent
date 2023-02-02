@@ -26,7 +26,7 @@ class ProductDetailsView extends ConsumerStatefulWidget {
 }
 
 class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
-  bool isselected = false;
+  // bool isselected = false;
 
   @override
   void initState() {
@@ -406,9 +406,14 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                   height: 50,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppConfig.greyColor),
-                  ),
+                      shape: BoxShape.circle,
+                      color: Colors.white,boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 10.0,
+                            offset: const Offset(0.0, 5.0),
+                            spreadRadius: 2.0)
+                      ]),
                   child: provider.isselected
                       ? InkWell(
                           hoverColor: Colors.black12,
@@ -419,7 +424,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           },
                           child: const Icon(
                             CupertinoIcons.heart_fill,
-                            size: 45,
+                            // size: 40,
                             color: Colors.red,
                           ),
                         )
@@ -433,12 +438,13 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                           },
                           child: const Icon(
                             CupertinoIcons.heart,
-                            size: 45,
+                            // size: 45,
                             color: Colors.red,
                           ),
                         ),
                 ),
               ),
+
               const SizedBox(width: 20),
               Expanded(
                 child: provider.quantity == 0
@@ -465,8 +471,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                       )
                     : InkWell(
                         onTap: () {
-                          var current = provider.current.toString().isEmpty
-                              ? provider.current
+                          var current = provider.current.isEmpty
+                              ? ''
                               : '-' + provider.current.toString();
                           print('cart clicked');
                           cartprovider.addToCart(widget.item, current,

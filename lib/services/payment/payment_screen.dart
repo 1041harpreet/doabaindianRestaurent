@@ -37,7 +37,7 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
               "shipping_discount": 0
             }
           },
-          "description": "The payment transaction description.",
+          "description": "The payment From DOABA INDIAN RESTAURANT.",
           "item_list": itemlist
         }
       ],
