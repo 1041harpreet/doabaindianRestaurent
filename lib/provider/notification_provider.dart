@@ -27,7 +27,7 @@ class NotificationService extends ChangeNotifier {
   addToNotification(
       String orderid, String email, bool status, tax, total, date)async {
     try {
-      var ref = await _firestore
+      await _firestore
           .collection('notifications')
           .doc(email)
           .collection(email)
@@ -39,8 +39,6 @@ class NotificationService extends ChangeNotifier {
         "tax": tax,
         "total": total,
         "date": date
-      }).then((value) {
-        print('added');
       });
     } catch (e) {
       print(e);

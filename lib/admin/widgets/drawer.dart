@@ -4,8 +4,9 @@ import 'package:restaurent.app/screens/navBar/profille_page/main_Profile_screen.
 
 import '../../config/config.dart';
 import '../completed_order_screen.dart';
+import '../shop_setting_page.dart';
 
-Widget drawer(context, authprovider, orderprovider,navprovider) {
+Widget drawer(context, authprovider, orderprovider, navprovider) {
   return ListView(
     // Important: Remove any padding from the ListView.
     padding: EdgeInsets.zero,
@@ -14,7 +15,6 @@ Widget drawer(context, authprovider, orderprovider,navprovider) {
         // <-- SEE HERE
         decoration: BoxDecoration(color: AppConfig.primaryColor),
         accountName: Text(Const.username, style: AppConfig.blacktext),
-
         accountEmail: Text(
           authprovider.user.email,
           style: AppConfig.blacktext,
@@ -26,9 +26,13 @@ Widget drawer(context, authprovider, orderprovider,navprovider) {
           Icons.home,
           color: Colors.black,
         ),
-        title: Text('Gallery', style: AppConfig.blacktext),
+        title: Text('Shop Setting', style: AppConfig.blacktext),
         onTap: () {
-          Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ShopSettingPage(),
+              ));
         },
       ),
       ListTile(
@@ -52,7 +56,7 @@ Widget drawer(context, authprovider, orderprovider,navprovider) {
         ),
         title: Text('Log Out', style: AppConfig.blacktext),
         onTap: () async {
-          logoutdialogBox(context, authprovider,navprovider);
+          logoutdialogBox(context, authprovider, navprovider);
           // await authprovider.signOut(context);
         },
       ),

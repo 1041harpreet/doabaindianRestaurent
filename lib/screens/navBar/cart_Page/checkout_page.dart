@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent.app/admin/provider/shop_provider.dart';
 import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/config/const.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 
@@ -34,6 +36,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
   Widget build(BuildContext context) {
     final cartprovider = ref.watch(cartProvider);
     final authprovider = ref.watch(authProvider);
+    final shopprovider = ref.watch(shopProvider);
     final checkoutprovider = ref.watch(checkOutProvider);
     final notificationprovider = ref.watch(notificationProvider);
     final size = MediaQuery.of(context).size;
@@ -307,10 +310,12 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                       size,
                       () async {
                         BuildContext parentContext = context;
-                        print('checkout start ');
 
                         if (checkoutprovider.checkoutForm.valid) {
-                          //Navigator.push(context, MaterialPageRoute(builder: (context) => BraintreePayment(),));
+                        await shopprovider.getStatus();
+                          Const.status==false ?  showSuccessToast(
+                              message: "Sorry, We are Closed, You can't order Now",
+                              context: context) :
                           Navigator.push(
                             context,
                             MaterialPageRoute(

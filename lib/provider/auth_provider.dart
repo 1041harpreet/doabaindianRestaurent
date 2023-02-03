@@ -453,6 +453,11 @@ class AuthService extends ChangeNotifier {
         Const.adminMail = value.get('mail');
         Const.adminPhone = value.get('phone');
         Const.devMail = value.get('devmail');
+        Const.key = value.get('key');
+        Const.secMail = value.get('secMail');
+        Const.clientID = value.get('clientID');
+        Const.secret = value.get('secret');
+        Const.status = value.get('status');
         print(Const.adminPhone);
       });
     } catch (e) {

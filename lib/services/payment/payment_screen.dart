@@ -20,8 +20,8 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
   print(total);
   return UsePaypal(
       sandboxMode: false,
-      clientId: Const().clientID,
-      secretKey: Const().secret,
+      clientId: Const.clientID,
+      secretKey: Const.secret,
       returnURL: Platform.isAndroid
           ? "com.example.restaurent.app://paypalpay"
           : "com.xstudioz.doaba://paypalpay",
@@ -87,12 +87,12 @@ Widget makePayment(cartprovider, checkoutprovider, parentcontext, double total,
               //used to send notification to user
               NotificationController().createNewNotification(
                   "Hey ${fullname}! Your order is confirmed",
-                  "Your order on ${email} of total ${cartprovider.total} is placed. ",
+                  "Your order on ${email} of total \$${cartprovider.total} is placed. ",
                   usertoken);
               //used to send notification to admin
               NotificationController().createNewNotification(
                   'Hey ! Order From ${fullname}',
-                  "New order on ${email} of total ${cartprovider.total} is Placed.",
+                  "New order on ${email} of total \$${cartprovider.total} is Placed.",
                   checkoutprovider.adminToken);
 
               //add on to notification

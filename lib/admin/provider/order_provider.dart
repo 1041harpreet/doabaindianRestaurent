@@ -1,11 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:reactive_forms/reactive_forms.dart';
 import '../../model/order_model_admin.dart';
 import '../../widgets/toast_service.dart';
 
 class OrderService extends ChangeNotifier {
+
+  FormGroup shopInfo= FormGroup({
+    "status": FormControl<bool>(
+        validators: [Validators.required]),
+
+  });
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool pendingloading = false;
   bool firstComLoading = false;
