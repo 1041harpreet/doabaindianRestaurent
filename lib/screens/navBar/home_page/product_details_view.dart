@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +93,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                             borderRadius: BorderRadius.circular(10.0)),
                         width: 40.0,
                         height: 40.0,
-                        child: Badge(
+                        child: badges.Badge(
                           badgeContent:
                               Text(cartprovider.badgevalue.toString()),
                           child: const Icon(
