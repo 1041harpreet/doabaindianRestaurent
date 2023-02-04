@@ -158,8 +158,7 @@ class AuthService extends ChangeNotifier {
           .createUserWithEmailAndPassword(
         email: email,
         password: password,
-      )
-          .then((value) async {
+      ).then((value) async {
         await adduser(email, username, phone, '');
         await getUserInfo(_auth.currentUser?.email, true);
         await setInitialTotal(email);
