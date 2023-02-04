@@ -1,11 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:reactive_forms/reactive_forms.dart';
 import '../../model/order_model_admin.dart';
 import '../../widgets/toast_service.dart';
 
 class OrderService extends ChangeNotifier {
+
+  FormGroup shopInfo= FormGroup({
+    "status": FormControl<bool>(
+        validators: [Validators.required]),
+
+  });
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool pendingloading = false;
   bool firstComLoading = false;
@@ -49,6 +55,7 @@ class OrderService extends ChangeNotifier {
         lastdocPending = ref.docs.last;
       }
     } catch (e) {
+      pendingOrderList=pendingOrderList;
       print(e.toString());
     } finally {
       changeloading(false);
@@ -74,9 +81,9 @@ class OrderService extends ChangeNotifier {
           await ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
       pendingOrderList.addAll(l);
       print(pendingOrderList.length);
-
       lastdocPending = ref.docs.last;
     } catch (e) {
+      pendingOrderList=pendingOrderList;
       print(e);
     } finally {
       changePfetching(false);
@@ -158,7 +165,6 @@ class OrderService extends ChangeNotifier {
 
   //mark as completed
   bool markloading = false;
-
   changemarkloading(value) {
     markloading = value;
     notifyListeners();
@@ -190,7 +196,6 @@ class OrderService extends ChangeNotifier {
 
   //get list of item
   List orderDetailList = [];
-
   getorderdetails(doc) async {
     changeDetailLoading(true);
     try {
@@ -199,7 +204,6 @@ class OrderService extends ChangeNotifier {
       orderDetailList = ref.docs
           .map((e) => AdminOrderItemDetails.fromJson(e.data()))
           .toList();
-      notifyListeners();
     } catch (e) {
       print(e.toString());
     } finally {
@@ -210,7 +214,6 @@ class OrderService extends ChangeNotifier {
 
   //delete order
   bool deleteloading = false;
-
   changedeleteloading(value) {
     deleteloading = value;
     notifyListeners();

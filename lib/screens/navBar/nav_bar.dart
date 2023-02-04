@@ -1,5 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -60,7 +60,7 @@ class _NavBarState extends ConsumerState<NavBar> {
                   size: 30.0),
               label: "Favourite"),
           BottomNavigationBarItem(
-              icon: Badge(
+              icon: badge.Badge(
                   badgeContent: Text(cartprovider.badgevalue.toString()),
                   child: const Icon(Icons.shopping_cart, size: 30.0)),
               label: "Cart"),

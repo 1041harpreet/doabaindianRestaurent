@@ -1,8 +1,10 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent.app/model/category_model.dart';
 
+import '../config/const.dart';
 import '../model/favourite_item_model.dart';
 import '../model/slider_model.dart';
 import '../model/subcategory_model.dart';
@@ -86,16 +88,12 @@ class CategoryService extends ChangeNotifier {
 
   //used to get category items
   getCategory() async {
-    // changeloading(true);
     try {
       var ref = await _firestore.collection('category').get();
       category = ref.docs.map((e) => CategoryItem.fromJson(e.data())).toList();
     } catch (e) {
       category = [];
       print(e.toString());
-    } finally {
-      // changeloading(false);
-      notifyListeners();
     }
   }
 
@@ -117,7 +115,6 @@ class CategoryService extends ChangeNotifier {
       print(e);
     } finally {
       changesubloading(false);
-      // notifyListeners();
     }
   }
 
@@ -125,15 +122,13 @@ class CategoryService extends ChangeNotifier {
 
   change(value) {
     dropLoading = value;
-    print('drop loading value' + dropLoading.toString());
     notifyListeners();
   }
 
-  String? current;
+  String current='';
 
   changeCurrent(value) {
     current = value ?? '';
-    print(current);
     notifyListeners();
   }
 
@@ -156,11 +151,13 @@ class CategoryService extends ChangeNotifier {
           current = dropDownItemList[0].title ?? '';
           print(dropDownItemList);
         } else {
+          current='';
           dropDownItemList = [];
         }
         change(false);
       });
     } catch (e) {
+      current='';
       dropDownItemList = [];
       change(false);
     } finally {
@@ -201,7 +198,6 @@ class CategoryService extends ChangeNotifier {
   getcarsoulItem() async {
     changecarload(true, carload);
     try {
-      // var item=category[index].title;
       var ref = await _firestore.collection('carsoul_slider').get();
       carsoulList = ref.docs.map((e) => SliderItem.fromJson(e.data())).toList();
       print(carsoulList);
@@ -220,13 +216,13 @@ class CategoryService extends ChangeNotifier {
     notifyListeners();
   }
 
-  addToFavourite(email, item, category) async {
+  addToFavourite( item, category) async {
     // changefavloading(true);
     try {
       await _firestore
           .collection('favourite')
-          .doc(email)
-          .collection(email)
+          .doc(Const.email)
+          .collection(Const.email)
           .doc(item.title)
           .set({
         "title": item.title,
@@ -237,13 +233,13 @@ class CategoryService extends ChangeNotifier {
     } catch (e) {}
   }
 
-  getFavouriteItem(email) async {
+  getFavouriteItem() async {
     changefavloading(true);
     try {
       var ref = await _firestore
           .collection('favourite')
-          .doc(email)
-          .collection(email)
+          .doc(Const.email)
+          .collection(Const.email)
           .get();
       favList = ref.docs.map((e) => FavItem.fromJson(e.data())).toList();
     } catch (e) {
@@ -254,12 +250,12 @@ class CategoryService extends ChangeNotifier {
     }
   }
 
-  removeToFavourite(email, item) async {
+  removeToFavourite( item) async {
     try {
       await _firestore
           .collection('favourite')
-          .doc(email)
-          .collection(email)
+          .doc(Const.email)
+          .collection(Const.email)
           .doc(item.title)
           .delete();
     } catch (e) {

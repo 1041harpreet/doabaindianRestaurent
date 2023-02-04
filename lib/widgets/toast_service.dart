@@ -14,6 +14,7 @@ showErrorToast({message,context}) {
     duration: const Duration(seconds: 5),
     curve: Curves.easeOutCubic,
     reverseCurve: Curves.easeOutCubic,
+
   );
 }
 

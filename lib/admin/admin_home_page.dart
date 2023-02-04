@@ -8,6 +8,7 @@ import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
 
+import '../provider/nav_bar_provider.dart';
 import '../services/notification_service/notification.dart';
 
 class AdminHomePage extends ConsumerStatefulWidget {
@@ -65,12 +66,13 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
     final wsize = MediaQuery.of(context).size.width;
     final hsize = MediaQuery.of(context).size.height;
     final authprovider = ref.watch(authProvider);
+    final navprovider = ref.watch(NavBarProvider);
     final orderprovider = ref.watch(orderProvider);
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
               backgroundColor: AppConfig.primaryColor,
-              title: Text("Your Pending Orders"),
+              title: Text("Pending Orders"),
               actions: [
                 IconButton(
                     onPressed: () async {
@@ -84,7 +86,7 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
           drawer: Drawer(
             backgroundColor: Colors.white,
             width: wsize * .7,
-            child: drawer(context, authprovider, orderprovider),
+            child: drawer(context, authprovider, orderprovider,navprovider),
           ),
           backgroundColor: AppConfig.secmainColor,
           body: orderprovider.pendingloading

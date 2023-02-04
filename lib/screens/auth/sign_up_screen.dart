@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 
@@ -15,6 +16,7 @@ class SignUpScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authprovider = ref.watch(authProvider);
+    final cartprovider = ref.watch(cartProvider);
     final navprovider = ref.watch(NavBarProvider);
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -32,7 +34,8 @@ class SignUpScreen extends ConsumerWidget {
             //page content here
             Expanded(
               flex: 9,
-              child: buildCard(size, authprovider, context, navprovider),
+              child: buildCard(
+                  size, authprovider, context, navprovider, cartprovider),
             ),
           ],
         ),
@@ -40,7 +43,8 @@ class SignUpScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildCard(Size size, authprovider, context, navprovider) {
+  Widget buildCard(
+      Size size, authprovider, context, navprovider, cartprovider) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -139,12 +143,10 @@ class SignUpScreen extends ConsumerWidget {
                   {
                     ValidationMessage.required: (error) =>
                         "The password must not be empty",
+                    ValidationMessage.minLength: (error) =>
+                        "The password must be greater than 6 character",
                   },
                   navprovider),
-              // textfieldbtn(size, 'Password', 'password', {
-              //   ValidationMessage.required: (error) =>
-              //       "The password must not be empty",
-              // },true),
               SizedBox(
                 height: size.height * 0.02,
               ),
@@ -162,7 +164,7 @@ class SignUpScreen extends ConsumerWidget {
                             context,
                             authprovider.SignUpForm.control('name').value,
                             authprovider.SignUpForm.control('phone').value);
-
+                        cartprovider.getBadge();
                         print('sign up end');
                       } else {
                         print('invalid');

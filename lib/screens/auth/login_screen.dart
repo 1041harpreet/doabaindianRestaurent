@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/screens/auth/forget_password.dart';
 import 'package:restaurent.app/screens/auth/sign_up_screen.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
@@ -16,6 +17,7 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authprovider = ref.watch(authProvider);
+    final cartprovider = ref.watch(cartProvider);
     final navprovider = ref.watch(NavBarProvider);
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -33,7 +35,7 @@ class LoginScreen extends ConsumerWidget {
             //page content here
             Expanded(
               flex: 9,
-              child: buildCard(size, authprovider, context, navprovider),
+              child: buildCard(size, authprovider, context, navprovider,cartprovider),
             ),
           ],
         ),
@@ -41,7 +43,7 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildCard(Size size, authprovider, context, navprovider) {
+  Widget buildCard(Size size, authprovider, context, navprovider,cartprovider) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -126,8 +128,7 @@ class LoginScreen extends ConsumerWidget {
                           MaterialPageRoute(
                             builder: (context) => ForgetPasswordScreen(),
                           ));
-                      // authprovider.resetPassword('1041harpreet@gmail.com');
-                      // authprovider.updateEmail('1044harpreet@gmail.com');
+
                     },
                     child: Text(
                       'Forget Password?',
@@ -155,6 +156,7 @@ class LoginScreen extends ConsumerWidget {
                             authprovider.loginForm.control('email').value,
                             authprovider.loginForm.control('password').value,
                             context);
+                        cartprovider.getBadge();
                         print('sign in');
                       } else {
                         print('invalid');

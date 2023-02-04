@@ -185,13 +185,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                               index: 0,
                             ),
                           ));
-                      print('pressed more');
                     },
                     child: Padding(
                       padding:
                           EdgeInsets.only(right: wsize * .03, top: hsize * .01),
                       child: Text("See All",
-                          style: TextStyle(color: Colors.grey.shade900)),
+                          style: TextStyle(color: AppConfig.primaryColor)),
                     ),
                   ),
                 ],
@@ -220,13 +219,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                               index: 0,
                             ),
                           ));
-                      print('pressed more');
                     },
                     child: Padding(
                       padding:
                           EdgeInsets.only(right: wsize * .03, top: hsize * .01),
                       child: Text("See all",
-                          style: TextStyle(color: Colors.grey.shade900)),
+                          style: TextStyle(color: AppConfig.primaryColor)),
                     ),
                   ),
                 ],

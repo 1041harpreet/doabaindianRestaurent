@@ -90,7 +90,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
                     ),
               row("Tax : ", '\$${widget.orderList[widget.index].tax}'),
               row("Total : ", '\$${widget.orderList[widget.index].total}'),
-              row("Status : ", '${widget.orderList[widget.index].status}'),
+              row("Status : ", '${widget.orderList[widget.index].status==false  ? 'Payment Completed': "Order Completed"}'),
               row("Note : ", '${widget.orderList[widget.index].note}'),
               const Divider(),
               if (widget.orderList[widget.index].status == false)

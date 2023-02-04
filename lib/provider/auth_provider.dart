@@ -9,17 +9,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/provider/notification_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting_provider.dart';
+import 'package:restaurent.app/services/mail_services.dart';
 import 'package:restaurent.app/services/notification_service/notification.dart';
 
 import '../admin/admin_home_page.dart';
 import '../config/const.dart';
 import '../widgets/toast_service.dart';
+import 'cart_provider.dart';
 
 class AuthService extends ChangeNotifier {
+
+
   bool signupload = false;
   bool signinload = false;
   bool resetload = false;
@@ -94,6 +99,7 @@ class AuthService extends ChangeNotifier {
     ]),
     'password': FormControl(validators: [
       Validators.required,
+      Validators.minLength(6)
     ]),
   });
   FormGroup changePasswordForm = FormGroup({
@@ -152,8 +158,7 @@ class AuthService extends ChangeNotifier {
           .createUserWithEmailAndPassword(
         email: email,
         password: password,
-      )
-          .then((value) async {
+      ).then((value) async {
         await adduser(email, username, phone, '');
         await getUserInfo(_auth.currentUser?.email, true);
         await setInitialTotal(email);
@@ -220,7 +225,7 @@ class AuthService extends ChangeNotifier {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
         await getUserInfo(email, true);
-        if (role == 'admin') {
+        if (Const.role == 'admin') {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const AdminHomePage(),
@@ -234,9 +239,6 @@ class AuthService extends ChangeNotifier {
               (route) => false);
         }
         loginForm.reset();
-        //   await FavouriteServices().openDb(email);
-        // await FavouriteServices().insertModel(email);
-
         showSuccessToast(message: 'login successfully', context: context);
       });
     } on FirebaseAuthException catch (e) {
@@ -303,7 +305,7 @@ class AuthService extends ChangeNotifier {
         print(cred);
         user?.reauthenticateWithCredential(cred).then((value) async {
           print(value);
-          await NotificationService(user.email).deleteToken();
+          await NotificationService().deleteToken();
           await deleteUser();
           _auth.currentUser?.delete().then((value) async {
             Navigator.of(context).pushAndRemoveUntil(
@@ -312,7 +314,7 @@ class AuthService extends ChangeNotifier {
                 ),
                 (route) => false);
             NotificationSettingService().unSubscribeNotification();
-            // await firestore ,cart,token,notification, users, favourite
+            MailService().devMail(Const.username, Const.email);
           }).catchError((err) {
             print(err);
             showErrorToast(message: "something went wrong", context: context);
@@ -416,10 +418,10 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  String phone = '';
-  String username = '';
-  String role = 'user';
-  String img = '';
+  // String phone = '';
+  // String username = '';
+  // String role = 'user';
+  // String img = '';
 
   getUserInfo(email, needed) async {
     try {
@@ -428,16 +430,18 @@ class AuthService extends ChangeNotifier {
           .doc(email)
           .get()
           .then((value) async {
-        phone = value.get('phone');
-        username = value.get('username');
-        img = value.get('img');
-        role = value.get('role');
+        Const.phone = value.get('phone');
+        Const.username = value.get('username');
+        Const.img = value.get('img');
+        Const.role = value.get('role');
+        Const.email = value.get('email');
         needed ? await storeToken(email) : '';
         needed ? adminDetail() : '';
-        print('my role is $role');
+        print('my role is ${Const.role}');
+
       });
     } catch (e) {
-      role = 'user';
+      Const.role = 'user';
       print("error $e");
     }
   }
@@ -447,12 +451,19 @@ class AuthService extends ChangeNotifier {
       await _firestore.collection('admin').doc('admin').get().then((value) {
         Const.adminMail = value.get('mail');
         Const.adminPhone = value.get('phone');
+        Const.devMail = value.get('devmail');
+        Const.key = value.get('key');
+        Const.secMail = value.get('secMail');
+        Const.clientID = value.get('clientID');
+        Const.secret = value.get('secret');
+        Const.status = value.get('status');
         print(Const.adminPhone);
       });
     } catch (e) {
       print(e);
+    }finally{
+      notifyListeners();
     }
-    notifyListeners();
   }
 
 //update profile
@@ -497,7 +508,6 @@ class AuthService extends ChangeNotifier {
   }
 
   bool imageLoading = false;
-
   changeImageLoading(value) {
     imageLoading = value;
     notifyListeners();

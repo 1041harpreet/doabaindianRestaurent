@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/config/const.dart';
 import 'package:restaurent.app/screens/navBar/home_page/product_details_view.dart';
 import 'package:restaurent.app/widgets/category_item.dart';
 
@@ -140,10 +141,10 @@ Widget cartlistBuilder(wsize, hsize, cartprovider, context, checkoutprovider,
                                           print('checkout');
                                           checkoutprovider.checkoutForm
                                               .patchValue({
-                                            "fullname": authprovider.username,
+                                            "fullname": Const.username,
                                             "phone":
-                                                authprovider.phone.toString(),
-                                            "email": authprovider.user.email
+                                                Const.phone,
+                                            "email":Const.email
                                           });
                                           Navigator.push(
                                               context,
