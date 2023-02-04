@@ -32,7 +32,6 @@ class ShopService extends ChangeNotifier {
     }
   }
   getStatus() async {
-    // changeload(true);
     try {
       await _firestore.collection('admin').doc('admin').get().then((value) {
         Const.status = value.get('status');

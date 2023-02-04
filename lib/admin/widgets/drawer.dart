@@ -16,7 +16,7 @@ Widget drawer(context, authprovider, orderprovider, navprovider) {
         decoration: BoxDecoration(color: AppConfig.primaryColor),
         accountName: Text(Const.username, style: AppConfig.blacktext),
         accountEmail: Text(
-          authprovider.user.email,
+          Const.email,
           style: AppConfig.blacktext,
         ),
         currentAccountPicture: Image.asset('assets/images/avatar.png'),
