@@ -55,6 +55,12 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Select Profile Photo</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Click profile picture</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Profile photo</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
