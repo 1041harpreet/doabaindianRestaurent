@@ -128,7 +128,6 @@ class NotificationController extends ChangeNotifier {
       try {
         await AwesomeNotificationsFcm().subscribeToTopic('all');
         token = await AwesomeNotificationsFcm().requestFirebaseAppToken();
-        print('token is ' + token);
         return token;
       } catch (exception) {
         debugPrint('$exception');
@@ -177,7 +176,7 @@ class NotificationController extends ChangeNotifier {
 
     final headers = {
       'content-type': 'application/json',
-      'Authorization': 'key=${Const().key}'
+      'Authorization': 'key=${Const.key}'
     };
 
     BaseOptions options = BaseOptions(

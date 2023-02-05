@@ -30,9 +30,12 @@ class _MoreCategoryState extends ConsumerState<MoreCategory>
       await ref.watch(categoryProvider).getsubcategory(ref.watch(categoryProvider).catogries[widget.index]);
     });
     _controller.addListener(() async {
-      ref.watch(categoryProvider).subloading == true;
-      await ref.watch(categoryProvider).getsubcategory(
-          await ref.watch(categoryProvider).catogries[_controller.index]);
+      if (!_controller.indexIsChanging) {
+        ref.watch(categoryProvider).subloading == true;
+        await ref.watch(categoryProvider).getsubcategory(
+            await ref.watch(categoryProvider).catogries[_controller.index]);
+      }
+
     });
     super.initState();
   }

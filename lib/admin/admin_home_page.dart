@@ -72,7 +72,7 @@ class _AdminHomePageState extends ConsumerState<AdminHomePage> {
       child: Scaffold(
           appBar: AppBar(
               backgroundColor: AppConfig.primaryColor,
-              title: Text("Your Pending Orders"),
+              title: Text("Pending Orders"),
               actions: [
                 IconButton(
                     onPressed: () async {

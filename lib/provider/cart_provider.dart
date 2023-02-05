@@ -83,10 +83,8 @@ class CartService extends ChangeNotifier {
           'total': itemTotal + item.price * count,
           "count": count + availableCount,
         });
-        print('update done');
       } else {
         var total = count * item.price;
-        print('item total is $total');
         await _firestore
             .collection('cart')
             .doc(Const.email)
@@ -103,14 +101,12 @@ class CartService extends ChangeNotifier {
       }
       showSuccessToast(message: "Item added to cart", context: context);
       await addToTotal(item, count);
-      print('total calculated$subtotal');
     } catch (e) {
       showErrorToast(message: "Failed", context: context);
       print(e);
     } finally {
       await getBadge();
       changeloading(false);
-      // notifyListeners();
     }
   }
 
@@ -123,7 +119,6 @@ class CartService extends ChangeNotifier {
         .doc(Const.email)
         .update({"subtotal": subtotal, 'total': subtotal + tax});
     await getTotal();
-    // notifyListeners();
   }
 
   bool exist = false;
@@ -141,8 +136,6 @@ class CartService extends ChangeNotifier {
       if (exist == true) {
         availableCount = value.get('count');
         itemTotal = value.get('total');
-        print("count value is $availableCount");
-        // await getcountValue(item);
       }
       notifyListeners();
     });
@@ -161,7 +154,6 @@ class CartService extends ChangeNotifier {
           .delete();
       showSuccessToast(message: "item removed from cart", context: context);
       await getTotal();
-      print('deleted');
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
@@ -178,17 +170,14 @@ class CartService extends ChangeNotifier {
   removeToTotal(item, count) async {
     try {
       var itemtotal = item.price * count;
-      print('item price $itemTotal');
       var stotal = subtotal.toStringAsFixed(2);
       //check bill can be 5.900002
       subtotal = double.tryParse(stotal)! - itemtotal;
-      print('before subtotal $subtotal');
       await _firestore
           .collection('cart')
           .doc(Const.email)
           .update({"subtotal": subtotal, 'total': subtotal + tax});
       await getTotal();
-      // notifyListeners();
     } catch (e) {
       print(e.toString());
     }
@@ -208,11 +197,9 @@ class CartService extends ChangeNotifier {
           total = 0.0;
         }
       });
-      print('subtotal is $subtotal');
     } catch (e) {
       subtotal = 0.0;
       total = 0.0;
-      print('get total error');
       print(e.toString());
     }finally{
       notifyListeners();
@@ -241,7 +228,5 @@ class CartService extends ChangeNotifier {
 }
 final cartProvider = ChangeNotifierProvider((ref) {
   var state = CartService();
-  // state.getTotal();
-  // state.getBadge();
   return state;
 });

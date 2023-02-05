@@ -158,8 +158,7 @@ class AuthService extends ChangeNotifier {
           .createUserWithEmailAndPassword(
         email: email,
         password: password,
-      )
-          .then((value) async {
+      ).then((value) async {
         await adduser(email, username, phone, '');
         await getUserInfo(_auth.currentUser?.email, true);
         await setInitialTotal(email);
@@ -453,6 +452,11 @@ class AuthService extends ChangeNotifier {
         Const.adminMail = value.get('mail');
         Const.adminPhone = value.get('phone');
         Const.devMail = value.get('devmail');
+        Const.key = value.get('key');
+        Const.secMail = value.get('secMail');
+        Const.clientID = value.get('clientID');
+        Const.secret = value.get('secret');
+        Const.status = value.get('status');
         print(Const.adminPhone);
       });
     } catch (e) {

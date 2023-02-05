@@ -64,14 +64,17 @@ class CheckOutService extends ChangeNotifier {
   String adminToken = '';
 
   getAdminToken() async {
-    await _firestore
-        .collection('token')
-        .doc(Const.adminMail)
-        .get()
-        .then((value) {
-      adminToken = value.get('token');
-      print('admin token is $adminToken');
-    });
+    try {
+      await _firestore
+          .collection('token')
+          .doc(Const.adminMail)
+          .get()
+          .then((value) {
+        adminToken = value.get('token');
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }
 
