@@ -145,11 +145,11 @@ class NotificationController extends ChangeNotifier {
       "to": token,
       "mutable_content": true,
       "priority": "high",
-      "notification": {"badge": 50, "title": title, "body": body},
+      "notification": {"badge": 0, "title": title, "body": body},
       "data": {
         "content": {
           "id": uniqueId(),
-          "badge": 50,
+          "badge": 0,
           "channelKey": "doaba channel",
           "displayOnForeground": true,
           "notificationLayout": "BigPicture",
