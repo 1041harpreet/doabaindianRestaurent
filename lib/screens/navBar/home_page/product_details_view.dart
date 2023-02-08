@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:restaurent.app/config/const.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
+import 'package:restaurent.app/widgets/login_dialogue.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
 
 import '../../../config/config.dart';
@@ -80,11 +82,16 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                     padding: const EdgeInsets.only(right: 15.0),
                     child: GestureDetector(
                       onTap: () {
-                        navprovider.changeindex(2);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => NavBar()),
-                        );
+                        if(Const.anonymous){
+                          loginBox(context, 'Cart');
+                        }else{
+                          navprovider.changeindex(2);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NavBar()),
+                          );
+                        }
+
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -352,7 +359,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                         SizedBox(
                                           child: buildImg(hsize, wsize,
                                               provider.subcategory[index].img),
-                                          height: hsize * 0.2,
+                                          height: hsize * 0.19,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
@@ -397,7 +404,36 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GestureDetector(
+          Const.anonymous ?  GestureDetector(
+          onTap: () {
+        provider.changeselect();
+        },
+          child: Container(
+            width: 50,
+            height: 50,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,boxShadow: [
+              BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 10.0,
+                  offset: const Offset(0.0, 5.0),
+                  spreadRadius: 2.0)
+            ]),
+            child:  InkWell(
+              hoverColor: Colors.black12,
+              onTap: () async {
+               loginBox(context, 'Favourite');
+              },
+              child: const Icon(
+                CupertinoIcons.heart,
+                // size: 45,
+                color: Colors.red,
+              ),
+            ),
+          ),
+        ):    GestureDetector(
                 onTap: () {
                   provider.changeselect();
                 },
@@ -447,29 +483,26 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
 
               const SizedBox(width: 20),
               Expanded(
-                child: provider.quantity == 0
-                    ? InkWell(
-                        onTap: () {
-                          showErrorToast(
-                              context: context, message: "please select item");
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Text(
-                            '+ Add to Cart',
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      )
-                    : InkWell(
+                child:Const.anonymous ? InkWell(
+                  onTap: () {
+                   loginBox(context, "Cart");
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Text(
+                      '+ Add to Cart',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ): InkWell(
                         onTap: () {
                           var current = provider.current.isEmpty
                               ? ''

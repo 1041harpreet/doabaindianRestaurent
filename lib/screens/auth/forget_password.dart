@@ -5,8 +5,11 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
+import '../../widgets/back_button.dart';
 import '../../widgets/toast_service.dart';
 import 'sign_up_screen.dart';
+
+
 
 class ForgetPasswordScreen extends ConsumerWidget {
   const ForgetPasswordScreen({Key? key}) : super(key: key);
@@ -25,25 +28,8 @@ class ForgetPasswordScreen extends ConsumerWidget {
             Expanded(
               flex: 1,
               child: Row(children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10.0)),
-                        width: 40.0,
-                        height: 40.0,
-                        child: const Icon(
-                          Icons.arrow_back_ios_new_outlined,
-                          color: Colors.grey,
-                        )),
-                  ),
-                ),
+                backButton(context),
+
               ]),
             ),
 

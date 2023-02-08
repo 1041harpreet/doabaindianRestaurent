@@ -5,6 +5,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
+import 'package:restaurent.app/widgets/back_button.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
@@ -26,10 +27,7 @@ class SignUpScreen extends ConsumerWidget {
         child: Column(
           children: [
             //to give space from top
-            const Expanded(
-              flex: 1,
-              child: Center(),
-            ),
+            Expanded(flex: 1, child: Center()),
 
             //page content here
             Expanded(
@@ -165,6 +163,7 @@ class SignUpScreen extends ConsumerWidget {
                             authprovider.SignUpForm.control('name').value,
                             authprovider.SignUpForm.control('phone').value);
                         cartprovider.getBadge();
+
                         print('sign up end');
                       } else {
                         print('invalid');
@@ -190,6 +189,12 @@ class SignUpScreen extends ConsumerWidget {
                         ));
                   },
                   child: footerText()),
+              SizedBox(
+                height: size.height * 0.02,
+              ),
+              authprovider.anonymous == true
+                  ? CircularProgressIndicator()
+                  : skipButton(context, authprovider)
             ],
           ),
         ),

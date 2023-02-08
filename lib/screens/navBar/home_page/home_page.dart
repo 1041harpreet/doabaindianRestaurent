@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/config/const.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/screens/navBar/home_page/categories/builder.dart';
@@ -16,6 +17,7 @@ import 'package:restaurent.app/widgets/buffet.dart';
 import '../../../provider/category_provider.dart';
 import '../../../provider/home_provider.dart';
 import '../../../widgets/about_us.dart';
+import '../../../widgets/login_dialogue.dart';
 import '../../../widgets/shimmer.dart';
 import 'carsoul_full_screen.dart';
 import 'categories/all_category.dart';
@@ -49,10 +51,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
+        return Dialog(backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)), //this right here
-            child: buffet());
+            child: buffet(Const.buffetImg));
       },
     );
   }
@@ -87,6 +89,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       size: wsize * 0.09,
                     ),
                     onPressed: () {
+                    Const.anonymous ?  loginBox(context,"Notifications") :
                       Navigator.push(
                         context,
                         PageRouteBuilder(
@@ -114,8 +117,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // header(wsize, hsize, homeprovider, categoryprovider, authprovider,
-              //     context),
+
               categoryprovider.carload
                   ? carsoulShimmer(context, wsize)
                   : Padding(
@@ -230,7 +232,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ],
               ),
               madeforulist(hsize, wsize, context, categoryprovider),
-
               aboutus(),
             ],
           ),

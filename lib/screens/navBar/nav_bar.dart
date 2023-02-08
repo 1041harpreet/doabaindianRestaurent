@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/config/const.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
+import 'package:restaurent.app/widgets/login_dialogue.dart';
 
 import '../../provider/nav_bar_provider.dart';
 import '../../services/notification_service/notification.dart';
@@ -45,7 +47,15 @@ class _NavBarState extends ConsumerState<NavBar> {
         selectedItemColor: AppConfig.primaryColor,
         unselectedItemColor: Colors.grey,
         onTap: (value) {
-          navbarprovider.changeindex(value);
+          if(value==1 || value==2){
+            if(Const.anonymous==true){
+              loginBox(context, value ==1 ? "Favourite":"Cart");
+            }else{
+              navbarprovider.changeindex(value);
+            }
+          }else{
+            navbarprovider.changeindex(value);
+          }
         },
         items: [
           const BottomNavigationBarItem(

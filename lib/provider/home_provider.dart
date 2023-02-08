@@ -41,7 +41,6 @@ class HomeService extends ChangeNotifier {
   }
 
   openwhatsapp(context) async {
-    var contact = "+16142822341";
     var androidUrl =
         "whatsapp://send?phone=${Const.adminPhone}&text=Hi, I need some help";
     var iosUrl =

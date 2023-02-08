@@ -23,7 +23,8 @@ import '../widgets/toast_service.dart';
 import 'cart_provider.dart';
 
 class AuthService extends ChangeNotifier {
-
+var cartprovider;
+AuthService(this.cartprovider);
 
   bool signupload = false;
   bool signinload = false;
@@ -160,13 +161,14 @@ class AuthService extends ChangeNotifier {
         password: password,
       ).then((value) async {
         await adduser(email, username, phone, '');
-        await getUserInfo(_auth.currentUser?.email, true);
+        await getUserInfo(email, true);
         await setInitialTotal(email);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => const NavBar(),
             ),
             (route) => false);
+        changeAnonymous(false);
         NotificationSettingService().writeValue(true);
       });
       SignUpForm.reset();
@@ -217,6 +219,30 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  bool anonymous=false;
+  changeAnon(value){
+    anonymous=value;
+    notifyListeners();
+  }
+  //sign in anonymously
+  void signInAnonymously(context) async{
+    changeAnon(true);
+    try{
+      await _auth.signInAnonymously().then((value) async {
+        // cartprovider.getTotal();
+        await adduser(value.user?.uid, '', '', '');
+        await getUserInfo(value.user?.uid, true);
+        await setInitialTotal(value.user?.uid);
+        cartprovider.getBadge();
+        changeAnonymous(true);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => NavBar(),));
+      });
+      changeAnon(false);
+    }catch(e){
+      changeAnon(false);
+      print(e);
+    }
+  }
   //SIGN IN METHOD
   signIn(email, password, context) async {
     signinloading(true);
@@ -238,6 +264,7 @@ class AuthService extends ChangeNotifier {
               ),
               (route) => false);
         }
+        changeAnonymous(false);
         loginForm.reset();
         showSuccessToast(message: 'login successfully', context: context);
       });
@@ -418,10 +445,6 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  // String phone = '';
-  // String username = '';
-  // String role = 'user';
-  // String img = '';
 
   getUserInfo(email, needed) async {
     try {
@@ -435,6 +458,7 @@ class AuthService extends ChangeNotifier {
         Const.img = value.get('img');
         Const.role = value.get('role');
         Const.email = value.get('email');
+
         needed ? await storeToken(email) : '';
         needed ? adminDetail() : '';
         print('my role is ${Const.role}');
@@ -457,6 +481,7 @@ class AuthService extends ChangeNotifier {
         Const.clientID = value.get('clientID');
         Const.secret = value.get('secret');
         Const.status = value.get('status');
+        Const.buffetImg = value.get('buffetImg');
         print(Const.adminPhone);
       });
     } catch (e) {
@@ -466,6 +491,11 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  changeAnonymous(bool value){
+    Const.anonymous=value;
+    print(Const.anonymous);
+    notifyListeners();
+  }
 //update profile
   updateProfileDetails(context, email, username, phone, img) async {
     try {
@@ -482,7 +512,6 @@ class AuthService extends ChangeNotifier {
   }
 
   File? imageFile;
-
   //uplaod image
   uploadimage(email, context, image) async {
     var imageUrl = '';
@@ -543,6 +572,7 @@ class AuthService extends ChangeNotifier {
 }
 
 final authProvider = ChangeNotifierProvider((ref) {
-  var state = AuthService();
+  final cartprovider=ref.watch(cartProvider);
+  var state = AuthService(cartprovider);
   return state;
 });

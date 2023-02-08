@@ -5,9 +5,11 @@ import 'package:iconify_flutter/icons/bx.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/home_provider.dart';
+import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/buffet_page.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/gallery.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/main_setting_page.dart';
+import 'package:restaurent.app/widgets/login_dialogue.dart';
 
 import '../../../config/const.dart';
 import '../../../provider/nav_bar_provider.dart';
@@ -52,17 +54,21 @@ Widget optionListView(authprovider, context, homeprovider, navprovider) {
       children: [
         _listItem(
             onClick: () {
-              authprovider.myProfile.patchValue({
-                "username": Const.username,
-                "email": Const.email,
-                "phone": Const.phone,
-                "img": Const.img
-              });
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyProfile(),
-                  ));
+              if (Const.anonymous) {
+                loginBox(context, 'Profile');
+              } else {
+                authprovider.myProfile.patchValue({
+                  "username": Const.username,
+                  "email": Const.email,
+                  "phone": Const.phone,
+                  "img": Const.img
+                });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyProfile(),
+                    ));
+              }
             },
             text: 'My Profile',
             icon: const Icon(Icons.ballot_outlined),
@@ -110,11 +116,15 @@ Widget optionListView(authprovider, context, homeprovider, navprovider) {
         _separator(),
         _listItem(
             onClick: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingPage(),
-                  ));
+              if (Const.anonymous) {
+                loginBox(context, 'Setting');
+              } else {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingPage(),
+                    ));
+              }
             },
             text: 'Settings',
             icon: const Icon(Icons.settings)),
@@ -126,7 +136,29 @@ Widget optionListView(authprovider, context, homeprovider, navprovider) {
             text: 'Terms & Conditions',
             icon: const Icon(Icons.assignment)),
         _separator(),
-        logoutbutton(authprovider, context, navprovider),
+        Const.anonymous
+            ? ListTile(
+                leading: const Icon(Icons.logout),
+                iconColor: AppConfig.blackColor,
+                title: Text(
+                  'LogOut',
+                  style: AppConfig.blackTitle,
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: AppConfig.blackColor,
+                  size: 15.0,
+                ),
+                onTap: () async {
+                  navprovider.changeindex(0);
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                          (route) => false);
+                },
+              )
+            : logoutbutton(authprovider, context, navprovider),
         _separator(),
       ],
     ),
@@ -197,7 +229,7 @@ Widget orderHeader(wsize, hsize) {
                   color: AppConfig.primaryColor,
                 ),
                 Text(
-                  " doabaindianrestaurant@gmail.com",
+                  "${Const.adminMail}",
                   style: AppConfig.blackTitle,
                 )
               ],

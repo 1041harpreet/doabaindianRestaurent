@@ -26,29 +26,44 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
     });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       print('working loader screen');
+
       if (ref.watch(authProvider).user != null) {
-        await ref
-            .watch(authProvider)
-            .getUserInfo(ref.watch(authProvider).user.email, true);
-        await ref.watch(cartProvider).getBadge();
-        await ref.watch(cartProvider).getTotal();
-        if (Const.role == 'admin') {
-          print('admin');
+        print(ref.watch(authProvider).user.email);
+        if(ref.watch(authProvider).user.email == null || ref.watch(authProvider).user.email=='' ){
+          print('skip');
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => const AdminHomePage(),
+                builder: (context) => const LoginScreen(),
               ),
-              (route) => false);
+                  (route) => false);
+        }else{
+          print('working in  null');
+          await ref
+              .watch(authProvider)
+              .getUserInfo(ref.watch(authProvider).user.email, true);
+          await ref.watch(cartProvider).getBadge();
+          await ref.watch(cartProvider).getTotal();
+          await ref.watch(authProvider).changeAnonymous(false);
+          if (Const.role == 'admin') {
+            print('admin');
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const AdminHomePage(),
+                ),
+                    (route) => false);
+          }
+          if (Const.role == 'user') {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => NavBar(),
+                ),
+                    (route) => false);
+          }
+
         }
-        if (Const.role == 'user') {
-          // await ref.watch(NavBarProvider).changeindex(0);
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => NavBar(),
-              ),
-              (route) => false);
-        }
-      } else {
+
+      }
+      else {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => const LoginScreen(),

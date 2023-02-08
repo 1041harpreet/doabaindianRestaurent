@@ -14,4 +14,6 @@ class Const {
   static String img = '';
   static String email = '';
   static bool status =true;
+  static bool anonymous=true;
+  static String buffetImg='';
 }
