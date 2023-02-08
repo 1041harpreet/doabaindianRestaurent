@@ -55,7 +55,7 @@ Widget optionListView(authprovider, context, homeprovider, navprovider) {
         _listItem(
             onClick: () {
               if (Const.anonymous) {
-                loginBox(context, 'Profile');
+                loginBox(context, 'Profile', navprovider);
               } else {
                 authprovider.myProfile.patchValue({
                   "username": Const.username,
@@ -117,7 +117,7 @@ Widget optionListView(authprovider, context, homeprovider, navprovider) {
         _listItem(
             onClick: () {
               if (Const.anonymous) {
-                loginBox(context, 'Setting');
+                loginBox(context, 'Setting', navprovider);
               } else {
                 Navigator.push(
                     context,
@@ -155,7 +155,7 @@ Widget optionListView(authprovider, context, homeprovider, navprovider) {
                       MaterialPageRoute(
                         builder: (context) => LoginScreen(),
                       ),
-                          (route) => false);
+                      (route) => false);
                 },
               )
             : logoutbutton(authprovider, context, navprovider),
@@ -272,8 +272,8 @@ logoutdialogBox(context, authprovider, navprovider) {
           ),
           TextButton(
             onPressed: () async {
-              navprovider.changeindex(0);
               await authprovider.signOut(context);
+              navprovider.changeindex(0);
               print('log');
             },
             child: const Text('Yes'),

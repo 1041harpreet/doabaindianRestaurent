@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/provider/notification_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
@@ -23,8 +22,9 @@ import '../widgets/toast_service.dart';
 import 'cart_provider.dart';
 
 class AuthService extends ChangeNotifier {
-var cartprovider;
-AuthService(this.cartprovider);
+  var cartprovider;
+
+  AuthService(this.cartprovider);
 
   bool signupload = false;
   bool signinload = false;
@@ -98,10 +98,8 @@ AuthService(this.cartprovider);
       Validators.number,
       Validators.maxLength(12)
     ]),
-    'password': FormControl(validators: [
-      Validators.required,
-      Validators.minLength(6)
-    ]),
+    'password':
+        FormControl(validators: [Validators.required, Validators.minLength(6)]),
   });
   FormGroup changePasswordForm = FormGroup({
     "current": FormControl(validators: [Validators.required]),
@@ -127,31 +125,6 @@ AuthService(this.cartprovider);
     }
   }
 
-  //  signInWithGoogle(context) async {
-  //    final GoogleSignIn googleSignIn = GoogleSignIn();
-  //    await googleSignIn.signOut().then((value) {
-  //      print('sign out complete');
-  //    });
-  //   try{
-  //     await googleSignIn.signIn().then((value) async {
-  //      await Auth().writeSecureData(value?.id);
-  //       print('working');
-  //     await adduser(value?.email, value?.displayName, '',value?.photoUrl);
-  //       await getUserInfo(value?.email);
-  //       await setInitialTotal(value?.email);
-  //       print(value?.email);
-  //       print(value?.displayName);
-  //       print(value?.photoUrl);
-  //     });
-  //
-  //   }catch(e){
-  //     showErrorToast(message: "Something went wrong",context: context);
-  //     print(e);
-  //   }
-  //
-  // }
-
-  //SIGN UP METHOD
   signUp(email, password, context, username, phone) async {
     signuploading(true);
     try {
@@ -159,7 +132,8 @@ AuthService(this.cartprovider);
           .createUserWithEmailAndPassword(
         email: email,
         password: password,
-      ).then((value) async {
+      )
+          .then((value) async {
         await adduser(email, username, phone, '');
         await getUserInfo(email, true);
         await setInitialTotal(email);
@@ -219,30 +193,36 @@ AuthService(this.cartprovider);
     }
   }
 
-  bool anonymous=false;
-  changeAnon(value){
-    anonymous=value;
+  bool anonymous = false;
+
+  changeAnon(value) {
+    anonymous = value;
     notifyListeners();
   }
+
   //sign in anonymously
-  void signInAnonymously(context) async{
+  void signInAnonymously(context) async {
     changeAnon(true);
-    try{
+    try {
       await _auth.signInAnonymously().then((value) async {
-        // cartprovider.getTotal();
         await adduser(value.user?.uid, '', '', '');
         await getUserInfo(value.user?.uid, true);
         await setInitialTotal(value.user?.uid);
         cartprovider.getBadge();
         changeAnonymous(true);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => NavBar(),));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NavBar(),
+            ));
       });
       changeAnon(false);
-    }catch(e){
+    } catch (e) {
       changeAnon(false);
       print(e);
     }
   }
+
   //SIGN IN METHOD
   signIn(email, password, context) async {
     signinloading(true);
@@ -250,7 +230,10 @@ AuthService(this.cartprovider);
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
+        print('coming');
+        print(value);
         await getUserInfo(email, true);
+        cartprovider.getBadge();
         if (Const.role == 'admin') {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
@@ -445,7 +428,6 @@ AuthService(this.cartprovider);
     }
   }
 
-
   getUserInfo(email, needed) async {
     try {
       await FirebaseFirestore.instance
@@ -460,9 +442,8 @@ AuthService(this.cartprovider);
         Const.email = value.get('email');
 
         needed ? await storeToken(email) : '';
-        needed ? adminDetail() : '';
+        needed ? await adminDetail() : '';
         print('my role is ${Const.role}');
-
       });
     } catch (e) {
       Const.role = 'user';
@@ -486,16 +467,17 @@ AuthService(this.cartprovider);
       });
     } catch (e) {
       print(e);
-    }finally{
+    } finally {
       notifyListeners();
     }
   }
 
-  changeAnonymous(bool value){
-    Const.anonymous=value;
+  changeAnonymous(bool value) {
+    Const.anonymous = value;
     print(Const.anonymous);
     notifyListeners();
   }
+
 //update profile
   updateProfileDetails(context, email, username, phone, img) async {
     try {
@@ -512,6 +494,7 @@ AuthService(this.cartprovider);
   }
 
   File? imageFile;
+
   //uplaod image
   uploadimage(email, context, image) async {
     var imageUrl = '';
@@ -537,6 +520,7 @@ AuthService(this.cartprovider);
   }
 
   bool imageLoading = false;
+
   changeImageLoading(value) {
     imageLoading = value;
     notifyListeners();
@@ -572,7 +556,7 @@ AuthService(this.cartprovider);
 }
 
 final authProvider = ChangeNotifierProvider((ref) {
-  final cartprovider=ref.watch(cartProvider);
+  final cartprovider = ref.watch(cartProvider);
   var state = AuthService(cartprovider);
   return state;
 });

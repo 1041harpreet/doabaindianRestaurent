@@ -162,8 +162,6 @@ class SignUpScreen extends ConsumerWidget {
                             context,
                             authprovider.SignUpForm.control('name').value,
                             authprovider.SignUpForm.control('phone').value);
-                        cartprovider.getBadge();
-
                         print('sign up end');
                       } else {
                         print('invalid');
@@ -287,7 +285,7 @@ Widget loadingButton(Size size) {
 Widget textfieldbtn(Size size, lable, controlname, validation, obsecure) {
   return Container(
     alignment: Alignment.center,
-    height: size.height * 0.07,
+    height: size.height * 0.08,
     padding: const EdgeInsets.symmetric(horizontal: 16),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(8.0),

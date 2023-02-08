@@ -49,7 +49,7 @@ class _NavBarState extends ConsumerState<NavBar> {
         onTap: (value) {
           if(value==1 || value==2){
             if(Const.anonymous==true){
-              loginBox(context, value ==1 ? "Favourite":"Cart");
+              loginBox(context, value ==1 ? "Favourite":"Cart",navbarprovider);
             }else{
               navbarprovider.changeindex(value);
             }

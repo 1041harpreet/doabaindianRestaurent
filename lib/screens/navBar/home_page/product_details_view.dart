@@ -83,7 +83,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                     child: GestureDetector(
                       onTap: () {
                         if(Const.anonymous){
-                          loginBox(context, 'Cart');
+                          loginBox(context, 'Cart',navprovider);
                         }else{
                           navprovider.changeindex(2);
                           Navigator.push(
@@ -424,7 +424,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
             child:  InkWell(
               hoverColor: Colors.black12,
               onTap: () async {
-               loginBox(context, 'Favourite');
+               loginBox(context, 'Favourite',navprovider);
               },
               child: const Icon(
                 CupertinoIcons.heart,
@@ -485,7 +485,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
               Expanded(
                 child:Const.anonymous ? InkWell(
                   onTap: () {
-                   loginBox(context, "Cart");
+                   loginBox(context, "Cart",navprovider);
                   },
                   child: Container(
                     alignment: Alignment.center,

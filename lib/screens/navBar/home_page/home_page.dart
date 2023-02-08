@@ -16,6 +16,7 @@ import 'package:restaurent.app/widgets/buffet.dart';
 
 import '../../../provider/category_provider.dart';
 import '../../../provider/home_provider.dart';
+import '../../../provider/nav_bar_provider.dart';
 import '../../../widgets/about_us.dart';
 import '../../../widgets/login_dialogue.dart';
 import '../../../widgets/shimmer.dart';
@@ -62,6 +63,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final categoryprovider = ref.watch(categoryProvider);
+    final navprovider = ref.watch(NavBarProvider);
     final cartprovider = ref.watch(cartProvider);
     final authprovider = ref.watch(authProvider);
     final homeprovider = ref.watch(homeProvider);
@@ -89,7 +91,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       size: wsize * 0.09,
                     ),
                     onPressed: () {
-                    Const.anonymous ?  loginBox(context,"Notifications") :
+                    Const.anonymous ?  loginBox(context,"Notifications",navprovider) :
                       Navigator.push(
                         context,
                         PageRouteBuilder(

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 
-loginBox(context,name) {
+loginBox(context,name,navprovider) {
   return showCupertinoDialog(
     context: context,
     builder: (context) => Theme(
@@ -17,6 +17,7 @@ loginBox(context,name) {
           ),
           TextButton(
             onPressed: () async {
+              navprovider.changeindex(0);
               Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
               print('login');
             },

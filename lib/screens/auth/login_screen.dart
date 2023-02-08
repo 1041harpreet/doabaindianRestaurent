@@ -28,15 +28,13 @@ class LoginScreen extends ConsumerWidget {
         child: Column(
           children: [
             //to give space from top
-             Expanded(
-              flex: 1,
-              child: Center()
-            ),
+            Expanded(flex: 1, child: Center()),
 
             //page content here
             Expanded(
               flex: 9,
-              child: buildCard(size, authprovider, context, navprovider,cartprovider),
+              child: buildCard(
+                  size, authprovider, context, navprovider, cartprovider),
             ),
           ],
         ),
@@ -44,7 +42,8 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildCard(Size size, authprovider, context, navprovider,cartprovider) {
+  Widget buildCard(
+      Size size, authprovider, context, navprovider, cartprovider) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -86,7 +85,7 @@ class LoginScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.03,
               ),
-              richText(20),
+              richText(MediaQuery.of(context).size.width * 0.05),
               SizedBox(
                 height: size.height * 0.05,
               ),
@@ -129,7 +128,6 @@ class LoginScreen extends ConsumerWidget {
                           MaterialPageRoute(
                             builder: (context) => ForgetPasswordScreen(),
                           ));
-
                     },
                     child: Text(
                       'Forget Password?',
@@ -157,10 +155,11 @@ class LoginScreen extends ConsumerWidget {
                             authprovider.loginForm.control('email').value,
                             authprovider.loginForm.control('password').value,
                             context);
-                        cartprovider.getBadge();
+                        // cartprovider.getBadge();
                         print('sign in');
                       } else {
                         print('invalid');
+                        print(authprovider.loginForm.value);
                         authprovider.loginForm.markAllAsTouched();
                         showErrorToast(
                             message: 'fill the detail first', context: context);
@@ -169,21 +168,6 @@ class LoginScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              // Text(
-              //   'or login with',
-              //   style: GoogleFonts.inter(
-              //     fontSize: 14.0,
-              //     color: const Color(0xFF969AA8),
-              //   ),
-              //   textAlign: TextAlign.center,
-              // ),
-              // SizedBox(
-              //   height: size.height * 0.02,
-              // ),
-              // Button(size, "sign up with Google", Colors.black, Colors.white,
-              //     () {
-              //   print('sign in with google');
-              // }),
               SizedBox(
                 height: size.height * 0.02,
               ),
@@ -200,7 +184,9 @@ class LoginScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.02,
               ),
-             authprovider.anonymous==true ? CircularProgressIndicator() : skipButton(context,authprovider)
+              authprovider.anonymous == true
+                  ? CircularProgressIndicator()
+                  : skipButton(context, authprovider)
             ],
           ),
         ),
@@ -236,7 +222,6 @@ class LoginScreen extends ConsumerWidget {
       ),
     );
   }
-
 
   Widget Button(Size size, title, titlecolor, buttoncolor, ontap) {
     return GestureDetector(
