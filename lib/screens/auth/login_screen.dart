@@ -184,9 +184,7 @@ class LoginScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              authprovider.anonymous == true
-                  ? CircularProgressIndicator()
-                  : skipButton(context, authprovider)
+
             ],
           ),
         ),

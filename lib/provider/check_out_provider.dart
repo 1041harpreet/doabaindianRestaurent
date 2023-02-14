@@ -16,6 +16,7 @@ class CheckOutService extends ChangeNotifier {
     'additional': FormControl(),
     'email': FormControl(validators: [Validators.required, Validators.email]),
     'phone': FormControl(validators: [
+      Validators.minLength(10),
       Validators.required,
     ]),
     'town': FormControl(),

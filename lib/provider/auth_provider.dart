@@ -134,7 +134,7 @@ class AuthService extends ChangeNotifier {
         password: password,
       )
           .then((value) async {
-        await adduser(email, username, phone, '');
+        await adduser(email, username, phone,'');
         await getUserInfo(email, true);
         await setInitialTotal(email);
         Navigator.of(context).pushAndRemoveUntil(
@@ -142,15 +142,16 @@ class AuthService extends ChangeNotifier {
               builder: (context) => const NavBar(),
             ),
             (route) => false);
+        cartprovider.getBadge();
+        cartprovider.getTotal();
         changeAnonymous(false);
+        changeLogged(true);
         NotificationSettingService().writeValue(true);
       });
       SignUpForm.reset();
       showSuccessToast(message: 'register successfully', context: context);
-      print(_auth.currentUser?.email);
     } on FirebaseAuthException catch (e) {
       // print(e.toString());
-      print(e.code);
       if (e.code == "network-request-failed") {
         showErrorToast(context: context, message: "No internet Connection");
       }
@@ -216,13 +217,17 @@ class AuthService extends ChangeNotifier {
               builder: (context) => NavBar(),
             ));
       });
+      changeLogged(true);
       changeAnon(false);
     } catch (e) {
       changeAnon(false);
       print(e);
     }
   }
-
+  changeLogged(value) {
+    Const.isloged = value;
+    notifyListeners();
+  }
   //SIGN IN METHOD
   signIn(email, password, context) async {
     signinloading(true);
@@ -234,6 +239,7 @@ class AuthService extends ChangeNotifier {
         print(value);
         await getUserInfo(email, true);
         cartprovider.getBadge();
+        cartprovider.getTotal();
         if (Const.role == 'admin') {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
@@ -248,6 +254,7 @@ class AuthService extends ChangeNotifier {
               (route) => false);
         }
         changeAnonymous(false);
+        changeLogged(true);
         loginForm.reset();
         showSuccessToast(message: 'login successfully', context: context);
       });
@@ -286,6 +293,7 @@ class AuthService extends ChangeNotifier {
 
   //SIGN OUT METHOD
   Future signOut(context) async {
+    changeLogged(false);
     await _auth.signOut();
     showSuccessToast(message: 'Logout successfully', context: context);
     Navigator.of(context).pushAndRemoveUntil(
@@ -294,7 +302,6 @@ class AuthService extends ChangeNotifier {
         ),
         (route) => false);
     await AwesomeNotificationsFcm().unsubscribeToTopic('all');
-    print('signout');
   }
 
   //delete account
@@ -423,7 +430,6 @@ class AuthService extends ChangeNotifier {
           .doc(email)
           .set({"subtotal": 0.0, "total": 0.0, "status": false});
     } catch (e) {
-      print('get total error');
       print(e.toString());
     }
   }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/config/const.dart';
+import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
@@ -83,7 +84,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                     child: GestureDetector(
                       onTap: () {
                         if(Const.anonymous){
-                          loginBox(context, 'Cart',navprovider);
+                          loginBox(context, 'Cart',navprovider,authProvider);
                         }else{
                           navprovider.changeindex(2);
                           Navigator.push(
@@ -424,7 +425,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
             child:  InkWell(
               hoverColor: Colors.black12,
               onTap: () async {
-               loginBox(context, 'Favourite',navprovider);
+               loginBox(context, 'Favourite',navprovider,authProvider);
               },
               child: const Icon(
                 CupertinoIcons.heart,
@@ -433,7 +434,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
               ),
             ),
           ),
-        ):    GestureDetector(
+        ):
+          GestureDetector(
                 onTap: () {
                   provider.changeselect();
                 },
@@ -483,9 +485,10 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
 
               const SizedBox(width: 20),
               Expanded(
-                child:Const.anonymous ? InkWell(
+                child:
+                Const.anonymous ? InkWell(
                   onTap: () {
-                   loginBox(context, "Cart",navprovider);
+                   loginBox(context, "Cart",navprovider,authProvider);
                   },
                   child: Container(
                     alignment: Alignment.center,

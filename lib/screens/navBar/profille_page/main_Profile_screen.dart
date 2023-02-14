@@ -55,7 +55,7 @@ Widget optionListView(authprovider, context, homeprovider, navprovider) {
         _listItem(
             onClick: () {
               if (Const.anonymous) {
-                loginBox(context, 'Profile', navprovider);
+                loginBox(context, 'Profile', navprovider,authprovider);
               } else {
                 authprovider.myProfile.patchValue({
                   "username": Const.username,
@@ -117,7 +117,7 @@ Widget optionListView(authprovider, context, homeprovider, navprovider) {
         _listItem(
             onClick: () {
               if (Const.anonymous) {
-                loginBox(context, 'Setting', navprovider);
+                loginBox(context, 'Setting', navprovider,authprovider);
               } else {
                 Navigator.push(
                     context,
@@ -136,29 +136,7 @@ Widget optionListView(authprovider, context, homeprovider, navprovider) {
             text: 'Terms & Conditions',
             icon: const Icon(Icons.assignment)),
         _separator(),
-        Const.anonymous
-            ? ListTile(
-                leading: const Icon(Icons.logout),
-                iconColor: AppConfig.blackColor,
-                title: Text(
-                  'LogOut',
-                  style: AppConfig.blackTitle,
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: AppConfig.blackColor,
-                  size: 15.0,
-                ),
-                onTap: () async {
-                  navprovider.changeindex(0);
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                      (route) => false);
-                },
-              )
-            : logoutbutton(authprovider, context, navprovider),
+       logoutbutton(authprovider, context, navprovider),
         _separator(),
       ],
     ),

@@ -6,6 +6,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/config/const.dart';
+import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/widgets/login_dialogue.dart';
 
@@ -35,6 +36,7 @@ class _NavBarState extends ConsumerState<NavBar> {
   Widget build(BuildContext context) {
     final navbarprovider = ref.watch(NavBarProvider);
     final cartprovider = ref.watch(cartProvider);
+    final authprovider = ref.watch(authProvider);
 
     return Scaffold(
       body: navbarprovider.screens[navbarprovider.selectedindex],
@@ -47,13 +49,13 @@ class _NavBarState extends ConsumerState<NavBar> {
         selectedItemColor: AppConfig.primaryColor,
         unselectedItemColor: Colors.grey,
         onTap: (value) {
-          if(value==1 || value==2){
-            if(Const.anonymous==true){
-              loginBox(context, value ==1 ? "Favourite":"Cart",navbarprovider);
-            }else{
+          if (value == 2) {
+            if (Const.anonymous == true) {
+              loginBox(context, "Cart", navbarprovider, authprovider);
+            } else {
               navbarprovider.changeindex(value);
             }
-          }else{
+          } else {
             navbarprovider.changeindex(value);
           }
         },

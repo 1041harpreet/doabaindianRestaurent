@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/notification_provider.dart';
 
+import '../../../../config/const.dart';
 import 'detail_notification.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
@@ -18,8 +19,10 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.watch(notificationProvider).getFirstNotification();
-      controller.addListener(_scrollListener);
+      Const.anonymous
+          ? ref.watch(notificationProvider).notificationList = []
+          : ref.watch(notificationProvider).getFirstNotification();
+      print(ref.watch(notificationProvider).notificationList);
     });
     super.initState();
   }

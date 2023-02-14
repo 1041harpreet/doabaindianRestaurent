@@ -16,4 +16,5 @@ class Const {
   static bool status =true;
   static bool anonymous=true;
   static String buffetImg='';
+  static bool isloged=true;
 }

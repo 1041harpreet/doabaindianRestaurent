@@ -7,6 +7,7 @@ import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/provider/category_provider.dart';
 import 'package:restaurent.app/provider/nav_bar_provider.dart';
 
+import '../../../config/const.dart';
 import '../../../widgets/category_item.dart';
 import '../../../widgets/shimmer.dart';
 import '../home_page/product_details_view.dart';
@@ -22,9 +23,9 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref
-          .watch(categoryProvider)
-          .getFavouriteItem();
+      Const.anonymous
+          ? ref.watch(categoryProvider).favList = []
+          : ref.watch(categoryProvider).getFavouriteItem();
     });
     super.initState();
   }
@@ -114,7 +115,7 @@ Widget Builder(wsize, hsize, cprovider, context) {
                                   ));
                             },
                             child:
-                                Item(wsize, hsize, item, cprovider, context));
+                                Item(item: item,));
                       },
                     ))),
   );

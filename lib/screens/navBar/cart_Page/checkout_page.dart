@@ -103,6 +103,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                           textfieldbtn(size, 'Phone', 'phone', {
                             ValidationMessage.required: (error) =>
                                 "The phone no must not be empty",
+                            ValidationMessage.minLength: (error) =>
+                            "The phone no is not correct",
                           }),
                           SizedBox(
                             height: size.height * 0.02,
@@ -169,12 +171,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             ),
                           ),
 
-                          // textfieldbtn(size, 'City', 'city',{
-                          //   ValidationMessage.required: (error) => "The City must not be empty",
-                          // }),
-                          // SizedBox(
-                          //   height: size.height * 0.02,
-                          // ),
+
                           textfieldbtn(size, 'Zip Code', 'zipcode', {
                             ValidationMessage.required: (error) =>
                                 "The ZipCode must not be empty",
@@ -263,7 +260,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   textAlign: TextAlign.center,
                                 ),
                                 Text(
-                                  cartprovider.tax.toString(),
+                                  "\$"+cartprovider.tax.toString(),
                                   style: GoogleFonts.inter(
                                     fontSize: 14.0,
                                     color: const Color(0xFF969AA8),
@@ -289,7 +286,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   textAlign: TextAlign.center,
                                 ),
                                 Text(
-                                  cartprovider.total.toStringAsFixed(2),
+                                  "\$"+cartprovider.total.toStringAsFixed(2),
                                   style: GoogleFonts.inter(
                                     fontSize: 14.0,
                                     fontWeight: FontWeight.bold,

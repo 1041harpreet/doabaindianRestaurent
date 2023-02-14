@@ -32,17 +32,16 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   @override
-  var d;
-  TextEditingController searchController = TextEditingController();
-
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.watch(categoryProvider).getCategory();
-      ref.watch(categoryProvider).getcarsoulItem();
-      ref.watch(categoryProvider).getmadeforu();
-      if (ref.watch(homeProvider).show) {
-        _showNewOrderDialog();
-        ref.watch(homeProvider).changeshow(false);
+      if (Const.isloged) {
+        ref.watch(categoryProvider).getCategory();
+        ref.watch(categoryProvider).getcarsoulItem();
+        ref.watch(categoryProvider).getmadeforu();
+        if (ref.watch(homeProvider).show) {
+          _showNewOrderDialog();
+          ref.watch(homeProvider).changeshow(false);
+        }
       }
     });
     super.initState();
@@ -52,7 +51,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(backgroundColor: Colors.white,
+        return Dialog(
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)), //this right here
             child: buffet(Const.buffetImg));
@@ -91,17 +91,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                       size: wsize * 0.09,
                     ),
                     onPressed: () {
-                    Const.anonymous ?  loginBox(context,"Notifications",navprovider) :
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secondaryAnimation) {
-                            return const NotificationPage();
-                          },
-                        ),
-                      );
+                      throw new Exception();
+                      // Navigator.push(
+                      //   context,
+                      //   PageRouteBuilder(
+                      //     pageBuilder: (BuildContext context,
+                      //         Animation<double> animation,
+                      //         Animation<double> secondaryAnimation) {
+                      //       return const NotificationPage();
+                      //     },
+                      //   ),
+                      // );
                     },
                   ))
             ]),
@@ -119,7 +119,6 @@ class _HomePageState extends ConsumerState<HomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               categoryprovider.carload
                   ? carsoulShimmer(context, wsize)
                   : Padding(
@@ -187,6 +186,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           MaterialPageRoute(
                             builder: (context) => MoreCategory(
                               index: 0,
+                              tablength: categoryprovider.category.length,
                             ),
                           ));
                     },
@@ -199,7 +199,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                 ],
               ),
-              listview(hsize, wsize, context, categoryprovider),
+              Listview(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -221,6 +221,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           MaterialPageRoute(
                             builder: (context) => MoreCategory(
                               index: 0,
+                              tablength: categoryprovider.category.length,
                             ),
                           ));
                     },
@@ -233,7 +234,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                 ],
               ),
-              madeforulist(hsize, wsize, context, categoryprovider),
+              MadeForYouList(),
               aboutus(),
             ],
           ),

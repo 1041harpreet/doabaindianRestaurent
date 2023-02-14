@@ -93,7 +93,7 @@ class _CategoryItemsState extends ConsumerState<CategoryItems> {
                   ),
                 ),
                 child:
-                    listBuilder(wsize, hsize, cprovider, widget.name, context),
+                    listBuilder(  catname: widget.name,),
               ),
             ),
           ),

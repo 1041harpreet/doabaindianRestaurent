@@ -25,7 +25,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+
 android {
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
@@ -74,5 +74,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation platform('com.google.firebase:firebase-bom:30.3.1')
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.3.3'
+
 }

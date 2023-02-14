@@ -78,14 +78,7 @@ class _AddToCartState extends ConsumerState<AddToCart> {
                   ),
                   child: Column(children: [
                     Expanded(
-                        child: cartlistBuilder(
-                            wsize,
-                            hsize,
-                            cartprovider,
-                            context,
-                            checkoutprovider,
-                            authprovider,
-                            categoryprovider)),
+                        child: CartlistBuilder()),
                   ]),
                 ),
               ),

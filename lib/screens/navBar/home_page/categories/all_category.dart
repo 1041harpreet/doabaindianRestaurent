@@ -9,8 +9,8 @@ import '../../../../provider/category_provider.dart';
 
 class MoreCategory extends ConsumerStatefulWidget {
   int index;
-
-  MoreCategory({Key? key, required this.index}) : super(key: key);
+  int tablength;
+  MoreCategory({Key? key, required this.index,required this.tablength}) : super(key: key);
 
   @override
   ConsumerState<MoreCategory> createState() => _MoreCategoryState();
@@ -19,23 +19,24 @@ class MoreCategory extends ConsumerStatefulWidget {
 class _MoreCategoryState extends ConsumerState<MoreCategory>
     with TickerProviderStateMixin {
   late TabController _controller;
-
+  late int selectedIndex;
 
   @override
   void initState() {
-    _controller =
-        TabController(length: 13, vsync: this, initialIndex: widget.index);
+    selectedIndex = widget.index;
+    _controller = TabController(
+        length: widget.tablength, vsync: this, initialIndex: selectedIndex);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await ref.watch(categoryProvider).getCategory();
-      await ref.watch(categoryProvider).getsubcategory(ref.watch(categoryProvider).catogries[widget.index]);
+      await ref.watch(categoryProvider).getsubcategory(
+          ref.watch(categoryProvider).category[selectedIndex].title);
     });
     _controller.addListener(() async {
       if (!_controller.indexIsChanging) {
         ref.watch(categoryProvider).subloading == true;
+        print(_controller.index);
         await ref.watch(categoryProvider).getsubcategory(
-            await ref.watch(categoryProvider).catogries[_controller.index]);
+            ref.watch(categoryProvider).category[_controller.index].title);
       }
-
     });
     super.initState();
   }
@@ -125,8 +126,8 @@ class _MoreCategoryState extends ConsumerState<MoreCategory>
                 controller: _controller,
                 children: cprovider.catogries
                     .map(
-                      (e) => listBuilder(wsize, hsize, cprovider,
-                          cprovider.catogries[_controller.index], context),
+                      (e) => listBuilder(
+                          catname: cprovider.catogries[_controller.index],),
                     )
                     .toList()),
           ),
