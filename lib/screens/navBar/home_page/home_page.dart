@@ -91,17 +91,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                       size: wsize * 0.09,
                     ),
                     onPressed: () {
-                      throw new Exception();
-                      // Navigator.push(
-                      //   context,
-                      //   PageRouteBuilder(
-                      //     pageBuilder: (BuildContext context,
-                      //         Animation<double> animation,
-                      //         Animation<double> secondaryAnimation) {
-                      //       return const NotificationPage();
-                      //     },
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (BuildContext context,
+                              Animation<double> animation,
+                              Animation<double> secondaryAnimation) {
+                            return const NotificationPage();
+                          },
+                        ),
+                      );
                     },
                   ))
             ]),
