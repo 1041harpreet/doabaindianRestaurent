@@ -6,11 +6,8 @@ import '../../model/order_model_admin.dart';
 import '../../widgets/toast_service.dart';
 
 class OrderService extends ChangeNotifier {
-
-  FormGroup shopInfo= FormGroup({
-    "status": FormControl<bool>(
-        validators: [Validators.required]),
-
+  FormGroup shopInfo = FormGroup({
+    "status": FormControl<bool>(validators: [Validators.required]),
   });
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool pendingloading = false;
@@ -55,7 +52,7 @@ class OrderService extends ChangeNotifier {
         lastdocPending = ref.docs.last;
       }
     } catch (e) {
-      pendingOrderList=pendingOrderList;
+      pendingOrderList = pendingOrderList;
       print(e.toString());
     } finally {
       changeloading(false);
@@ -70,7 +67,7 @@ class OrderService extends ChangeNotifier {
           .collection('orders')
           .where('status', isEqualTo: false)
           // .orderBy('date', descending: true)
-          .startAfterDocument(lastdoc!)
+          .startAfterDocument(lastdocPending!)
           .limit(limit)
           .get();
       print(ref.docs.length);
@@ -83,7 +80,7 @@ class OrderService extends ChangeNotifier {
       print(pendingOrderList.length);
       lastdocPending = ref.docs.last;
     } catch (e) {
-      pendingOrderList=pendingOrderList;
+      pendingOrderList = pendingOrderList;
       print(e);
     } finally {
       changePfetching(false);
@@ -113,6 +110,7 @@ class OrderService extends ChangeNotifier {
         lastdoc = ref.docs.last;
       }
     } catch (e) {
+      compOrderList = compOrderList;
       print(e.toString());
     } finally {
       changefirstloading(false);
@@ -154,9 +152,9 @@ class OrderService extends ChangeNotifier {
           await ref.docs.map((e) => AdminOrderItem.fromJson(e.data())).toList();
       compOrderList.addAll(l);
       print(compOrderList.length);
-
       lastdoc = ref.docs.last;
     } catch (e) {
+      compOrderList = compOrderList;
       print(e);
     } finally {
       changefetching(false);
@@ -165,6 +163,7 @@ class OrderService extends ChangeNotifier {
 
   //mark as completed
   bool markloading = false;
+
   changemarkloading(value) {
     markloading = value;
     notifyListeners();
@@ -196,6 +195,7 @@ class OrderService extends ChangeNotifier {
 
   //get list of item
   List orderDetailList = [];
+
   getorderdetails(doc) async {
     changeDetailLoading(true);
     try {
@@ -214,6 +214,7 @@ class OrderService extends ChangeNotifier {
 
   //delete order
   bool deleteloading = false;
+
   changedeleteloading(value) {
     deleteloading = value;
     notifyListeners();

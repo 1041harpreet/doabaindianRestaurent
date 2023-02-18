@@ -405,74 +405,29 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-          Const.anonymous ?  GestureDetector(
-          onTap: () {
-        provider.changeselect();
-        },
-          child: Container(
-            width: 50,
-            height: 50,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,boxShadow: [
-              BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 10.0,
-                  offset: const Offset(0.0, 5.0),
-                  spreadRadius: 2.0)
-            ]),
-            child:  InkWell(
-              hoverColor: Colors.black12,
-              onTap: () async {
-               loginBox(context, 'Favourite',navprovider,authProvider);
-              },
-              child: const Icon(
-                CupertinoIcons.heart,
-                // size: 45,
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ):
-          GestureDetector(
-                onTap: () {
-                  provider.changeselect();
-                },
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 10.0,
-                            offset: const Offset(0.0, 5.0),
-                            spreadRadius: 2.0)
-                      ]),
-                  child: provider.isselected
-                      ? InkWell(
+              Const.anonymous ?  GestureDetector(
+                      onTap: () {
+                        provider.changeselect();
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 10.0,
+                                  offset: const Offset(0.0, 5.0),
+                                  spreadRadius: 2.0)
+                            ]),
+                        child: InkWell(
                           hoverColor: Colors.black12,
                           onTap: () async {
-                            await provider.changeselect();
-                            await provider.removeToFavourite(
-                                 widget.item);
-                          },
-                          child: const Icon(
-                            CupertinoIcons.heart_fill,
-                            // size: 40,
-                            color: Colors.red,
-                          ),
-                        )
-                      : InkWell(
-                          hoverColor: Colors.black12,
-                          onTap: () async {
-                            print('fav');
-                            await provider.changeselect();
-                            await provider.addToFavourite(
-                                widget.item, widget.catname);
+                            loginBox(context, 'Favourite', navprovider,
+                                authProvider);
                           },
                           child: const Icon(
                             CupertinoIcons.heart,
@@ -480,32 +435,79 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                             color: Colors.red,
                           ),
                         ),
-                ),
-              ),
-
-              const SizedBox(width: 20),
-              Expanded(
-                child:
-                Const.anonymous ? InkWell(
-                  onTap: () {
-                   loginBox(context, "Cart",navprovider,authProvider);
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      '+ Add to Cart',
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        provider.changeselect();
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 10.0,
+                                  offset: const Offset(0.0, 5.0),
+                                  spreadRadius: 2.0)
+                            ]),
+                        child: provider.isselected
+                            ? InkWell(
+                                hoverColor: Colors.black12,
+                                onTap: () async {
+                                  await provider.changeselect();
+                                  await provider.removeToFavourite(widget.item);
+                                },
+                                child: const Icon(
+                                  CupertinoIcons.heart_fill,
+                                  // size: 40,
+                                  color: Colors.red,
+                                ),
+                              )
+                            : InkWell(
+                                hoverColor: Colors.black12,
+                                onTap: () async {
+                                  print('fav');
+                                  await provider.changeselect();
+                                  await provider.addToFavourite(
+                                      widget.item, widget.catname);
+                                },
+                                child: const Icon(
+                                  CupertinoIcons.heart,
+                                  // size: 45,
+                                  color: Colors.red,
+                                ),
+                              ),
                       ),
                     ),
-                  ),
-                ): InkWell(
+              const SizedBox(width: 20),
+              Expanded(
+                child: Const.anonymous
+                    ? InkWell(
+                        onTap: () {
+                          loginBox(context, "Cart", navprovider, authProvider);
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Text(
+                            '+ Add to Cart',
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      )
+                    : InkWell(
                         onTap: () {
                           var current = provider.current.isEmpty
                               ? ''
