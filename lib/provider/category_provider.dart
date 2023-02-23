@@ -19,21 +19,21 @@ class CategoryService extends ChangeNotifier {
     notifyListeners();
   }
 
-  List catogries = [
-    'Appetizer (Non- Vegetarian)',
-    'Appetizer (Vegetarian)',
-    'Beverages',
-    'Biryani & Rice',
-    'Breads – Made in Tandoor',
-    'Chutneys & Sides',
-    'Dessert',
-    ' Entrees – Chicken Dishes',
-    'Entrees – Gosht (Goat & Lamb)',
-    'Entrees – North Indian Vegetarian',
-    'Entrees – Seafood (Fish & Shrimp)',
-    'Soup & Salad',
-    'Tandoor Clay Oven'
-  ];
+  // List catogries = [
+  //   'Appetizer (Non- Vegetarian)',
+  //   'Appetizer (Vegetarian)',
+  //   'Beverages',
+  //   'Biryani & Rice',
+  //   'Breads – Made in Tandoor',
+  //   'Chutneys & Sides',
+  //   'Dessert',
+  //   ' Entrees – Chicken Dishes',
+  //   'Entrees – Gosht (Goat & Lamb)',
+  //   'Entrees – North Indian Vegetarian',
+  //   'Entrees – Seafood (Fish & Shrimp)',
+  //   'Soup & Salad',
+  //   'Tandoor Clay Oven'
+  // ];
 
   int quantity = 1;
   double total = 0;

@@ -115,19 +115,19 @@ class _MoreCategoryState extends ConsumerState<MoreCategory>
                     ),
                     labelColor: Colors.black,
                     unselectedLabelColor: Colors.grey,
-                    tabs: cprovider.catogries
+                    tabs: cprovider.category
                         .map((e) => Tab(
-                              child: Text(e),
+                              child: Text(e.title),
                             ))
                         .toList())),
           ),
           Expanded(
             child: TabBarView(
                 controller: _controller,
-                children: cprovider.catogries
+                children: cprovider.category
                     .map(
                       (e) => listBuilder(
-                          catname: cprovider.catogries[_controller.index],),
+                          catname: cprovider.category[_controller.index].title,),
                     )
                     .toList()),
           ),
