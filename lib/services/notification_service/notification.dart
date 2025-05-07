@@ -128,7 +128,6 @@ class NotificationController extends ChangeNotifier {
       try {
         await AwesomeNotificationsFcm().subscribeToTopic('all');
         token = await AwesomeNotificationsFcm().requestFirebaseAppToken();
-        print('token is ' + token);
         return token;
       } catch (exception) {
         debugPrint('$exception');
@@ -146,11 +145,11 @@ class NotificationController extends ChangeNotifier {
       "to": token,
       "mutable_content": true,
       "priority": "high",
-      "notification": {"badge": 50, "title": title, "body": body},
+      "notification": {"badge": 0, "title": title, "body": body},
       "data": {
         "content": {
           "id": uniqueId(),
-          "badge": 50,
+          "badge": 0,
           "channelKey": "doaba channel",
           "displayOnForeground": true,
           "notificationLayout": "BigPicture",
@@ -177,7 +176,7 @@ class NotificationController extends ChangeNotifier {
 
     final headers = {
       'content-type': 'application/json',
-      'Authorization': 'key=${Const().key}'
+      'Authorization': 'key=${Const.key}'
     };
 
     BaseOptions options = BaseOptions(

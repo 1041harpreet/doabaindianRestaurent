@@ -5,10 +5,13 @@ import 'package:iconify_flutter/icons/bx.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/home_provider.dart';
+import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/buffet_page.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/gallery.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/main_setting_page.dart';
+import 'package:restaurent.app/widgets/login_dialogue.dart';
 
+import '../../../config/const.dart';
 import '../../../provider/nav_bar_provider.dart';
 import 'aboutus_page.dart';
 import 'my_Profile_screen.dart';
@@ -34,7 +37,7 @@ class ProfileScreen extends ConsumerWidget {
         body: SingleChildScrollView(
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             orderHeader(wsize, hsize),
-            optionListView(authprovider, context, homeprovider)
+            optionListView(authprovider, context, homeprovider, navprovider)
           ]),
         ),
       ),
@@ -42,7 +45,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-Widget optionListView(authprovider, context, homeprovider) {
+Widget optionListView(authprovider, context, homeprovider, navprovider) {
   return Container(
     child: ListView(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
@@ -51,18 +54,21 @@ Widget optionListView(authprovider, context, homeprovider) {
       children: [
         _listItem(
             onClick: () {
-              print(authprovider.phone);
-              authprovider.myProfile.patchValue({
-                "username": authprovider.username,
-                "email": authprovider.user.email,
-                "phone": authprovider.phone,
-                "img": authprovider.img
-              });
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyProfile(),
-                  ));
+              if (Const.anonymous) {
+                loginBox(context, 'Profile', navprovider,authprovider);
+              } else {
+                authprovider.myProfile.patchValue({
+                  "username": Const.username,
+                  "email": Const.email,
+                  "phone": Const.phone,
+                  "img": Const.img
+                });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyProfile(),
+                    ));
+              }
             },
             text: 'My Profile',
             icon: const Icon(Icons.ballot_outlined),
@@ -110,11 +116,15 @@ Widget optionListView(authprovider, context, homeprovider) {
         _separator(),
         _listItem(
             onClick: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingPage(),
-                  ));
+              if (Const.anonymous) {
+                loginBox(context, 'Setting', navprovider,authprovider);
+              } else {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingPage(),
+                    ));
+              }
             },
             text: 'Settings',
             icon: const Icon(Icons.settings)),
@@ -126,7 +136,7 @@ Widget optionListView(authprovider, context, homeprovider) {
             text: 'Terms & Conditions',
             icon: const Icon(Icons.assignment)),
         _separator(),
-        logoutbutton(authprovider, context),
+       logoutbutton(authprovider, context, navprovider),
         _separator(),
       ],
     ),
@@ -159,7 +169,7 @@ Widget _listItem({icon, text, onClick, showArrow = true}) {
   );
 }
 
-Widget logoutbutton(authprovider, context) {
+Widget logoutbutton(authprovider, context, navprovider) {
   return ListTile(
     leading: const Icon(Icons.logout),
     iconColor: AppConfig.blackColor,
@@ -173,57 +183,59 @@ Widget logoutbutton(authprovider, context) {
       size: 15.0,
     ),
     onTap: () async {
-      logoutdialogBox(context, authprovider);
+      logoutdialogBox(context, authprovider, navprovider);
     },
   );
 }
 
 Widget orderHeader(wsize, hsize) {
   return Padding(
-    padding: EdgeInsets.all(wsize * 0.02),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    padding:
+        EdgeInsets.symmetric(vertical: hsize * 0.02, horizontal: wsize * 0.04),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: hsize * 0.01,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.email,
+                  color: AppConfig.primaryColor,
+                ),
+                Text(
+                  "${Const.adminMail}",
+                  style: AppConfig.blackTitle,
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.phone,
+                  color: AppConfig.primaryColor,
+                ),
+                Text(
+                  " ${Const.adminPhone}",
+                  style: AppConfig.blackTitle,
+                )
+              ],
+            )
+          ],
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
-          child: Row(
-            children: [
-              Icon(
-                Icons.email,
-                color: AppConfig.primaryColor,
-              ),
-              Text(
-                " doabaindianrestaurant@gmail.com",
-                style: AppConfig.blackTitle,
-              )
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: wsize * 0.04),
-          child: Row(
-            children: [
-              Icon(
-                Icons.phone,
-                color: AppConfig.primaryColor,
-              ),
-              Text(
-                " +16143760951",
-                style: AppConfig.blackTitle,
-              )
-            ],
-          ),
+        Image.asset(
+          'assets/images/logo-web.jpg',
+          width: wsize * 0.2,
         )
       ],
     ),
   );
 }
 
-logoutdialogBox(context, authprovider) {
+logoutdialogBox(context, authprovider, navprovider) {
   return showDialog(
     context: context,
     builder: (context) => Theme(
@@ -239,6 +251,7 @@ logoutdialogBox(context, authprovider) {
           TextButton(
             onPressed: () async {
               await authprovider.signOut(context);
+              navprovider.changeindex(0);
               print('log');
             },
             child: const Text('Yes'),

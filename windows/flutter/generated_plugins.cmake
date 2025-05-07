@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   awesome_notifications
   connectivity_plus
   maps_launcher
+  sentry_flutter
   url_launcher_windows
 )
 

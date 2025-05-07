@@ -1,12 +1,15 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:restaurent.app/config/const.dart';
+import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/provider/nav_bar_provider.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
+import 'package:restaurent.app/widgets/login_dialogue.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
 
 import '../../../config/config.dart';
@@ -26,7 +29,7 @@ class ProductDetailsView extends ConsumerStatefulWidget {
 }
 
 class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
-  bool isselected = false;
+  // bool isselected = false;
 
   @override
   void initState() {
@@ -80,11 +83,16 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                     padding: const EdgeInsets.only(right: 15.0),
                     child: GestureDetector(
                       onTap: () {
-                        navprovider.changeindex(2);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => NavBar()),
-                        );
+                        if(Const.anonymous){
+                          loginBox(context, 'Cart',navprovider,authProvider);
+                        }else{
+                          navprovider.changeindex(2);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NavBar()),
+                          );
+                        }
+
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -93,7 +101,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                             borderRadius: BorderRadius.circular(10.0)),
                         width: 40.0,
                         height: 40.0,
-                        child: Badge(
+                        child: badges.Badge(
                           badgeContent:
                               Text(cartprovider.badgevalue.toString()),
                           child: const Icon(
@@ -352,7 +360,7 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                                         SizedBox(
                                           child: buildImg(hsize, wsize,
                                               provider.subcategory[index].img),
-                                          height: hsize * 0.2,
+                                          height: hsize * 0.19,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
@@ -397,55 +405,91 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GestureDetector(
-                onTap: () {
-                  provider.changeselect();
-                },
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppConfig.greyColor),
-                  ),
-                  child: provider.isselected
-                      ? InkWell(
+              Const.anonymous ?  GestureDetector(
+                      onTap: () {
+                        provider.changeselect();
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 10.0,
+                                  offset: const Offset(0.0, 5.0),
+                                  spreadRadius: 2.0)
+                            ]),
+                        child: InkWell(
                           hoverColor: Colors.black12,
                           onTap: () async {
-                            await provider.changeselect();
-                            await provider.removeToFavourite(
-                                cartprovider.email, widget.item);
-                          },
-                          child: const Icon(
-                            CupertinoIcons.heart_fill,
-                            size: 45,
-                            color: Colors.red,
-                          ),
-                        )
-                      : InkWell(
-                          hoverColor: Colors.black12,
-                          onTap: () async {
-                            print('fav');
-                            await provider.changeselect();
-                            await provider.addToFavourite(cartprovider.email,
-                                widget.item, widget.catname);
+                            loginBox(context, 'Favourite', navprovider,
+                                authProvider);
                           },
                           child: const Icon(
                             CupertinoIcons.heart,
-                            size: 45,
+                            // size: 45,
                             color: Colors.red,
                           ),
                         ),
-                ),
-              ),
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        provider.changeselect();
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 10.0,
+                                  offset: const Offset(0.0, 5.0),
+                                  spreadRadius: 2.0)
+                            ]),
+                        child: provider.isselected
+                            ? InkWell(
+                                hoverColor: Colors.black12,
+                                onTap: () async {
+                                  await provider.changeselect();
+                                  await provider.removeToFavourite(widget.item);
+                                },
+                                child: const Icon(
+                                  CupertinoIcons.heart_fill,
+                                  // size: 40,
+                                  color: Colors.red,
+                                ),
+                              )
+                            : InkWell(
+                                hoverColor: Colors.black12,
+                                onTap: () async {
+                                  print('fav');
+                                  await provider.changeselect();
+                                  await provider.addToFavourite(
+                                      widget.item, widget.catname);
+                                },
+                                child: const Icon(
+                                  CupertinoIcons.heart,
+                                  // size: 45,
+                                  color: Colors.red,
+                                ),
+                              ),
+                      ),
+                    ),
               const SizedBox(width: 20),
               Expanded(
-                child: provider.quantity == 0
+                child: Const.anonymous
                     ? InkWell(
                         onTap: () {
-                          showErrorToast(
-                              context: context, message: "please select item");
+                          loginBox(context, "Cart", navprovider, authProvider);
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -465,8 +509,8 @@ class _ProductDetailsViewState extends ConsumerState<ProductDetailsView> {
                       )
                     : InkWell(
                         onTap: () {
-                          var current = provider.current.toString().isEmpty
-                              ? provider.current
+                          var current = provider.current.isEmpty
+                              ? ''
                               : '-' + provider.current.toString();
                           print('cart clicked');
                           cartprovider.addToCart(widget.item, current,

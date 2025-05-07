@@ -6,6 +6,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 
+import '../../../config/const.dart';
 import 'edit_profile.dart';
 
 class MyProfile extends ConsumerWidget {
@@ -22,10 +23,10 @@ class MyProfile extends ConsumerWidget {
           IconButton(
               onPressed: () {
                 authprovider.updateProfile.patchValue({
-                  "username": authprovider.username,
-                  "email": authprovider.user.email,
-                  "phone": authprovider.phone,
-                  "img": authprovider.img
+                  "username": Const.username,
+                  "email": Const.email,
+                  "phone": Const.phone,
+                  "img": Const.img
                 });
                 Navigator.push(
                     context,
@@ -48,13 +49,13 @@ class MyProfile extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        authprovider.img.isEmpty
+                        Const.img.isEmpty
                             ? Stack(
                                 children: [
                                   buildImage(image),
                                 ],
                               )
-                            : buildNetoworkImage(authprovider.img),
+                            : buildNetoworkImage(Const.img),
                         const SizedBox(height: 16),
                         textfieldbtn(size, 'Username', 'username'),
                         const SizedBox(height: 16),

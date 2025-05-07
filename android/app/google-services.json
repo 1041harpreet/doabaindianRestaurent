@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:65766094671:android:fd8805d825274d7ce7f73a",
         "android_client_info": {
-          "package_name": "com.example.restaurent.app"
+          "package_name": "com.example.restaurent_app"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "65766094671-2l7pmji27s8e8c5ur4r6k3rld2bsd6so.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.restaurent.app",
+            "package_name": "com.example.restaurent_app",
             "certificate_hash": "e6d83198a94f39ca30bb5ef6e1c09f1326f59eb1"
           }
         },
@@ -37,6 +37,49 @@
             {
               "client_id": "65766094671-2r32ncis2dcra7holb4f52dcsggi99if.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "65766094671-hv7tk3hv4r36rhigdj7ua9bd3ler54qi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.xstudioz.doaba"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65766094671:android:250205b1c88fc1cfe7f73a",
+        "android_client_info": {
+          "package_name": "com.xstudioz.restaurant.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65766094671-2r32ncis2dcra7holb4f52dcsggi99if.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeXqDDznS2mXI-izjpi943ugp3jd14vZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65766094671-2r32ncis2dcra7holb4f52dcsggi99if.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "65766094671-hv7tk3hv4r36rhigdj7ua9bd3ler54qi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.xstudioz.doaba"
+              }
             }
           ]
         }

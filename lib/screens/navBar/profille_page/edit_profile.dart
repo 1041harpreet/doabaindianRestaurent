@@ -8,6 +8,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:restaurent.app/config/config.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 
+import '../../../config/const.dart';
 import 'my_Profile_screen.dart';
 
 class EditProfile extends ConsumerWidget {
@@ -160,9 +161,9 @@ class EditProfile extends ConsumerWidget {
                           },
                           child: Stack(
                             children: [
-                              authprovider.img.isEmpty
+                              Const.img.isEmpty
                                   ? buildImage(image)
-                                  : buildNetoworkImage(authprovider.img),
+                                  : buildNetoworkImage(Const.img),
                               // isEdit ?
                               Positioned(
                                 bottom: 0,

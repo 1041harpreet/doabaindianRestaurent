@@ -46,13 +46,16 @@ class DeleteAccount extends ConsumerWidget {
             "Delete Account",
           ),
           actions: [
-            Tooltip(
+            Tooltip(height: 50.0,
+              decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.0)),),
+             textAlign: TextAlign.center,
+              padding: EdgeInsets.all(8.0),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Icon(Icons.info),
               ),
               message:
-                  "once your account is deleted,all of your content will be gone, including order details.You can not recover after that.",
+                  "once your account is deleted, all of your content will be gone, including order details.You can not recover after that.",
               triggerMode: TooltipTriggerMode.tap,
             )
           ],

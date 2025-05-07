@@ -1,10 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.restaurent.app">
+    package="com.xstudioz.restaurant.app">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.CAMERA" />
     <application
 
@@ -17,7 +15,7 @@
            android:name="com.google.firebase.messaging.default_notification_icon"
            android:resource="@drawable/res_app_icon" />
         <activity
-            android:name="com.example.restaurent.app.MainActivity"
+            android:name="com.xstudioz.restaurant.app.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
@@ -65,16 +63,16 @@
             <data android:scheme="mailto" />
         </intent>
     </queries>
-    <queries>
+<!--    <queries>-->
         <!-- If your app checks for SMS support -->
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="sms" />
-        </intent>
-        <!-- If your app checks for call support -->
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="tel" />
-        </intent>
-    </queries>
+<!--        <intent>-->
+<!--            <action android:name="android.intent.action.VIEW" />-->
+<!--            <data android:scheme="sms" />-->
+<!--        </intent>-->
+<!--        &lt;!&ndash; If your app checks for call support &ndash;&gt;-->
+<!--        <intent>-->
+<!--            <action android:name="android.intent.action.VIEW" />-->
+<!--            <data android:scheme="tel" />-->
+<!--        </intent>-->
+<!--    </queries>-->
 </manifest>

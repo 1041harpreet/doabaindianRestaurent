@@ -5,8 +5,11 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../config/config.dart';
 import '../../provider/auth_provider.dart';
+import '../../widgets/back_button.dart';
 import '../../widgets/toast_service.dart';
 import 'sign_up_screen.dart';
+
+
 
 class ForgetPasswordScreen extends ConsumerWidget {
   const ForgetPasswordScreen({Key? key}) : super(key: key);
@@ -25,25 +28,8 @@ class ForgetPasswordScreen extends ConsumerWidget {
             Expanded(
               flex: 1,
               child: Row(children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10.0)),
-                        width: 40.0,
-                        height: 40.0,
-                        child: const Icon(
-                          Icons.arrow_back_ios_new_outlined,
-                          color: Colors.grey,
-                        )),
-                  ),
-                ),
+                backButton(context),
+
               ]),
             ),
 
@@ -143,62 +129,4 @@ class ForgetPasswordScreen extends ConsumerWidget {
   }
 }
 
-// Widget richText(
-//     double fontSize,
-//     ) {
-//   return Text.rich(
-//     TextSpan(
-//       style: GoogleFonts.inter(
-//         fontSize: fontSize,
-//         color: const Color(0xFF21899C),
-//         letterSpacing: 2.000000061035156,
-//       ),
-//       children: const [
-//         TextSpan(
-//           text: 'DOABA INDIAN ',
-//           style: TextStyle(
-//             fontWeight: FontWeight.w800,
-//           ),
-//         ),
-//         TextSpan(
-//           text: 'RESTAURANT',
-//           style: TextStyle(
-//             color: Color(0xFFFE9879),
-//             fontWeight: FontWeight.w800,
-//           ),
-//         ),
-//       ],
-//     ),
-//   );
-// }
-// Widget textfieldbtn(Size size, lable, controlname, validation) {
-//   return Container(
-//     alignment: Alignment.center,
-//     height: size.height * 0.07,
-//     padding: const EdgeInsets.symmetric(horizontal: 16),
-//     decoration: BoxDecoration(
-//       borderRadius: BorderRadius.circular(8.0),
-//       border: Border.all(
-//         width: 1.0,
-//         color: const Color(0xFFEFEFEF),
-//       ),
-//     ),
-//     child: ReactiveTextField(
-//       formControlName: controlname,
-//       style: GoogleFonts.inter(
-//         fontSize: 16.0,
-//         color: const Color(0xFF15224F),
-//       ),
-//       validationMessages: validation,
-//       maxLines: 1,
-//       cursorColor: const Color(0xFF15224F),
-//       decoration: InputDecoration(
-//           labelText: lable,
-//           labelStyle: GoogleFonts.inter(
-//             fontSize: 12.0,
-//             color: const Color(0xFF969AA8),
-//           ),
-//           border: InputBorder.none),
-//     ),
-//   );
-// }
+

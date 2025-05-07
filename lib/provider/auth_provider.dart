@@ -13,13 +13,19 @@ import 'package:restaurent.app/provider/notification_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/screens/navBar/profille_page/setting/notification/notification_setting_provider.dart';
+import 'package:restaurent.app/services/mail_services.dart';
 import 'package:restaurent.app/services/notification_service/notification.dart';
 
 import '../admin/admin_home_page.dart';
 import '../config/const.dart';
 import '../widgets/toast_service.dart';
+import 'cart_provider.dart';
 
 class AuthService extends ChangeNotifier {
+  var cartprovider;
+
+  AuthService(this.cartprovider);
+
   bool signupload = false;
   bool signinload = false;
   bool resetload = false;
@@ -92,9 +98,8 @@ class AuthService extends ChangeNotifier {
       Validators.number,
       Validators.maxLength(12)
     ]),
-    'password': FormControl(validators: [
-      Validators.required,
-    ]),
+    'password':
+        FormControl(validators: [Validators.required, Validators.minLength(6)]),
   });
   FormGroup changePasswordForm = FormGroup({
     "current": FormControl(validators: [Validators.required]),
@@ -120,31 +125,6 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  //  signInWithGoogle(context) async {
-  //    final GoogleSignIn googleSignIn = GoogleSignIn();
-  //    await googleSignIn.signOut().then((value) {
-  //      print('sign out complete');
-  //    });
-  //   try{
-  //     await googleSignIn.signIn().then((value) async {
-  //      await Auth().writeSecureData(value?.id);
-  //       print('working');
-  //     await adduser(value?.email, value?.displayName, '',value?.photoUrl);
-  //       await getUserInfo(value?.email);
-  //       await setInitialTotal(value?.email);
-  //       print(value?.email);
-  //       print(value?.displayName);
-  //       print(value?.photoUrl);
-  //     });
-  //
-  //   }catch(e){
-  //     showErrorToast(message: "Something went wrong",context: context);
-  //     print(e);
-  //   }
-  //
-  // }
-
-  //SIGN UP METHOD
   signUp(email, password, context, username, phone) async {
     signuploading(true);
     try {
@@ -154,22 +134,24 @@ class AuthService extends ChangeNotifier {
         password: password,
       )
           .then((value) async {
-        await adduser(email, username, phone, '');
-        await getUserInfo(_auth.currentUser?.email, true);
+        await adduser(email, username, phone,'');
+        await getUserInfo(email, true);
         await setInitialTotal(email);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => const NavBar(),
             ),
             (route) => false);
+        cartprovider.getBadge();
+        cartprovider.getTotal();
+        changeAnonymous(false);
+        changeLogged(true);
         NotificationSettingService().writeValue(true);
       });
       SignUpForm.reset();
       showSuccessToast(message: 'register successfully', context: context);
-      print(_auth.currentUser?.email);
     } on FirebaseAuthException catch (e) {
       // print(e.toString());
-      print(e.code);
       if (e.code == "network-request-failed") {
         showErrorToast(context: context, message: "No internet Connection");
       }
@@ -212,6 +194,40 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  bool anonymous = false;
+
+  changeAnon(value) {
+    anonymous = value;
+    notifyListeners();
+  }
+
+  //sign in anonymously
+  void signInAnonymously(context) async {
+    changeAnon(true);
+    try {
+      await _auth.signInAnonymously().then((value) async {
+        await adduser(value.user?.uid, '', '', '');
+        await getUserInfo(value.user?.uid, true);
+        await setInitialTotal(value.user?.uid);
+        cartprovider.getBadge();
+        changeAnonymous(true);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NavBar(),
+            ));
+      });
+      changeLogged(true);
+      changeAnon(false);
+    } catch (e) {
+      changeAnon(false);
+      print(e);
+    }
+  }
+  changeLogged(value) {
+    Const.isloged = value;
+    notifyListeners();
+  }
   //SIGN IN METHOD
   signIn(email, password, context) async {
     signinloading(true);
@@ -219,8 +235,12 @@ class AuthService extends ChangeNotifier {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
+        print('coming');
+        print(value);
         await getUserInfo(email, true);
-        if (role == 'admin') {
+        cartprovider.getBadge();
+        cartprovider.getTotal();
+        if (Const.role == 'admin') {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const AdminHomePage(),
@@ -233,10 +253,9 @@ class AuthService extends ChangeNotifier {
               ),
               (route) => false);
         }
+        changeAnonymous(false);
+        changeLogged(true);
         loginForm.reset();
-        //   await FavouriteServices().openDb(email);
-        // await FavouriteServices().insertModel(email);
-
         showSuccessToast(message: 'login successfully', context: context);
       });
     } on FirebaseAuthException catch (e) {
@@ -274,6 +293,7 @@ class AuthService extends ChangeNotifier {
 
   //SIGN OUT METHOD
   Future signOut(context) async {
+    changeLogged(false);
     await _auth.signOut();
     showSuccessToast(message: 'Logout successfully', context: context);
     Navigator.of(context).pushAndRemoveUntil(
@@ -282,7 +302,6 @@ class AuthService extends ChangeNotifier {
         ),
         (route) => false);
     await AwesomeNotificationsFcm().unsubscribeToTopic('all');
-    print('signout');
   }
 
   //delete account
@@ -303,7 +322,7 @@ class AuthService extends ChangeNotifier {
         print(cred);
         user?.reauthenticateWithCredential(cred).then((value) async {
           print(value);
-          await NotificationService(user.email).deleteToken();
+          await NotificationService().deleteToken();
           await deleteUser();
           _auth.currentUser?.delete().then((value) async {
             Navigator.of(context).pushAndRemoveUntil(
@@ -312,7 +331,7 @@ class AuthService extends ChangeNotifier {
                 ),
                 (route) => false);
             NotificationSettingService().unSubscribeNotification();
-            // await firestore ,cart,token,notification, users, favourite
+            MailService().devMail(Const.username, Const.email);
           }).catchError((err) {
             print(err);
             showErrorToast(message: "something went wrong", context: context);
@@ -411,15 +430,9 @@ class AuthService extends ChangeNotifier {
           .doc(email)
           .set({"subtotal": 0.0, "total": 0.0, "status": false});
     } catch (e) {
-      print('get total error');
       print(e.toString());
     }
   }
-
-  String phone = '';
-  String username = '';
-  String role = 'user';
-  String img = '';
 
   getUserInfo(email, needed) async {
     try {
@@ -428,16 +441,18 @@ class AuthService extends ChangeNotifier {
           .doc(email)
           .get()
           .then((value) async {
-        phone = value.get('phone');
-        username = value.get('username');
-        img = value.get('img');
-        role = value.get('role');
+        Const.phone = value.get('phone');
+        Const.username = value.get('username');
+        Const.img = value.get('img');
+        Const.role = value.get('role');
+        Const.email = value.get('email');
+
         needed ? await storeToken(email) : '';
-        needed ? adminDetail() : '';
-        print('my role is $role');
+        needed ? await adminDetail() : '';
+        print('my role is ${Const.role}');
       });
     } catch (e) {
-      role = 'user';
+      Const.role = 'user';
       print("error $e");
     }
   }
@@ -447,11 +462,25 @@ class AuthService extends ChangeNotifier {
       await _firestore.collection('admin').doc('admin').get().then((value) {
         Const.adminMail = value.get('mail');
         Const.adminPhone = value.get('phone');
+        Const.devMail = value.get('devmail');
+        Const.key = value.get('key');
+        Const.secMail = value.get('secMail');
+        Const.clientID = value.get('clientID');
+        Const.secret = value.get('secret');
+        Const.status = value.get('status');
+        Const.buffetImg = value.get('buffetImg');
         print(Const.adminPhone);
       });
     } catch (e) {
       print(e);
+    } finally {
+      notifyListeners();
     }
+  }
+
+  changeAnonymous(bool value) {
+    Const.anonymous = value;
+    print(Const.anonymous);
     notifyListeners();
   }
 
@@ -533,6 +562,7 @@ class AuthService extends ChangeNotifier {
 }
 
 final authProvider = ChangeNotifierProvider((ref) {
-  var state = AuthService();
+  final cartprovider = ref.watch(cartProvider);
+  var state = AuthService(cartprovider);
   return state;
 });

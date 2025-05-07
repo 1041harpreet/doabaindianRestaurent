@@ -9,8 +9,8 @@ import '../../../../provider/category_provider.dart';
 
 class MoreCategory extends ConsumerStatefulWidget {
   int index;
-
-  MoreCategory({Key? key, required this.index}) : super(key: key);
+  int tablength;
+  MoreCategory({Key? key, required this.index,required this.tablength}) : super(key: key);
 
   @override
   ConsumerState<MoreCategory> createState() => _MoreCategoryState();
@@ -19,42 +19,24 @@ class MoreCategory extends ConsumerStatefulWidget {
 class _MoreCategoryState extends ConsumerState<MoreCategory>
     with TickerProviderStateMixin {
   late TabController _controller;
+  late int selectedIndex;
 
-  // final options = const LiveOptions(
-  //   // Start animation after (default zero)
-  //   delay: Duration(seconds: 0),
-  //
-  //   // Show each item through (default 250)
-  //   showItemInterval: Duration(milliseconds: 10),
-  //
-  //   // Animation duration (default 250)
-  //   showItemDuration: Duration(microseconds: 10),
-  //
-  //   // Animations starts at 0.05 visible
-  //   // item fraction in sight (default 0.025)
-  //   visibleFraction: 0.01,
-  //
-  //   // Repeat the animation of the appearance
-  //   // when scrolling in the opposite direction (default false)
-  //   // To get the effect as in a showcase for ListView, set true
-  //   reAnimateOnVisibility: false,
-  // );
   @override
   void initState() {
-    _controller =
-        TabController(length: 13, vsync: this, initialIndex: widget.index);
+    selectedIndex = widget.index;
+    _controller = TabController(
+        length: widget.tablength, vsync: this, initialIndex: selectedIndex);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await ref.watch(categoryProvider).getCategory();
-      await ref
-          .watch(categoryProvider)
-          .getsubcategory(ref.watch(categoryProvider).catogries[widget.index]);
+      await ref.watch(categoryProvider).getsubcategory(
+          ref.watch(categoryProvider).category[selectedIndex].title);
     });
     _controller.addListener(() async {
-      ref.watch(categoryProvider).subloading == true;
-      print(_controller.index);
-      await ref.watch(categoryProvider).getsubcategory(
-          await ref.watch(categoryProvider).catogries[_controller.index]);
-      print(ref.watch(categoryProvider).subcategory);
+      if (!_controller.indexIsChanging) {
+        ref.watch(categoryProvider).subloading == true;
+        print(_controller.index);
+        await ref.watch(categoryProvider).getsubcategory(
+            ref.watch(categoryProvider).category[_controller.index].title);
+      }
     });
     super.initState();
   }
@@ -133,19 +115,19 @@ class _MoreCategoryState extends ConsumerState<MoreCategory>
                     ),
                     labelColor: Colors.black,
                     unselectedLabelColor: Colors.grey,
-                    tabs: cprovider.catogries
+                    tabs: cprovider.category
                         .map((e) => Tab(
-                              child: Text(e),
+                              child: Text(e.title),
                             ))
                         .toList())),
           ),
           Expanded(
             child: TabBarView(
                 controller: _controller,
-                children: cprovider.catogries
+                children: cprovider.category
                     .map(
-                      (e) => listBuilder(wsize, hsize, cprovider,
-                          cprovider.catogries[_controller.index], context),
+                      (e) => listBuilder(
+                          catname: cprovider.category[_controller.index].title,),
                     )
                     .toList()),
           ),

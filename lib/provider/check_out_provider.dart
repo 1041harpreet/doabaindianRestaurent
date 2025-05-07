@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent.app/config/const.dart';
 
 class CheckOutService extends ChangeNotifier {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -15,6 +16,7 @@ class CheckOutService extends ChangeNotifier {
     'additional': FormControl(),
     'email': FormControl(validators: [Validators.required, Validators.email]),
     'phone': FormControl(validators: [
+      Validators.minLength(10),
       Validators.required,
     ]),
     'town': FormControl(),
@@ -63,14 +65,17 @@ class CheckOutService extends ChangeNotifier {
   String adminToken = '';
 
   getAdminToken() async {
-    await _firestore
-        .collection('token')
-        .doc('1042harpreet@gmail.com')
-        .get()
-        .then((value) {
-      adminToken = value.get('token');
-      print('admin token is $adminToken');
-    });
+    try {
+      await _firestore
+          .collection('token')
+          .doc(Const.adminMail)
+          .get()
+          .then((value) {
+        adminToken = value.get('token');
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }
 

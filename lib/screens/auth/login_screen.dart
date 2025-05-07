@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/screens/auth/forget_password.dart';
 import 'package:restaurent.app/screens/auth/sign_up_screen.dart';
+import 'package:restaurent.app/widgets/back_button.dart';
 import 'package:restaurent.app/widgets/toast_service.dart';
 
 import '../../config/config.dart';
@@ -16,6 +18,7 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authprovider = ref.watch(authProvider);
+    final cartprovider = ref.watch(cartProvider);
     final navprovider = ref.watch(NavBarProvider);
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -25,15 +28,13 @@ class LoginScreen extends ConsumerWidget {
         child: Column(
           children: [
             //to give space from top
-            const Expanded(
-              flex: 1,
-              child: Center(),
-            ),
+            Expanded(flex: 1, child: Center()),
 
             //page content here
             Expanded(
               flex: 9,
-              child: buildCard(size, authprovider, context, navprovider),
+              child: buildCard(
+                  size, authprovider, context, navprovider, cartprovider),
             ),
           ],
         ),
@@ -41,7 +42,8 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildCard(Size size, authprovider, context, navprovider) {
+  Widget buildCard(
+      Size size, authprovider, context, navprovider, cartprovider) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -83,7 +85,7 @@ class LoginScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.03,
               ),
-              richText(20),
+              richText(MediaQuery.of(context).size.width * 0.05),
               SizedBox(
                 height: size.height * 0.05,
               ),
@@ -126,8 +128,6 @@ class LoginScreen extends ConsumerWidget {
                           MaterialPageRoute(
                             builder: (context) => ForgetPasswordScreen(),
                           ));
-                      // authprovider.resetPassword('1041harpreet@gmail.com');
-                      // authprovider.updateEmail('1044harpreet@gmail.com');
                     },
                     child: Text(
                       'Forget Password?',
@@ -155,9 +155,11 @@ class LoginScreen extends ConsumerWidget {
                             authprovider.loginForm.control('email').value,
                             authprovider.loginForm.control('password').value,
                             context);
+                        // cartprovider.getBadge();
                         print('sign in');
                       } else {
                         print('invalid');
+                        print(authprovider.loginForm.value);
                         authprovider.loginForm.markAllAsTouched();
                         showErrorToast(
                             message: 'fill the detail first', context: context);
@@ -166,21 +168,6 @@ class LoginScreen extends ConsumerWidget {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              // Text(
-              //   'or login with',
-              //   style: GoogleFonts.inter(
-              //     fontSize: 14.0,
-              //     color: const Color(0xFF969AA8),
-              //   ),
-              //   textAlign: TextAlign.center,
-              // ),
-              // SizedBox(
-              //   height: size.height * 0.02,
-              // ),
-              // Button(size, "sign up with Google", Colors.black, Colors.white,
-              //     () {
-              //   print('sign in with google');
-              // }),
               SizedBox(
                 height: size.height * 0.02,
               ),
@@ -194,6 +181,10 @@ class LoginScreen extends ConsumerWidget {
                         ));
                   },
                   child: footerText()),
+              SizedBox(
+                height: size.height * 0.02,
+              ),
+
             ],
           ),
         ),
@@ -229,27 +220,6 @@ class LoginScreen extends ConsumerWidget {
       ),
     );
   }
-
-  // Widget loadingButton(Size size) {
-  //   return Container(
-  //       alignment: Alignment.center,
-  //       height: size.height * 0.06,
-  //       decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(10.0),
-  //         color: AppConfig.primaryColor,
-  //         boxShadow: [
-  //           BoxShadow(
-  //             color: const Color(0xFF4C2E84).withOpacity(0.2),
-  //             offset: const Offset(0, 15.0),
-  //             blurRadius: 60.0,
-  //           ),
-  //         ],
-  //       ),
-  //       child: const Center(
-  //           child: CircularProgressIndicator(
-  //         color: Colors.white,
-  //       )));
-  // }
 
   Widget Button(Size size, title, titlecolor, buttoncolor, ontap) {
     return GestureDetector(

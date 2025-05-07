@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/config/const.dart';
 import 'package:restaurent.app/provider/auth_provider.dart';
 import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/screens/navBar/home_page/categories/builder.dart';
@@ -15,7 +16,9 @@ import 'package:restaurent.app/widgets/buffet.dart';
 
 import '../../../provider/category_provider.dart';
 import '../../../provider/home_provider.dart';
+import '../../../provider/nav_bar_provider.dart';
 import '../../../widgets/about_us.dart';
+import '../../../widgets/login_dialogue.dart';
 import '../../../widgets/shimmer.dart';
 import 'carsoul_full_screen.dart';
 import 'categories/all_category.dart';
@@ -29,17 +32,16 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   @override
-  var d;
-  TextEditingController searchController = TextEditingController();
-
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.watch(categoryProvider).getCategory();
-      ref.watch(categoryProvider).getcarsoulItem();
-      ref.watch(categoryProvider).getmadeforu();
-      if (ref.watch(homeProvider).show) {
-        _showNewOrderDialog();
-        ref.watch(homeProvider).changeshow(false);
+      if (Const.isloged) {
+        ref.watch(categoryProvider).getCategory();
+        ref.watch(categoryProvider).getcarsoulItem();
+        ref.watch(categoryProvider).getmadeforu();
+        if (ref.watch(homeProvider).show) {
+          _showNewOrderDialog();
+          ref.watch(homeProvider).changeshow(false);
+        }
       }
     });
     super.initState();
@@ -50,9 +52,10 @@ class _HomePageState extends ConsumerState<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)), //this right here
-            child: buffet());
+            child: buffet(Const.buffetImg));
       },
     );
   }
@@ -60,6 +63,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final categoryprovider = ref.watch(categoryProvider);
+    final navprovider = ref.watch(NavBarProvider);
     final cartprovider = ref.watch(cartProvider);
     final authprovider = ref.watch(authProvider);
     final homeprovider = ref.watch(homeProvider);
@@ -114,8 +118,6 @@ class _HomePageState extends ConsumerState<HomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // header(wsize, hsize, homeprovider, categoryprovider, authprovider,
-              //     context),
               categoryprovider.carload
                   ? carsoulShimmer(context, wsize)
                   : Padding(
@@ -183,20 +185,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                           MaterialPageRoute(
                             builder: (context) => MoreCategory(
                               index: 0,
+                              tablength: categoryprovider.category.length,
                             ),
                           ));
-                      print('pressed more');
                     },
                     child: Padding(
                       padding:
                           EdgeInsets.only(right: wsize * .03, top: hsize * .01),
                       child: Text("See All",
-                          style: TextStyle(color: Colors.grey.shade900)),
+                          style: TextStyle(color: AppConfig.primaryColor)),
                     ),
                   ),
                 ],
               ),
-              listview(hsize, wsize, context, categoryprovider),
+              Listview(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -218,21 +220,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                           MaterialPageRoute(
                             builder: (context) => MoreCategory(
                               index: 0,
+                              tablength: categoryprovider.category.length,
                             ),
                           ));
-                      print('pressed more');
                     },
                     child: Padding(
                       padding:
                           EdgeInsets.only(right: wsize * .03, top: hsize * .01),
                       child: Text("See all",
-                          style: TextStyle(color: Colors.grey.shade900)),
+                          style: TextStyle(color: AppConfig.primaryColor)),
                     ),
                   ),
                 ],
               ),
-              madeforulist(hsize, wsize, context, categoryprovider),
-
+              MadeForYouList(),
               aboutus(),
             ],
           ),

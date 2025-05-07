@@ -15,6 +15,7 @@ class NavServices extends ChangeNotifier {
   ];
   bool isObsecure = true;
 
+
   changeSecure(value) {
     isObsecure = value;
     print(isObsecure);

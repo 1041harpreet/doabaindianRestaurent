@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurent.app/config/config.dart';
+import 'package:restaurent.app/provider/cart_provider.dart';
 import 'package:restaurent.app/screens/auth/login_screen.dart';
 import 'package:restaurent.app/screens/navBar/nav_bar.dart';
 import 'package:restaurent.app/widgets/shimmer.dart';
 
 import '../../admin/admin_home_page.dart';
+import '../../config/const.dart';
 import '../../provider/auth_provider.dart';
 import '../../services/connection_service.dart';
 
@@ -24,27 +26,44 @@ class _LoaderScreenState extends ConsumerState<LoaderScreen> {
     });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       print('working loader screen');
+
       if (ref.watch(authProvider).user != null) {
-        await ref
-            .watch(authProvider)
-            .getUserInfo(ref.watch(authProvider).user.email, true);
-        if (ref.watch(authProvider).role == 'admin') {
-          print('admin');
+        print(ref.watch(authProvider).user.email);
+        if(ref.watch(authProvider).user.email == null || ref.watch(authProvider).user.email=='' ){
+          print('skip');
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => const AdminHomePage(),
+                builder: (context) => const LoginScreen(),
               ),
-              (route) => false);
+                  (route) => false);
+        }else{
+          print('working in  null');
+          await ref
+              .watch(authProvider)
+              .getUserInfo(ref.watch(authProvider).user.email, true);
+          await ref.watch(cartProvider).getBadge();
+          await ref.watch(cartProvider).getTotal();
+          await ref.watch(authProvider).changeAnonymous(false);
+          if (Const.role == 'admin') {
+            print('admin');
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const AdminHomePage(),
+                ),
+                    (route) => false);
+          }
+          if (Const.role == 'user') {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => NavBar(),
+                ),
+                    (route) => false);
+          }
+
         }
-        if (ref.watch(authProvider).role == 'user') {
-          // await ref.watch(NavBarProvider).changeindex(0);
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => NavBar(),
-              ),
-              (route) => false);
-        }
-      } else {
+
+      }
+      else {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => const LoginScreen(),
